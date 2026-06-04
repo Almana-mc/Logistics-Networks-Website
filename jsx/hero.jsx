@@ -18,7 +18,7 @@ function NavBar() {
       <div className="nav__links">
         <a href="#download">Download</a>
         <a href="library.html">Library</a>
-        <a href="#" aria-disabled="true" onClick={e => e.preventDefault()}>Docs</a>
+        <a href="docs.html">Docs</a>
         <Btn as="a" href="visualiser.html" variant="ghost" className="nav__cta" aria-label="Open visualiser">
           Open Visualiser <Icon name="arrow" size={15} />
         </Btn>
