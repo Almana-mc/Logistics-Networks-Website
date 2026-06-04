@@ -19,6 +19,7 @@ function Visualiser({ graphOpts }) {
   const [selected, setSelected] = React.useState(-1);
   const [drag, setDrag] = React.useState(false);
   const [pending, setPending] = React.useState(null);
+  const [raw, setRaw] = React.useState('');
   const fileInput = React.useRef(null);
 
   const commit = (parsed, name) => {
@@ -38,9 +39,23 @@ function Visualiser({ graphOpts }) {
       setError(e.message || 'Could not parse file.'); setNet(null); setPending(null);
       return;
     }
+    setRaw(text);
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduce) { commit(parsed, name); return; }
     setError(null); setNet(null); setPending({ net: parsed, name: name || 'network.lnet' });
+  };
+
+  React.useEffect(() => {
+    const handoff = readHandoff();
+    if (handoff) load(handoff.text, handoff.name);
+  }, []);
+
+  const downloadCurrent = () => {
+    const url = URL.createObjectURL(new Blob([raw], { type: 'text/plain' }));
+    const a = document.createElement('a');
+    a.href = url; a.download = fileName || 'network.lnet';
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   const onFile = (file) => {
@@ -98,9 +113,16 @@ function Visualiser({ graphOpts }) {
                 <span><b>{net.stats.activeChannels}</b> active ch.</span>
                 {net.stats.hidden > 0 && <span className="dim">{net.stats.hidden} hidden</span>}
               </div>
-              <button className="btn btn-ghost btn-sm" onClick={() => { setNet(null); setError(null); setPending(null); }}>
-                <Icon name="reset" size={15} /> New file
-              </button>
+              <div className="vis__bar-act">
+                {raw && (
+                  <button className="btn btn-ghost btn-sm" onClick={downloadCurrent}>
+                    <Icon name="download" size={15} /> Download .lnet
+                  </button>
+                )}
+                <button className="btn btn-ghost btn-sm" onClick={() => { setNet(null); setError(null); setPending(null); setRaw(''); }}>
+                  <Icon name="reset" size={15} /> New file
+                </button>
+              </div>
             </div>
 
             <div className="vis__grid">

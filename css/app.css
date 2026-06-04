@@ -53,6 +53,7 @@
 .nav__links > a { color: var(--fg-dim); text-decoration: none; font-size: var(--text-ui); font-weight: 500; transition: color .2s var(--ease-out-quart); }
 .nav__links > a:hover { color: var(--accent); }
 .nav__cta { font-size: var(--text-md) !important; padding: var(--space-2) var(--space-4) !important; }
+.nav__here { font-family: var(--font-mono); font-size: var(--text-md); color: var(--accent); letter-spacing: 0; }
 
 /* ---------- Hero ---------- */
 .hero { position: relative; padding: clamp(40px, 7vw, 90px) 0 var(--space-8); }
@@ -239,6 +240,7 @@
 .vis__file { display: flex; align-items: center; gap: var(--space-3); color: var(--fg-dim); font-size: var(--text-md); min-width: 0; }
 .vis__file svg { color: var(--accent); flex-shrink: 0; }
 .vis__net { color: var(--fg); font-family: var(--font-display); font-weight: 600; padding: 2px 0 2px 12px; box-shadow: -1px 0 0 var(--line); letter-spacing: 0; }
+.vis__bar-act { display: flex; gap: var(--space-2); flex-wrap: wrap; }
 .vis__statline { display: flex; gap: 20px; font-size: var(--text-sm); color: var(--fg-mute); flex-wrap: wrap; }
 .vis__statline b { color: var(--accent); font-weight: 700; }
 .vis__statline .dim { color: var(--fg-faint); }
