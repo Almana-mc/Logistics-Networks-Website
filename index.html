@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Logistics Network · .lnet Visualiser</title>
+  <meta name="description" content="Visualise .lnet exports from the Logistics Network mod as a live, colour-coded network graph parsed entirely in your browser." />
+  <link rel="stylesheet" href="css/tokens.css" />
+  <link rel="stylesheet" href="css/app.css" />
+  <link rel="stylesheet" href="css/hero.css" />
+  <link rel="stylesheet" href="css/loader.css" />
+</head>
+<body>
+  <div id="root"></div>
+
+  <!-- React + Babel -->
+  <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+
+  <!-- Plain JS engines -->
+  <script src="js/lnet.js"></script>
+  <script src="js/graph.js"></script>
+
+  <!-- React layer (JSX) -->
+  <script type="text/babel" src="jsx/lib.jsx"></script>
+  <script type="text/babel" src="jsx/graph-canvas.jsx"></script>
+  <script type="text/babel" src="jsx/hero.jsx"></script>
+  <script type="text/babel" src="jsx/sections.jsx"></script>
+  <script type="text/babel" src="jsx/visualiser.jsx"></script>
+  <script type="text/babel" src="jsx/app.jsx"></script>
+</body>
+</html>
