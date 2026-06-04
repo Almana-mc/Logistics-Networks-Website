@@ -70,6 +70,10 @@ function Icon({ name, size = 18, stroke = 2 }) {
     file: <><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" /><path d="M14 3v5h5" /></>,
     reset: <><path d="M3 12a9 9 0 1 0 3-6.7" /><path d="M3 4v4h4" /></>,
     dot: <circle cx="12" cy="12" r="4" fill="currentColor" stroke="none" />,
+    menu: <><path d="M4 6h16" /><path d="M4 12h16" /><path d="M4 18h16" /></>,
+    book: <><path d="M4 19V6a2 2 0 0 1 2-2h11v15H6a2 2 0 0 0-2 2z" /><path d="M17 4v15" /></>,
+    alert: <><path d="M12 4 2.5 20.5h19z" /><path d="M12 10v4.5" /><path d="M12 18h.01" /></>,
+    search: <><circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" /></>,
   };
   return <svg {...common} aria-hidden="true">{paths[name]}</svg>;
 }
