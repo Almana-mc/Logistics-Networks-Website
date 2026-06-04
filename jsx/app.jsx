@@ -27,7 +27,8 @@ function Footer({ release }) {
           <a href="https://github.com/Almana-mc/LogisticsNetworks" target="_blank" rel="noreferrer">GitHub</a>
           <a href="https://discord.gg/xTeHR2tdYh" target="_blank" rel="noreferrer">Discord</a>
           <a href="#download">Download</a>
-          <a href="#visualiser">Visualiser</a>
+          <a href="library.html">Library</a>
+          <a href="visualiser.html">Visualiser</a>
         </div>
         <div className="footer__meta mono">
           v{release.version} · {MOD.loader}<br />
@@ -59,7 +60,6 @@ function App() {
       <NavBar />
       <Hero heroData={heroData} graphOpts={graphOpts} headline={DESIGN.headline} release={release} />
       <Downloads release={release} />
-      <Visualiser graphOpts={graphOpts} />
       <Footer release={release} />
     </>
   );

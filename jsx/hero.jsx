@@ -17,8 +17,9 @@ function NavBar() {
       </a>
       <div className="nav__links">
         <a href="#download">Download</a>
+        <a href="library.html">Library</a>
         <a href="docs.html">Docs</a>
-        <Btn as="a" href="#visualiser" variant="ghost" className="nav__cta" aria-label="Open visualiser">
+        <Btn as="a" href="visualiser.html" variant="ghost" className="nav__cta" aria-label="Open visualiser">
           Open Visualiser <Icon name="arrow" size={15} />
         </Btn>
       </div>
@@ -46,7 +47,7 @@ function Hero({ heroData, graphOpts, headline, release }) {
           </h1>
           <p className="hero__blurb">{MOD.blurb}</p>
           <div className="hero__actions">
-            <Btn as="a" href="#visualiser" variant="primary">
+            <Btn as="a" href="visualiser.html" variant="primary">
               <Icon name="upload" size={17} /> Drop a .lnet file
             </Btn>
             <Btn as="a" href="#download" variant="ghost">
