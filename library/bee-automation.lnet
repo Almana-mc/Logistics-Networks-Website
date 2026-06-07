@@ -1,0 +1,14 @@
+version=1.0
+network=Bee Automation
+label=Hive
+clipboard={channels:[{batch:10000,delay:160,enabled:1b,index:0,mode:"EXPORT"}],network_name:"Bee Automation",node_label:"Hive",required_items:[{count:1,item:{count:1,id:"logisticsnetworks:netherite_upgrade"}}],upgrades:[{item:{count:1,id:"logisticsnetworks:netherite_upgrade"},slot:0}]}
+label=Honey Store
+clipboard={channels:[{batch:100,enabled:1b,index:3,type:"FLUID"}],network_name:"Bee Automation",node_label:"Honey Store"}
+label=Centrifuge
+clipboard={channels:[{enabled:1b,index:0,priority:1},{enabled:1b,index:1},{batch:10000,delay:10,enabled:1b,index:2,io:"down",mode:"EXPORT"},{batch:1000000,delay:10,enabled:1b,index:3,io:"down",mode:"EXPORT",type:"FLUID"},{batch:2000,enabled:1b,index:8,type:"ENERGY"}],network_name:"Bee Automation",node_label:"Centrifuge",required_items:[{count:1,item:{count:1,id:"logisticsnetworks:netherite_upgrade"}}],upgrades:[{item:{count:1,id:"logisticsnetworks:netherite_upgrade"},slot:0}]}
+label=Item Store
+clipboard={channels:[{enabled:1b,index:2}],network_name:"Bee Automation",node_label:"Item Store"}
+label=Power
+clipboard={channels:[{batch:2000,enabled:1b,index:8,io:"east",mode:"EXPORT",type:"ENERGY"}],network_name:"Bee Automation",node_label:"Power"}
+label=Buffer
+clipboard={channels:[{enabled:1b,index:0},{batch:64,enabled:1b,index:1,mode:"EXPORT"}],network_name:"Bee Automation",node_label:"Buffer",required_items:[{count:1,item:{count:1,id:"logisticsnetworks:diamond_upgrade"}}],upgrades:[{item:{count:1,id:"logisticsnetworks:diamond_upgrade"},slot:0}]}

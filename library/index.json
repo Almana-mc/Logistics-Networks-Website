@@ -1,1 +1,10 @@
-[]
+[
+  {
+    "name": "Bee Automation",
+    "author": "AlmanaX21",
+    "desc": "A simple Productive Bees setup",
+    "file": "bee-automation.lnet",
+    "types": ["ITEM", "FLUID", "ENERGY"],
+    "added": "2026-06-07"
+  }
+]
