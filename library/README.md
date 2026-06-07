@@ -48,7 +48,7 @@ network moves, e.g. `["ITEM", "FLUID", "ENERGY"]`. Unknown values are ignored.
 [
   {
     "name": "Main Base",
-    "author": "AlmanaX",
+    "author": "AlmanaX21",
     "desc": "Item, fluid and energy channels wired across four nodes.",
     "file": "main-base.lnet",
     "types": ["ITEM", "FLUID", "ENERGY"],
@@ -56,7 +56,7 @@ network moves, e.g. `["ITEM", "FLUID", "ENERGY"]`. Unknown values are ignored.
   },
   {
     "name": "Fluid Buffer",
-    "author": "AlmanaX",
+    "author": "AlmanaX21",
     "desc": "A two-tank import/export pair holding fluid on channel zero.",
     "file": "fluid-buffer.lnet",
     "types": ["FLUID"],
