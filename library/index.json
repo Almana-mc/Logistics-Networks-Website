@@ -1,5 +1,13 @@
 [
   {
+    "name": "Eldritch Automation",
+    "author": "AlmanaX21",
+    "desc": "Eldritch Miner with auto repair",
+    "file": "eldritch-automation.lnet",
+    "types": ["ITEM"],
+    "added": "2026-06-07"
+  },
+  {
     "name": "Bee Automation",
     "author": "AlmanaX21",
     "desc": "A simple Productive Bees setup",

@@ -1,0 +1,8 @@
+version=1.0
+network=Eldritch Automation
+label=Ore Store
+clipboard={channels:[{enabled:1b,index:0}],network_name:"Eldritch Automation",node_label:"Ore Store"}
+label=Mineshaft
+clipboard={channels:[{batch:10000,delay:5,enabled:1b,index:0,io:"down",mode:"EXPORT"},{enabled:1b,index:1,mode:"EXPORT"},{enabled:1b,index:2}],filters:[{channel:1,item:{components:{"minecraft:custom_data":{ln_filter:{items:[{item:{components:{"minecraft:damage":1,"minecraft:enchantments":{"minecraft:mending":1,"minecraft:unbreaking":4},"occultism:max_mining_time":15,"occultism:miner_output_multiplier":9,"occultism:rolls_per_operation":1},count:1,id:"occultism:miner_ancient_eldritch"},nbt_rules:[{o:"<",p:"minecraft:durability",v:50}],slot:0}]}}},count:1,id:"logisticsnetworks:small_filter"},slot:0}],network_name:"Eldritch Automation",node_label:"Mineshaft",required_items:[{count:1,item:{count:1,id:"logisticsnetworks:netherite_upgrade"}},{count:1,item:{components:{"minecraft:custom_data":{ln_filter:{items:[{item:{components:{"minecraft:damage":1,"minecraft:enchantments":{"minecraft:mending":1,"minecraft:unbreaking":4},"occultism:max_mining_time":15,"occultism:miner_output_multiplier":9,"occultism:rolls_per_operation":1},count:1,id:"occultism:miner_ancient_eldritch"},nbt_rules:[{o:"<",p:"minecraft:durability",v:50}],slot:0}]}}},count:1,id:"logisticsnetworks:small_filter"}}],upgrades:[{item:{count:1,id:"logisticsnetworks:netherite_upgrade"},slot:0}]}
+label=XP Tank
+clipboard={channels:[{enabled:1b,index:1},{enabled:1b,index:2,io:"down",mode:"EXPORT"}],network_name:"Eldritch Automation",node_label:"XP Tank"}
