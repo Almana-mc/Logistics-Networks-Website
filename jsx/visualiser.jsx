@@ -46,8 +46,13 @@ function Visualiser({ graphOpts }) {
   };
 
   React.useEffect(() => {
-    const handoff = readHandoff();
-    if (handoff) load(handoff.text, handoff.name);
+    const file = new URLSearchParams(location.search).get('net');
+    if (!file) return;
+    const clean = file.replace(/[\\/]/g, '');
+    fetch('library/' + clean)
+      .then(r => (r.ok ? r.text() : Promise.reject(r.status)))
+      .then(text => load(text, clean))
+      .catch(() => setError('Could not load that network.'));
   }, []);
 
   const downloadCurrent = () => {

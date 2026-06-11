@@ -22,24 +22,6 @@ const RELEASES_URL = 'https://github.com/Almana-mc/LogisticsNetworks/releases/la
 
 const RELEASE_TTL = 60 * 60 * 1000;
 
-const HANDOFF_KEY = 'ln-pending-net';
-
-function writeHandoff(name, text) {
-  sessionStorage.setItem(HANDOFF_KEY, JSON.stringify({ name, text }));
-}
-
-function readHandoff() {
-  const raw = sessionStorage.getItem(HANDOFF_KEY);
-  if (!raw) return null;
-  sessionStorage.removeItem(HANDOFF_KEY);
-  try {
-    const v = JSON.parse(raw);
-    return v && typeof v.text === 'string' ? { name: v.name || 'network.lnet', text: v.text } : null;
-  } catch (e) {
-    return null;
-  }
-}
-
 function useRelease() {
   const [rel, setRel] = useState({ version: MOD.version, released: MOD.released, url: RELEASES_URL });
 
@@ -112,5 +94,4 @@ function TypeChip({ type, count, active = true }) {
 }
 
 Object.assign(window, { MOD, RESOURCE_TYPES, Icon, Btn, TypeChip,
-  HANDOFF_KEY, writeHandoff, readHandoff,
   useState, useEffect, useRef, useCallback });

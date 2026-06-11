@@ -105,8 +105,6 @@
 
 .lib-tile__act { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; }
 .lib-tile__act .btn { width: 100%; justify-content: center; }
-.lib-tile__act .btn[disabled] { opacity: .65; cursor: progress; }
-.lib-tile__err { color: var(--state-error); font-size: var(--text-xs); }
 
 /* ---------- Skeleton ---------- */
 .lib-tile--skel { min-height: 300px; border-style: dashed; background: var(--bg-1); animation: lib-pulse 1.4s ease-in-out infinite; }

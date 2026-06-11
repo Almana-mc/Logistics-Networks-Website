@@ -87,12 +87,6 @@ function Toolbar({ q, setQ, active, toggleType, sort, setSort, shown, total }) {
 }
 
 function Tile({ entry }) {
-  const [busy, setBusy] = useState(false);
-  const [err, setErr] = useState(false);
-  const open = () => {
-    setBusy(true); setErr(false);
-    openInVisualiser(entry).catch(() => { setBusy(false); setErr(true); });
-  };
   const dominant = entry.types[0] ? typeVar(entry.types[0]) : 'var(--accent)';
   return (
     <article className={`lib-tile lib-tile--${entrySpan(entry)}`} style={{ '--c': dominant }}>
@@ -114,10 +108,9 @@ function Tile({ entry }) {
         {entry.added && <time className="lib-tile__date mono" dateTime={entry.added}>{entry.added}</time>}
       </div>
       <div className="lib-tile__act">
-        <button className="btn btn-primary btn-sm" onClick={open} disabled={busy}>
-          {busy ? 'Opening…' : 'Open in visualiser'} <Icon name="arrow" size={15} />
-        </button>
-        {err && <span className="lib-tile__err mono" role="alert">Couldn't load that file.</span>}
+        <a className="btn btn-primary btn-sm" href={visualiserUrl(entry)}>
+          Open in visualiser <Icon name="arrow" size={15} />
+        </a>
       </div>
     </article>
   );

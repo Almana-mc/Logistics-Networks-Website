@@ -3,7 +3,7 @@
 const LIBRARY_DIR = 'library/';
 const TYPE_IDS = RESOURCE_TYPES.map(t => t.id);
 
-const libraryFileUrl = file => LIBRARY_DIR + file;
+const visualiserUrl = entry => 'visualiser.html?net=' + encodeURIComponent(entry.file);
 
 function normalizeEntry(raw) {
   if (!raw || typeof raw !== 'object') return null;
@@ -15,7 +15,7 @@ function normalizeEntry(raw) {
   if (!name || !author || !desc || !file) return null;
   const types = Array.isArray(raw.types) ? raw.types.filter(t => TYPE_IDS.includes(t)) : [];
   const added = typeof raw.added === 'string' ? raw.added : null;
-  return { name, author, desc, file, types, added, _url: libraryFileUrl(file) };
+  return { name, author, desc, file, types, added };
 }
 
 let cache = null;
@@ -28,15 +28,6 @@ function fetchLibrary() {
       const list = Array.isArray(data) ? data : [];
       cache = list.map(normalizeEntry).filter(Boolean);
       return cache;
-    });
-}
-
-function openInVisualiser(entry) {
-  return fetch(entry._url)
-    .then(r => (r.ok ? r.text() : Promise.reject(r.status)))
-    .then(text => {
-      writeHandoff(entry.file, text);
-      location.href = 'visualiser.html';
     });
 }
 
@@ -71,6 +62,6 @@ function sortEntries(list, mode) {
 }
 
 Object.assign(window, {
-  LIBRARY_DIR, fetchLibrary, libraryFileUrl, openInVisualiser,
+  LIBRARY_DIR, fetchLibrary, visualiserUrl,
   matchesQuery, matchesTypes, entrySpan, sortEntries,
 });
