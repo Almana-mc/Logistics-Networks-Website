@@ -1,5 +1,13 @@
 [
   {
+    "name": "Pilpoh's Bee Setup",
+    "author": "Pilpoh",
+    "desc": "Bee setup showcased in Pilpoh's video",
+    "file": "pilpohs-bee-setup.lnet",
+    "types": ["ITEM", "FLUID", "ENERGY"],
+    "added": "2026-06-11"
+  },
+  {
     "name": "Eldritch Automation",
     "author": "AlmanaX21",
     "desc": "Eldritch Miner with auto repair",
