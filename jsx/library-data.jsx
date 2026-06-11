@@ -22,7 +22,7 @@ let cache = null;
 
 function fetchLibrary() {
   if (cache) return Promise.resolve(cache);
-  return fetch(LIBRARY_DIR + 'index.json')
+  return fetch(LIBRARY_DIR + 'index.json', { cache: 'no-cache' })
     .then(r => (r.ok ? r.json() : Promise.reject(r.status)))
     .then(data => {
       const list = Array.isArray(data) ? data : [];
