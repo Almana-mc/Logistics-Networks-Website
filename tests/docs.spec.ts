@@ -42,7 +42,9 @@ test("documentation renders the initial guide while metadata is pending", async 
   );
   try {
     await page.goto("docs.html");
-    await expect(page.getByRole("heading", { name: "Local guide" })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Local guide" }),
+    ).toBeVisible();
   } finally {
     releaseMetadata();
   }
@@ -54,20 +56,20 @@ test("documentation chapter, relative link, version and mobile access", async ({
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("docs.html");
   await expect(page.locator(".doc-context")).toBeVisible({ timeout: 30000 });
-  await page.getByRole("button", { name: "Browse documentation" }).click();
+  await page.getByRole("button", { name: "Contents" }).click();
   await page
     .getByRole("navigation", { name: "Documentation chapters" })
     .getByRole("link", { name: "Channel Settings", exact: true })
     .click();
   await expect(page).toHaveURL(/#nodes\/channel-settings$/);
   await expect(page.locator(".doc-context")).toBeVisible();
+  await page.getByRole("button", { name: "Contents" }).click();
   await page.getByLabel("Minecraft version").selectOption("1.21.1");
-  await expect(page.locator(".doc-context")).toContainText("1.21.1", {
-    timeout: 30000,
-  });
+  await expect(
+    page.getByRole("link", { name: "View this page on GitHub" }),
+  ).toHaveAttribute("href", /\/blob\/1\.21\.1\//, { timeout: 30000 });
   await page.reload();
   await expect(page.getByLabel("Minecraft version")).toHaveValue("1.21.1");
-  await page.getByRole("button", { name: "Menu", exact: true }).click();
   await page
     .getByRole("navigation", { name: "Primary", exact: true })
     .getByRole("link", { name: "Visualiser", exact: true })

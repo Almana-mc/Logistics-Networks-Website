@@ -14,16 +14,22 @@ export default function ChapterLinks({ nav, route }: Props) {
   return (
     <nav className="chapter-links" aria-label="Documentation chapters">
       {nav.overview && (
-        <a href="#" aria-current={!route ? "page" : undefined}>
+        <a
+          className="chapter-top"
+          href="#"
+          aria-current={!route ? "page" : undefined}
+        >
           Overview
         </a>
       )}
       {nav.sections.map((section) => (
         <ChapterGroup key={section.key} section={section} route={route} />
       ))}
+      {nav.extras.length > 0 && <hr className="chapter-rule" />}
       {nav.extras.map((page: Chapter) => (
         <a
           key={page.key}
+          className="chapter-top"
           href={`#${page.key}`}
           aria-current={route === page.key ? "page" : undefined}
         >

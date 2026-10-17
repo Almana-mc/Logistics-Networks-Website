@@ -30,14 +30,16 @@ for (const route of [
           () => document.documentElement.scrollWidth <= innerWidth,
         ),
       ).toBeTruthy();
-      if (width <= 1024) {
+      const collapsed = width <= 1024 && route !== "docs.html";
+      if (collapsed)
         await page.getByRole("button", { name: "Menu", exact: true }).click();
-        for (const name of ["Home", "Library", "Docs", "Visualiser"])
-          await expect(
-            page
-              .getByRole("navigation", { name: "Primary", exact: true })
-              .getByRole("link", { name, exact: true }),
-          ).toBeVisible();
+      for (const name of ["Home", "Library", "Docs", "Visualiser"])
+        await expect(
+          page
+            .getByRole("navigation", { name: "Primary", exact: true })
+            .getByRole("link", { name, exact: true }),
+        ).toBeVisible();
+      if (collapsed) {
         await page.keyboard.press("Escape");
         await expect(
           page.getByRole("button", { name: "Menu", exact: true }),
@@ -63,11 +65,11 @@ for (const route of [
     }
     await expect
       .poll(() =>
-        page.locator(".site-header .brand img").evaluate(
-          (node) => (node as HTMLImageElement).naturalWidth,
-        ),
+        page
+          .locator("header img")
+          .evaluate((node) => (node as HTMLImageElement).naturalWidth),
       )
-      .toBe(104);
+      .toBe(route === "docs.html" ? 72 : 104);
     await page.evaluate(
       await readFile(require.resolve("axe-core/axe.min.js"), "utf8"),
     );

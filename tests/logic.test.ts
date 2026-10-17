@@ -6,7 +6,12 @@ import { createElement } from "react";
 import { filterEntries, libraryFile, normalizeEntry } from "../lib/library";
 import { readStored, writeStored } from "../lib/storage";
 import { mdLink, parseMarkdown } from "../lib/docs-markdown";
-import { buildNav, routeFromMdPath, fetchBranches } from "../lib/docs-source";
+import {
+  buildNav,
+  flattenNav,
+  routeFromMdPath,
+  fetchBranches,
+} from "../lib/docs-source";
 
 test("English guide navigation excludes locale folders and resolves index links", () => {
   const nav = buildNav([
@@ -130,4 +135,14 @@ test("all bundled exports retain their parser results", async () => {
     assert.equal(result.warnings.length, 0);
   }
   assert.throws(() => parseNetwork("invalid network"), /header/);
+});
+
+test("flattened guide order drives previous and next pages", () => {
+  const keys = (files: string[]) =>
+    flattenNav(buildNav(files)).map((page) => page.key);
+  assert.deepEqual(
+    keys(["links.md", "nodes/header.md", "index.md", "nodes/index.md"]),
+    ["", "nodes", "nodes/header", "links"],
+  );
+  assert.deepEqual(keys(["filters/small.md"]), ["filters", "filters/small"]);
 });

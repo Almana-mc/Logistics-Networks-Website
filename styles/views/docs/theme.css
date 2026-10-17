@@ -1,0 +1,70 @@
+@font-face {
+  font-family: Archivo;
+  src: url("../../../assets/fonts/archivo-variable.woff2") format("woff2");
+  font-weight: 400 800;
+  font-stretch: 62% 125%;
+  font-display: swap;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("../../../assets/fonts/jetbrains-mono-variable.woff2")
+    format("woff2");
+  font-weight: 400 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Pixel Operator";
+  src: url("../../../assets/fonts/pixel-operator-700.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+:root {
+  --bg-0: #101216;
+  --bg-1: #15171d;
+  --bg-2: #1d2028;
+  --bg-3: #242832;
+  --fg: #f2ece1;
+  --fg-dim: #bdb8ae;
+  --fg-mute: #a3a8b2;
+  --accent: #81a1c1;
+  --accent-ink: #0e1014;
+  --line: rgb(242 236 225 / 0.1);
+  --line-soft: rgb(242 236 225 / 0.08);
+  --control: rgb(242 236 225 / 0.2);
+  --font-body: Archivo, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-pixel: "Pixel Operator", monospace;
+  --gutter: clamp(1.25rem, 4vw, 3rem);
+  --page-width: 82.5rem;
+}
+html {
+  scroll-padding-top: 6rem;
+}
+a:hover {
+  color: var(--fg);
+}
+.button {
+  border-radius: 10px;
+}
+.loading-state {
+  border-radius: 14px;
+}
+.docs-label {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-mute);
+}
+.docs-wordmark {
+  font-weight: 800;
+  font-stretch: 118%;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.docs-wordmark strong {
+  font-weight: inherit;
+  color: var(--accent);
+}

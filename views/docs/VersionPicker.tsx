@@ -6,7 +6,9 @@ type Props = {
 export default function VersionPicker({ versions, branch, onBranch }: Props) {
   return (
     <div className="docs-version">
-      <label htmlFor="guide-version">Minecraft version</label>
+      <label className="docs-label" htmlFor="guide-version">
+        Minecraft version
+      </label>
       <select
         id="guide-version"
         value={branch}

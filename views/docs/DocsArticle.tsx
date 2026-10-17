@@ -1,5 +1,6 @@
 import GuideUnavailable from "./GuideUnavailable";
-import { blobUrl } from "../../lib/docs-source";
+import DocsPager from "./DocsPager";
+import { blobUrl, buildNav, sectionForKey } from "../../lib/docs-source";
 import type { GuidePage } from "./useGuidePage";
 import Icon from "../../components/Icon";
 
@@ -7,10 +8,13 @@ type Props = {
   page: GuidePage | null;
   status: string;
   branch: string;
+  nav: ReturnType<typeof buildNav> | null;
+  route: string;
   onRetry: () => void;
 };
 
-export default function DocsArticle({ page, status, branch, onRetry }: Props) {
+export default function DocsArticle(props: Props) {
+  const { page, status, branch, nav, route, onRetry } = props;
   if (status === "loading")
     return (
       <article className="doc-article">
@@ -27,17 +31,21 @@ export default function DocsArticle({ page, status, branch, onRetry }: Props) {
   return (
     <article className="doc-article">
       <p className="doc-context">
-        Logistics Network guide <span> / {branch}</span>
+        <Icon name="book" size={14} />
+        {sectionForKey(nav, route)?.title || "Guide"}
       </p>
       {page.blocks}
-      <a
-        className="doc-source inline-link"
-        href={blobUrl(page.path, branch)}
-        target="_blank"
-        rel="noreferrer"
-      >
-        View this guide on GitHub <Icon name="external" size={18} />
-      </a>
+      <div className="doc-footer">
+        <a
+          className="doc-source"
+          href={blobUrl(page.path, branch)}
+          target="_blank"
+          rel="noreferrer"
+        >
+          View this page on GitHub <Icon name="external" size={14} />
+        </a>
+        <DocsPager nav={nav!} route={route} />
+      </div>
     </article>
   );
 }

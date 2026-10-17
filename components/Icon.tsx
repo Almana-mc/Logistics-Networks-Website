@@ -1,6 +1,13 @@
 type Props = {
   name:
-    "arrow" | "external" | "upload" | "file" | "close" | "menu" | "download";
+    | "arrow"
+    | "external"
+    | "upload"
+    | "file"
+    | "close"
+    | "menu"
+    | "download"
+    | "book";
   size?: number;
 };
 
@@ -13,6 +20,7 @@ export default function Icon({ name, size = 20 }: Props) {
     close: "m6 6 12 12M6 18 18 6",
     menu: "M4 6h16M4 12h16M4 18h16",
     download: "M12 4v12m-6-6 6 6 6-6M4 17v3h16v-3",
+    book: "M4 19V6a2 2 0 0 1 2-2h11v15H6a2 2 0 0 0-2 2zM17 4v15",
   };
   return (
     <svg

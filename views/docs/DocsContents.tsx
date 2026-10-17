@@ -1,27 +1,43 @@
+import { useEffect, useState } from "react";
 import type { GuidePage } from "./useGuidePage";
 
-export default function DocsContents({ toc }: { toc: GuidePage["toc"] }) {
+type Props = { toc: GuidePage["toc"]; route: string };
+export default function DocsContents({ toc, route }: Props) {
+  const active = useActiveHeading(toc);
   if (!toc.length) return null;
-  const go = (id: string) => {
-    const element = document.getElementById(id);
-    element?.scrollIntoView({ block: "start" });
-    element?.setAttribute("tabindex", "-1");
-    element?.focus({ preventScroll: true });
-  };
   return (
-    <details className="docs-contents">
-      <summary>On this page</summary>
-      <nav aria-label="On this page">
+    <nav className="docs-toc" aria-label="On this page">
+      <p className="docs-label">On this page</p>
+      <div className="docs-toc__links">
         {toc.map((entry, index) => (
-          <button
+          <a
             key={`${entry.id}-${index}`}
-            className={`contents-level-${entry.level}`}
-            onClick={() => go(entry.id)}
+            className={`toc-level-${entry.level}`}
+            href={`#${route}~${entry.id}`}
+            aria-current={entry.id === active ? "location" : undefined}
           >
             {entry.text}
-          </button>
+          </a>
         ))}
-      </nav>
-    </details>
+      </div>
+    </nav>
   );
+}
+
+function useActiveHeading(toc: GuidePage["toc"]) {
+  const [active, setActive] = useState("");
+  useEffect(() => {
+    const spy = () => {
+      const line = window.innerHeight * 0.4;
+      const passed = toc.filter(
+        (entry) =>
+          document.getElementById(entry.id)!.getBoundingClientRect().top < line,
+      );
+      setActive((passed.at(-1) ?? toc[0])?.id ?? "");
+    };
+    spy();
+    window.addEventListener("scroll", spy, { passive: true });
+    return () => window.removeEventListener("scroll", spy);
+  }, [toc]);
+  return active;
 }

@@ -12,6 +12,7 @@ export default function ChapterGroup({ section, route }: Props) {
       </a>
       {section.pages.map((page: Chapter) => (
         <a
+          className="chapter-sub"
           href={`#${page.key}`}
           key={page.key}
           aria-current={route === page.key ? "page" : undefined}

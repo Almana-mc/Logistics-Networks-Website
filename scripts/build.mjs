@@ -65,10 +65,11 @@ for (const [file, view] of Object.entries(routes)) {
       (entry) =>
         `<link rel="modulepreload" href="${entry.path.replace("dist/", "")}" />`,
     );
-  for (const [font] of outputs.filter(([path]) => path.endsWith(".woff2")))
-    preloads.push(
-      `<link rel="preload" href="${font.replace("dist/", "")}" as="font" type="font/woff2" crossorigin />`,
-    );
+  for (const { path } of result.metafile.outputs[info.cssBundle].imports)
+    if (path.endsWith(".woff2"))
+      preloads.push(
+        `<link rel="preload" href="${path.replace("dist/", "")}" as="font" type="font/woff2" crossorigin />`,
+      );
   const html = source
     .replace("__STYLE__", info.cssBundle.replace("dist/", ""))
     .replace("__SCRIPT__", script.replace("dist/", ""))

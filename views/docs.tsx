@@ -1,19 +1,19 @@
 import { createRoot } from "react-dom/client";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
+import DocsHeader from "./docs/DocsHeader";
+import DocsFooter from "./docs/DocsFooter";
 import DocsNavigation from "./docs/DocsNavigation";
 import DocsArticle from "./docs/DocsArticle";
 import DocsContents from "./docs/DocsContents";
 import { useDocs } from "./docs/useDocs";
-import "../styles/index.css";
-import "../styles/views/docs.css";
-import "../styles/views/docs-article.css";
+import { useDocsMenu } from "./docs/useDocsMenu";
+import "../styles/views/docs/index.css";
 
 function Docs() {
   const docs = useDocs();
+  const menu = useDocsMenu(docs.route, docs.branch);
   return (
     <>
-      <Header current="Docs" />
+      <DocsHeader menuOpen={menu.open} onMenu={menu.toggle} />
       <main id="main" className="shell docs-layout" tabIndex={-1}>
         <DocsNavigation
           versions={docs.versions}
@@ -21,20 +21,19 @@ function Docs() {
           onBranch={docs.pickBranch}
           nav={docs.nav}
           route={docs.route.key}
+          open={menu.open}
         />
-        <div className="docs-reading">
-          <div className="docs-contents-slot">
-            <DocsContents toc={docs.page?.toc || []} />
-          </div>
-          <DocsArticle
-            status={docs.status}
-            page={docs.page}
-            branch={docs.branch}
-            onRetry={docs.retry}
-          />
-        </div>
+        <DocsArticle
+          status={docs.status}
+          page={docs.page}
+          branch={docs.branch}
+          nav={docs.nav}
+          route={docs.route.key}
+          onRetry={docs.retry}
+        />
+        <DocsContents toc={docs.page?.toc || []} route={docs.route.key} />
       </main>
-      <Footer />
+      <DocsFooter branch={docs.branch} />
     </>
   );
 }

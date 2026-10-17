@@ -1,5 +1,4 @@
 import VersionPicker from "./VersionPicker";
-import { useEffect, useState } from "react";
 import { buildNav } from "../../lib/docs-source";
 import ChapterLinks from "./ChapterLinks";
 
@@ -9,6 +8,7 @@ type Props = {
   onBranch: (branch: string) => void;
   nav: ReturnType<typeof buildNav> | null;
   route: string;
+  open: boolean;
 };
 
 export default function DocsNavigation({
@@ -17,32 +17,16 @@ export default function DocsNavigation({
   onBranch,
   nav,
   route,
+  open,
 }: Props) {
-  const [open, setOpen] = useState(false);
-  useEffect(() => setOpen(false), [route, branch]);
   return (
-    <aside className="docs-sidebar">
+    <aside
+      id="docs-sidebar"
+      className={`docs-sidebar${open ? " is-open" : ""}`}
+      aria-label="Documentation sections"
+    >
       <VersionPicker versions={versions} branch={branch} onBranch={onBranch} />
-      <button
-        className="button secondary docs-browse"
-        aria-expanded={open}
-        aria-controls="guide-chapters"
-        onClick={() => setOpen(!open)}
-      >
-        Browse documentation <span aria-hidden="true">{open ? "−" : "+"}</span>
-      </button>
-      <div
-        className={`docs-chapters${open ? " is-open" : ""}`}
-        id="guide-chapters"
-        onKeyDown={(event) => {
-          if (event.key === "Escape") {
-            setOpen(false);
-            document.querySelector<HTMLButtonElement>(".docs-browse")?.focus();
-          }
-        }}
-      >
-        <ChapterLinks nav={nav} route={route} />
-      </div>
+      <ChapterLinks nav={nav} route={route} />
     </aside>
   );
 }
