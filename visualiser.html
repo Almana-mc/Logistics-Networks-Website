@@ -1,31 +1,31 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Visualiser · Logistics Network</title>
-  <meta name="description" content="Drop a .lnet export from the Logistics Network mod and inspect it as a live, colour-coded network graph parsed entirely in your browser." />
-  <link rel="stylesheet" href="css/tokens.css" />
-  <link rel="stylesheet" href="css/app.css" />
-  <link rel="stylesheet" href="css/loader.css" />
-</head>
-<body>
-  <div id="root"></div>
-
-  <!-- React + Babel -->
-  <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
-
-  <!-- Plain JS engines -->
-  <script src="js/lnet.js"></script>
-  <script src="js/graph.js"></script>
-
-  <!-- React layer (JSX) -->
-  <script type="text/babel" src="jsx/lib.jsx"></script>
-  <script type="text/babel" src="jsx/graph-canvas.jsx"></script>
-  <script type="text/babel" src="jsx/hero.jsx"></script>
-  <script type="text/babel" src="jsx/visualiser.jsx"></script>
-  <script type="text/babel" src="jsx/visualiser-page.jsx"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Network visualiser | Logistics Network</title>
+    <meta
+      name="description"
+      content="Open a local .lnet export and inspect nodes, channels and inferred connections. Files stay on your device."
+    />
+    <meta name="theme-color" content="#00565b" />
+    <link rel="icon" type="image/png" sizes="400x400" href="__LOGO__" />
+    <link rel="apple-touch-icon" href="__LOGO__" />
+    <link
+      rel="canonical"
+      href="https://logistics-network.almanax21.com/visualiser.html"
+    />
+    <link rel="stylesheet" href="__STYLE__" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div id="root"></div>
+    <noscript
+      >This site needs JavaScript for its interactive tools.
+      <a href="https://github.com/Almana-mc/LogisticsNetworks"
+        >View Logistics Network on GitHub</a
+      >.</noscript
+    >
+    <script type="module" src="__SCRIPT__"></script>
+  </body>
 </html>

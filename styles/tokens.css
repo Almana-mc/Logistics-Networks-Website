@@ -1,0 +1,49 @@
+@font-face {
+  font-family: Barlow;
+  src: url("../assets/fonts/barlow-400.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: Barlow;
+  src: url("../assets/fonts/barlow-600.woff2") format("woff2");
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: Barlow;
+  src: url("../assets/fonts/barlow-700.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+:root {
+  color-scheme: dark;
+  --bg-0: oklch(0.205 0.009 180);
+  --bg-1: oklch(0.255 0.008 180);
+  --bg-2: oklch(0.3 0.01 180);
+  --bg-3: oklch(0.355 0.019 180);
+  --brand: oklch(0.411 0.069 202);
+  --brand-deep: oklch(0.34 0.052 202);
+  --fg: oklch(0.943 0.008 65);
+  --fg-dim: oklch(0.815 0.015 180);
+  --fg-mute: oklch(0.74 0.018 180);
+  --accent: oklch(0.85 0.08 183);
+  --accent-ink: oklch(0.25 0.033 183);
+  --line: oklch(0.465 0.02 180);
+  --control: oklch(0.68 0.02 180);
+  --error: oklch(0.8 0.12 25);
+  --type-item: oklch(0.82 0.11 78);
+  --type-fluid: oklch(0.81 0.095 230);
+  --type-energy: oklch(0.79 0.115 25);
+  --type-chemical: oklch(0.83 0.115 141);
+  --type-source: oklch(0.82 0.105 308);
+  --font-body: Barlow, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, Consolas, monospace;
+  --gutter: clamp(1.25rem, 4.3vw, 4rem);
+  --page-width: 90rem;
+  --layer-content: 1;
+  --layer-sticky: 10;
+  --layer-menu: 20;
+  --layer-notice: 30;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}

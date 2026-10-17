@@ -1,0 +1,39 @@
+{
+  "name": "logistics-network-website",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev": "npm run build && node scripts/serve.mjs",
+    "preview": "node scripts/serve.mjs",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "format": "prettier --write views components lib styles scripts tests *.json *.html",
+    "format:check": "prettier --check views components lib styles scripts tests *.json *.html",
+    "test:unit": "node --import tsx --test tests/logic.test.ts",
+    "test": "playwright test",
+    "audit:performance": "node scripts/lighthouse.mjs"
+  },
+  "dependencies": {
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@playwright/test": "1.63.0",
+    "@types/react": "18.3.31",
+    "@types/react-dom": "18.3.7",
+    "autoprefixer": "10.6.0",
+    "axe-core": "4.13.0",
+    "chrome-launcher": "1.2.1",
+    "esbuild": "0.28.2",
+    "eslint": "10.10.0",
+    "lighthouse": "13.4.1",
+    "postcss": "8.5.28",
+    "prettier": "3.9.6",
+    "tsx": "4.23.13",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.70.0"
+  }
+}

@@ -1,0 +1,133 @@
+.node-detail {
+  background: var(--bg-2);
+  padding: 1.5rem;
+  min-width: 0;
+  border-radius: 3px;
+}
+.empty-detail {
+  min-height: 260px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.empty-detail h2 {
+  font-size: 1.5rem;
+}
+.empty-detail p {
+  margin: 1rem 0 0;
+  color: var(--fg-dim);
+}
+.node-detail-heading > span {
+  color: var(--fg-mute);
+  font-size: 0.875rem;
+}
+.node-detail-heading h2 {
+  font-size: 1.8rem;
+  margin-top: 0.5rem;
+  overflow-wrap: anywhere;
+}
+.node-detail-heading p {
+  color: var(--fg-dim);
+  font-size: 0.875rem;
+  margin-top: 0.65rem;
+}
+.node-channels,
+.node-items {
+  margin-top: 1.75rem;
+}
+.node-channels h3,
+.node-items h3 {
+  font-size: 1.05rem;
+  margin-bottom: 1rem;
+}
+.node-channel {
+  border-top: 1px solid var(--line);
+}
+.node-channel:last-child {
+  border-bottom: 1px solid var(--line);
+}
+.node-channel summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  font-size: 0.875rem;
+  min-height: 52px;
+}
+.node-channel summary::after {
+  content: "+";
+  margin-left: auto;
+  color: var(--accent);
+  font-size: 1.15rem;
+}
+.node-channel[open] summary::after {
+  content: "−";
+}
+.node-channel summary strong {
+  font-weight: 600;
+}
+.node-channel summary > span:not(.resource-dot) {
+  color: var(--fg-dim);
+  font-size: 0.75rem;
+}
+.channel-settings {
+  padding: 0.5rem 0 1rem;
+}
+.channel-resource {
+  color: var(--resource);
+  font-size: 0.875rem;
+  overflow-wrap: anywhere;
+}
+.channel-settings dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 0;
+}
+.channel-settings dt {
+  color: var(--fg-mute);
+  font-size: 0.8125rem;
+}
+.channel-settings dd {
+  margin: 0.2rem 0 0;
+  font-size: 0.875rem;
+  overflow-wrap: anywhere;
+}
+.node-items ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.node-items li {
+  padding-block: 0.75rem;
+  border-top: 1px solid var(--line);
+}
+.node-items li > span {
+  display: block;
+  font-size: 0.8125rem;
+  color: var(--fg-mute);
+}
+.node-items code {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 0.8125rem;
+  color: var(--fg-dim);
+  overflow-wrap: anywhere;
+}
+.node-items details {
+  margin-top: 0.5rem;
+}
+.node-items summary {
+  font-size: 0.875rem;
+}
+.node-items pre {
+  font-size: 0.75rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  margin: 0;
+}
+@media (max-width: 40rem) {
+  .node-detail {
+    padding: 1.25rem;
+  }
+}

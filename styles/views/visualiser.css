@@ -1,0 +1,225 @@
+.upload-zone {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding: 3rem 1.5rem;
+  border: 1px dashed var(--control);
+  background: var(--bg-2);
+  text-align: center;
+  border-radius: 4px;
+}
+.upload-zone.is-dragging {
+  background: var(--brand);
+  border-color: var(--accent);
+}
+.upload-symbol {
+  display: grid;
+  place-items: center;
+  margin-bottom: 1.5rem;
+  width: 72px;
+  height: 72px;
+  background: var(--brand);
+  color: var(--accent);
+}
+.upload-zone h2 {
+  font-size: 2rem;
+}
+.upload-zone > p {
+  margin-top: 0.75rem;
+  color: var(--fg-dim);
+}
+.file-choice {
+  max-width: 100%;
+  margin-block: 1.25rem 0.5rem;
+  text-align: left;
+}
+.file-choice label {
+  font-size: 0.9375rem;
+  margin-bottom: 0.5rem;
+}
+.file-choice input {
+  display: block;
+  width: 100%;
+  max-width: 24rem;
+  min-height: 46px;
+  border: 1px solid var(--control);
+  border-radius: 3px;
+  background: var(--bg-0);
+  font-size: 0.875rem;
+  padding: 0.2rem;
+}
+.file-choice input::file-selector-button {
+  min-height: 44px;
+  margin-right: 0.65rem;
+  padding: 0.6rem 0.85rem;
+  font: 600 0.9375rem var(--font-body);
+  background: var(--accent);
+  color: var(--accent-ink);
+  border: 0;
+  cursor: pointer;
+}
+.upload-zone .file-privacy {
+  font-size: 0.875rem;
+  color: var(--fg-mute);
+  margin-bottom: 0;
+}
+.upload-zone .error-text {
+  color: var(--error);
+}
+.upload-zone .error-text:empty {
+  display: none;
+}
+.upload-example {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem 1.5rem;
+  padding-top: 1.75rem;
+  margin-top: 1.75rem;
+  border-top: 1px solid var(--line);
+}
+.upload-example > span {
+  color: var(--fg-dim);
+  font-size: 0.9375rem;
+}
+.network-file-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+  padding: 1.25rem;
+  background: var(--bg-2);
+  border-block: 1px solid var(--line);
+}
+.network-file-name {
+  min-width: 0;
+}
+.network-file-name > span {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--fg-mute);
+  font-size: 0.875rem;
+  overflow-wrap: anywhere;
+}
+.network-file-name h2 {
+  font-size: 1.4rem;
+  margin-top: 0.4rem;
+  overflow-wrap: anywhere;
+}
+.network-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  margin: 0;
+  font-size: 0.9375rem;
+  color: var(--fg-dim);
+}
+.network-stats b {
+  color: var(--fg);
+}
+.node-picker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  margin-block: 1.5rem;
+}
+.node-picker label {
+  font-size: 0.9375rem;
+}
+.node-picker select {
+  flex: 0 1 22rem;
+}
+.node-picker p {
+  font-size: 0.875rem;
+  color: var(--fg-mute);
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.workspace-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+.graph-region {
+  min-width: 0;
+  border: 1px solid var(--line);
+  background: var(--bg-0);
+}
+.graph-canvas {
+  position: relative;
+  height: clamp(350px, 42vw, 570px);
+}
+.graph-canvas canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.graph-controls {
+  display: flex;
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  gap: 0.5rem;
+}
+.graph-controls button {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0.4rem 0.7rem;
+  color: var(--fg);
+  background: var(--bg-2);
+  border: 1px solid var(--control);
+  border-radius: 3px;
+}
+.graph-controls button:hover {
+  background: var(--bg-3);
+}
+.graph-legend {
+  padding: 1rem;
+  border-top: 1px solid var(--line);
+}
+.graph-legend p {
+  color: var(--fg-mute);
+  font-size: 0.875rem;
+  margin: 0.75rem 0 0;
+}
+.inference-note {
+  max-width: 95ch;
+  margin: 1.25rem 0 0;
+  color: var(--fg-mute);
+  font-size: 0.875rem;
+}
+.parsing-notes {
+  margin-top: 1.5rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--control);
+}
+.parsing-notes li {
+  overflow-wrap: anywhere;
+}
+@media (max-width: 64rem) {
+  .workspace-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .graph-canvas {
+    height: 430px;
+  }
+}
+@media (max-width: 40rem) {
+  .upload-zone {
+    padding: 2rem 1rem;
+  }
+  .upload-zone h2 {
+    font-size: 1.65rem;
+  }
+  .network-file-bar {
+    padding: 1rem;
+  }
+  .graph-canvas {
+    height: 350px;
+  }
+}

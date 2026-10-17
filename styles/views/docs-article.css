@@ -1,0 +1,133 @@
+.doc-article {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.doc-context {
+  color: var(--fg-mute);
+  font-size: 0.875rem;
+  margin-bottom: 1.25rem;
+}
+.doc-context span {
+  color: var(--fg-dim);
+}
+.doc-article h1 {
+  font-size: 2.75rem;
+  line-height: 1.15;
+  margin-bottom: 1.5rem;
+}
+.doc-article h2 {
+  font-size: 1.8rem;
+  margin: 2.75rem 0 1rem;
+}
+.doc-article h3 {
+  font-size: 1.4rem;
+  margin: 2rem 0 0.75rem;
+}
+.doc-article h4 {
+  font-size: 1.2rem;
+  margin: 1.75rem 0 0.65rem;
+}
+.doc-p,
+.doc-li {
+  color: var(--fg-dim);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+}
+.doc-p {
+  margin-bottom: 1.25rem;
+}
+.doc-article strong {
+  color: var(--fg);
+  font-weight: 600;
+}
+.doc-link {
+  color: var(--accent);
+}
+.doc-ul,
+.doc-ol {
+  margin-block: 1rem 1.5rem;
+  padding-left: 1.5rem;
+}
+.doc-li {
+  padding-left: 0.15rem;
+  margin-bottom: 0.4rem;
+}
+.doc-code {
+  color: var(--fg);
+  background: var(--bg-0);
+  font-size: 0.875em;
+  padding: 0.1rem 0.3rem;
+  border-radius: 2px;
+}
+.doc-pre {
+  padding: 1.25rem;
+  margin: 1.5rem 0;
+  overflow: auto;
+  background: var(--bg-0);
+  border: 1px solid var(--line);
+  font-size: 0.875rem;
+  line-height: 1.65;
+}
+.doc-quote {
+  margin: 1.5rem 0;
+  padding: 1.25rem;
+  background: var(--bg-2);
+  color: var(--fg-dim);
+  border: 1px solid var(--line);
+}
+.doc-figure {
+  margin: 2rem 0;
+}
+.doc-figure__img {
+  width: 100%;
+  height: auto;
+  background: var(--bg-0);
+}
+.doc-figure__cap {
+  margin-top: 0.75rem;
+  color: var(--fg-mute);
+  font-size: 0.875rem;
+}
+.doc-inline-img {
+  display: inline-block;
+  vertical-align: middle;
+  max-width: 100%;
+  height: auto;
+}
+.doc-table-wrap {
+  max-width: 100%;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border: 1px solid var(--line);
+}
+.doc-table {
+  border-collapse: collapse;
+  width: 100%;
+  text-align: left;
+  font-size: 0.9375rem;
+}
+.doc-table th {
+  background: var(--bg-2);
+  font-weight: 600;
+}
+.doc-table th,
+.doc-table td {
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid var(--line);
+}
+.doc-table td {
+  color: var(--fg-dim);
+}
+.doc-hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin: 2.5rem 0;
+}
+.doc-source {
+  margin-top: 2rem;
+}
+@media (max-width: 40rem) {
+  .doc-article h1 {
+    font-size: 2.25rem;
+  }
+}

@@ -1,0 +1,98 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  min-width: 44px;
+  min-height: 46px;
+  padding: 0.65rem 1.25rem;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  text-decoration: none;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.primary {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+.primary:hover {
+  background: var(--fg);
+  color: var(--accent-ink);
+}
+.secondary {
+  border-color: var(--control);
+  color: var(--fg);
+  background: transparent;
+}
+.secondary:hover {
+  background: var(--bg-3);
+}
+.text-button {
+  background: transparent;
+  color: var(--fg);
+  padding-inline: 0.5rem;
+}
+.text-button:hover {
+  text-decoration: underline;
+}
+.actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+}
+input[type="search"],
+select {
+  min-height: 46px;
+  max-width: 100%;
+  min-width: 0;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid var(--control);
+  border-radius: 3px;
+  color: var(--fg);
+  background: var(--bg-0);
+}
+input::placeholder {
+  color: var(--fg-mute);
+  opacity: 1;
+}
+label {
+  display: block;
+  font-weight: 600;
+}
+summary {
+  cursor: pointer;
+  min-height: 44px;
+  padding-block: 0.6rem;
+  font-weight: 600;
+}
+.resource-legend {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.resource-legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.9375rem;
+}
+.resource-dot {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  background: var(--resource);
+}
+.resource-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--fg-dim);
+  font-size: 0.9375rem;
+}

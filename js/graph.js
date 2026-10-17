@@ -54,7 +54,7 @@
         accent: resolveColor('--accent', '#4fd6e0'),
         accent2: resolveColor('--accent-2', '#e8954a'),
         bg0: resolveColor('--bg-0', '#0d1117'),
-        line: resolveColor('--line', '#2b3550'),
+        line: resolveColor('--control', '#a4b4b0'),
         fg: resolveColor('--fg', '#f3f5f8'),
         fgmute: resolveColor('--fg-mute', '#8893a8'),
         link: resolveColor('--line', '#2b3550')
@@ -83,7 +83,10 @@
       this.pulses = [];
       this.selected = -1; this.hover = -1;
       this._seedPulses();
-      this._settle(this.opts.decorative ? 180 : 240);
+      const iterations = this.opts.decorative
+        ? 180
+        : Math.min(240, Math.max(24, Math.round(1800000 / (this.nodes.length ** 2))));
+      this._settle(iterations);
       this._lw = this.cw; this._lh = this.ch;
     }
 
@@ -219,6 +222,10 @@
         this.hover = -1;
         if (this.dragNode < 0 && !this.panning) this.canvas.style.cursor = 'default';
       };
+      ['Move', 'Down', 'Up', 'Wheel', 'Leave'].forEach(name => {
+        const handle = this['_on' + name];
+        this['_on' + name] = ev => { handle(ev); this._frame(); };
+      });
       this.canvas.addEventListener('pointermove', this._onMove);
       this.canvas.addEventListener('pointerdown', this._onDown);
       this.canvas.addEventListener('pointerup', this._onUp);
@@ -248,6 +255,7 @@
 
     resize() {
       const r = this.canvas.getBoundingClientRect();
+      if (!r.width || !r.height) return;
       this.cw = r.width; this.ch = r.height;
       this.canvas.width = r.width * this.dpr;
       this.canvas.height = r.height * this.dpr;
@@ -261,7 +269,12 @@
       }
     }
 
-    start() { if (this._raf) return; const loop = () => { this._frame(); this._raf = requestAnimationFrame(loop); }; loop(); }
+    start() {
+      this._frame();
+      if (this._raf || !(this.opts.pulseSpeed || this.opts.breathing || this.opts.nodePulse)) return;
+      const loop = () => { this._frame(); this._raf = requestAnimationFrame(loop); };
+      this._raf = requestAnimationFrame(loop);
+    }
     stop() { if (this._raf) cancelAnimationFrame(this._raf); this._raf = null; }
 
     _frame() {
@@ -294,7 +307,7 @@
 
       if (this.opts.style !== 'wireframe') {
         this.edges.forEach(e => {
-          if (e.weak) return;
+          if (e.weak || e.undirected) return;
           const a = this.nodes[e.from], b = this.nodes[e.to];
           if (!a || !b) return;
           e._pt = (e._pt + 0.006 * this.opts.pulseSpeed * (e._pgap || 1));
@@ -311,10 +324,12 @@
     _drawEdge(a, b, color, e, connected, dim) {
       const ctx = this.ctx;
       ctx.save();
-      const alpha = dim ? 0.06 : (e.weak ? 0.16 : (connected ? 0.85 : 0.42));
+      const alpha = dim ? 0.18 : (e.weak ? 0.65 : (connected ? 1 : 0.75));
       ctx.globalAlpha = alpha;
       ctx.strokeStyle = color;
       ctx.lineWidth = connected ? 2 : (e.weak ? 0.8 : 1.2);
+      if (e.weak) ctx.setLineDash([2, 6]);
+      else if (e.undirected) ctx.setLineDash([5, 4]);
       if (this.opts.style === 'glow' && !dim) {
         ctx.shadowColor = color;
         ctx.shadowBlur = connected ? 14 : 6;
@@ -323,6 +338,16 @@
       ctx.moveTo(a.x, a.y);
       ctx.lineTo(b.x, b.y);
       ctx.stroke();
+      if (!e.weak && !e.undirected) {
+        const angle = Math.atan2(b.y - a.y, b.x - a.x);
+        const offset = b.baseR + 8;
+        const x = b.x - Math.cos(angle) * offset, y = b.y - Math.sin(angle) * offset;
+        ctx.beginPath();
+        ctx.moveTo(x - Math.cos(angle - 0.5) * 8, y - Math.sin(angle - 0.5) * 8);
+        ctx.lineTo(x, y);
+        ctx.lineTo(x - Math.cos(angle + 0.5) * 8, y - Math.sin(angle + 0.5) * 8);
+        ctx.stroke();
+      }
       ctx.restore();
     }
 
@@ -413,9 +438,9 @@
 
       // label
       if (n.label && !this.opts.decorative && (this.cw > 520 || isSel || isHov)) {
-        ctx.globalAlpha = dim ? 0.25 : (isSel || isHov ? 1 : 0.8);
+        ctx.globalAlpha = 1;
         ctx.fillStyle = isSel ? this.col.fg : this.col.fgmute;
-        ctx.font = `${isSel ? 600 : 500} 12px 'JetBrains Mono', monospace`;
+        ctx.font = `${isSel ? 600 : 400} 13px Barlow, sans-serif`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'top';
         const txt = n.label.length > 16 ? n.label.slice(0, 15) + '…' : n.label;
