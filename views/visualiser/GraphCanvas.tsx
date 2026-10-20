@@ -1,5 +1,5 @@
 import { useGraph } from "./useGraph";
-import ResourceLegend from "../../components/ResourceLegend";
+import GraphKeys from "./GraphKeys";
 import type { Network } from "../../lib/network";
 
 export default function GraphCanvas({
@@ -14,14 +14,17 @@ export default function GraphCanvas({
   const { canvas, zoom, reset } = useGraph(network, selected, onSelect);
   return (
     <div className="graph-region">
-      <canvas
-        ref={canvas}
-        role="img"
-        aria-label={`${network.network} inferred topology. Use the node selector to inspect every node.`}
-      />
+      <div className="graph-canvas">
+        <canvas
+          ref={canvas}
+          role="img"
+          aria-label={`${network.network} inferred topology. Use the node selector to inspect every node.`}
+        />
+      </div>
       <p className="graph-hint">
-        Scroll to zoom · drag to pan
-        {selected < 0 && <span>Click a node →</span>}
+        <span className="hint-fine">Ctrl/⌘ + scroll to zoom · drag to pan</span>
+        <span className="hint-touch">Drag sideways to pan · +/− to zoom</span>
+        {selected < 0 && <strong>Select a node to inspect it</strong>}
       </p>
       <div className="graph-controls">
         <button aria-label="Zoom out" onClick={() => zoom(0.8)}>
@@ -32,7 +35,7 @@ export default function GraphCanvas({
         </button>
         <button onClick={reset}>Reset view</button>
       </div>
-      <ResourceLegend />
+      <GraphKeys network={network} />
     </div>
   );
 }

@@ -150,7 +150,7 @@
     }
 
     _bind() {
-      this.canvas.style.touchAction = 'none';
+      this.canvas.style.touchAction = 'pan-y';
       this._onMove = (ev) => {
         if (!this.opts.interactive) return;
         const screen = this._screenPt(ev);
@@ -192,14 +192,13 @@
           return;
         }
         this.panning = true;
-        this.selected = -1;
         this.canvas.style.cursor = 'grabbing';
         this.canvas.setPointerCapture?.(ev.pointerId);
         ev.preventDefault();
       };
       this._onUp = (ev) => {
         if (!this.opts.interactive) return;
-        if (!this.dragMoved && this.dragNode < 0) {
+        if (ev.type === 'pointerup' && !this.dragMoved && this.dragNode < 0) {
           this._emit('nodeclick', { index: -1, node: null });
         }
         this.dragNode = -1;
@@ -209,7 +208,7 @@
         this.canvas.style.cursor = this.hover >= 0 ? 'grab' : 'move';
       };
       this._onWheel = (ev) => {
-        if (!this.opts.interactive) return;
+        if (!this.opts.interactive || !(ev.ctrlKey || ev.metaKey)) return;
         ev.preventDefault();
         const p = this._screenPt(ev);
         const before = this._toGraph(p);
@@ -265,7 +264,10 @@
       if (this.nodes.length && this._lw) {
         const grew = Math.abs(this.cw - this._lw) / this._lw > 0.3 ||
                      Math.abs(this.ch - this._lh) / this._lh > 0.3;
-        if (grew) { this._settle(140); this._lw = this.cw; this._lh = this.ch; }
+        const sx = this.cw / this._lw, sy = this.ch / this._lh;
+        if (grew) this._settle(140);
+        else this.nodes.forEach(n => { n.x *= sx; n.y *= sy; });
+        this._lw = this.cw; this._lh = this.ch;
       }
     }
 
@@ -437,13 +439,14 @@
       }
 
       // label
-      if (n.label && !this.opts.decorative && (this.cw > 520 || isSel || isHov)) {
+      if (n.label && !this.opts.decorative) {
         ctx.globalAlpha = 1;
         ctx.fillStyle = isSel ? this.col.fg : this.col.fgmute;
         ctx.font = `${isSel ? 600 : 500} 12px 'JetBrains Mono', monospace`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'top';
-        const txt = n.label.length > 16 ? n.label.slice(0, 15) + '…' : n.label;
+        const max = this.cw > 520 || isSel || isHov ? 16 : 10;
+        const txt = n.label.length > max ? n.label.slice(0, max - 1) + '…' : n.label;
         ctx.fillText(txt, n.x, n.y + r + 7);
       }
       ctx.restore();

@@ -1,10 +1,6 @@
 .stage,
 .graph-region {
   background-color: var(--stage);
-  background-image:
-    linear-gradient(rgb(242 236 225 / 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(242 236 225 / 0.03) 1px, transparent 1px);
-  background-size: 40px 40px;
 }
 .stage {
   min-height: 460px;
@@ -100,6 +96,22 @@
 .upload-zone .error-text {
   margin: 0;
 }
+.upload-zone .error-text:empty {
+  display: none;
+}
+.upload-alternatives {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem 0.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line-soft);
+}
+.upload-alternatives p {
+  margin: 0;
+  color: var(--fg-dim);
+}
 .processing {
   display: flex;
   align-items: center;
@@ -172,5 +184,6 @@
   display: block;
   height: 100%;
   background: var(--accent);
-  transition: width 200ms ease-out;
+  transform-origin: left;
+  transition: transform 200ms var(--ease-out);
 }

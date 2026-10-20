@@ -1,14 +1,15 @@
 import type { Channel } from "../../lib/network";
 
 const title = (type: string) => type.charAt(0) + type.slice(1).toLowerCase();
+const modes: Record<string, string> = { EXPORT: "Sender", IMPORT: "Receiver" };
 
 export default function ChannelSummary({ channel }: { channel: Channel }) {
   return (
     <summary>
       <span className="channel-head">
         <strong>CH{channel.index + 1}</strong>
-        <span className={`mode-chip is-${channel.mode.toLowerCase()}`}>
-          {channel.mode}
+        <span className="mode-chip" title={`Saved as ${channel.mode}`}>
+          {modes[channel.mode] || channel.mode}
         </span>
         <span className="channel-type">
           <span className="resource-dot" />

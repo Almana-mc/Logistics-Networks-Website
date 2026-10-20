@@ -11,10 +11,15 @@ export const steps = [
 type Props = { step: number; loaded: LoadedNetwork };
 export default function ProcessingSteps({ step, loaded }: Props) {
   const { stats } = loaded.network;
-  const values = [loaded.name, stats.nodes, stats.links, stats.activeChannels];
+  const values = [
+    loaded.name,
+    `${stats.nodes} nodes`,
+    `${stats.links} links`,
+    `${stats.activeChannels} channels`,
+  ];
   const progress = (Math.min(step, steps.length) / steps.length) * 100;
   return (
-    <div className="stage processing" role="status">
+    <div className="stage processing">
       <div className="processing-panel">
         <ol>
           {steps.map((label, index) => (
@@ -33,7 +38,7 @@ export default function ProcessingSteps({ step, loaded }: Props) {
           ))}
         </ol>
         <span className="progress" aria-hidden="true">
-          <span style={{ width: `${progress}%` }} />
+          <span style={{ transform: `scaleX(${progress / 100})` }} />
         </span>
       </div>
     </div>

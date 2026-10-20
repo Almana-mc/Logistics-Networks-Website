@@ -69,7 +69,10 @@ test("visualiser keeps a 500-node layout below 200ms", async ({
   page,
   browserName,
 }) => {
-  test.skip(browserName !== "chromium", "Uses the Chromium performance budget.");
+  test.skip(
+    browserName !== "chromium",
+    "Uses the Chromium performance budget.",
+  );
   await page.goto("visualiser.html");
   const elapsed = await page.evaluate(() => {
     const canvas = document.createElement("canvas");

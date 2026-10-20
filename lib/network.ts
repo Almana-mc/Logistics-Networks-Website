@@ -1,4 +1,6 @@
 import "../js/lnet.js";
+import type { GraphData } from "./graph";
+import { libraryFile } from "./library";
 
 export type Channel = {
   index: number;
@@ -84,4 +86,22 @@ export function parseNetwork(text: string) {
     }
   }
   return network;
+}
+
+export const graphData = (network: Network, baseR = 11): GraphData => ({
+  nodes: network.nodes.map((node) => ({
+    label: node.label,
+    dominantType: node.visible
+      ? node.config.activeChannels[0]?.type || "ITEM"
+      : null,
+    role: node.visible ? "node" : "hidden",
+    baseR,
+  })),
+  edges: network.topology,
+});
+
+export async function loadLibraryNetwork(file: string) {
+  const response = await fetch(libraryFile(file));
+  if (!response.ok) throw new Error(`Could not load ${file}.`);
+  return parseNetwork(await response.text());
 }

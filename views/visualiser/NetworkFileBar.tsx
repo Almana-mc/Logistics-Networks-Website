@@ -16,7 +16,6 @@ export default function NetworkFileBar({
       <div className="network-file-name">
         <Icon name="file" size={16} />
         <span>{loaded.name}</span>
-        <h2>{loaded.network.network}</h2>
       </div>
       <p className="network-stats">
         <span>

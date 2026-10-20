@@ -13,13 +13,19 @@ export default function UploadActions({ busy, error, onExample }: Props) {
       >
         {error}
       </p>
-      <button
-        className="button secondary small"
-        disabled={busy}
-        onClick={onExample}
-      >
-        Load example network
-      </button>
+      <div className="upload-alternatives">
+        <p>No export yet?</p>
+        <button
+          className="button secondary small"
+          disabled={busy}
+          onClick={onExample}
+        >
+          Load example network
+        </button>
+        <a className="button secondary small" href="library.html">
+          Browse the library
+        </a>
+      </div>
     </>
   );
 }

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import "../../js/graph.js";
-import type { Network } from "../../lib/network";
+import { graphData, type Network } from "../../lib/network";
 import type { Graph } from "../../lib/graph";
 
 function createGraph(
@@ -16,17 +16,7 @@ function createGraph(
     nodePulse: !still,
     interactive: true,
   });
-  next.setData({
-    nodes: network.nodes.map((node) => ({
-      label: node.label,
-      dominantType: node.visible
-        ? node.config.activeChannels[0]?.type || "ITEM"
-        : null,
-      role: node.visible ? "node" : "hidden",
-      baseR: 11,
-    })),
-    edges: network.topology,
-  });
+  next.setData(graphData(network));
   next.on("nodeclick", ({ index }) => onSelect(index));
   next.start();
   return next;

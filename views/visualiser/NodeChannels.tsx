@@ -6,7 +6,7 @@ import { resourceStyle } from "../../lib/resources";
 export default function NodeChannels({ channels }: { channels: Channel[] }) {
   return (
     <section className="node-channels">
-      <h4 className="detail-label">Channels</h4>
+      <h3 className="detail-label">Channels</h3>
       {!channels.length && <p>No active channels.</p>}
       {channels.map((channel) => (
         <details

@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import type { NetworkNode } from "../../lib/network";
 import NodePicker from "./NodePicker";
 import NodeChannels from "./NodeChannels";
@@ -11,6 +12,7 @@ type Props = {
 
 export default function NodeDetail({ nodes, selected, onSelect }: Props) {
   const node = selected < 0 ? null : nodes[selected];
+  const heading = useRevealOnSelect(selected);
   return (
     <aside
       className="node-detail"
@@ -19,9 +21,9 @@ export default function NodeDetail({ nodes, selected, onSelect }: Props) {
       <NodePicker nodes={nodes} selected={selected} onSelect={onSelect} />
       {node ? (
         <>
-          <header className="node-heading">
+          <header className="node-heading" ref={heading}>
             <p className="detail-label">Node</p>
-            <h3>{node.label}</h3>
+            <h2>{node.label}</h2>
             <p className="node-chips">
               <span className={node.visible ? "chip is-visible" : "chip"}>
                 {node.visible ? "visible" : "hidden"}
@@ -44,4 +46,15 @@ export default function NodeDetail({ nodes, selected, onSelect }: Props) {
       )}
     </aside>
   );
+}
+
+function useRevealOnSelect(selected: number) {
+  const heading = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const box = heading.current?.getBoundingClientRect();
+    if (!box || box.top < innerHeight - 120) return;
+    const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    heading.current!.scrollIntoView({ behavior: still ? "auto" : "smooth" });
+  }, [selected]);
+  return heading;
 }

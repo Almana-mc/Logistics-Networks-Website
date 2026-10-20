@@ -1,4 +1,5 @@
 import type { NetworkNode } from "../../lib/network";
+import { itemName } from "../../lib/items";
 
 export default function NodeItems({
   config,
@@ -12,12 +13,13 @@ export default function NodeItems({
         .filter((group) => group.items.length)
         .map((group) => (
           <section className="node-items" key={group.title}>
-            <h4 className="detail-label">{group.title}</h4>
+            <h3 className="detail-label">{group.title}</h3>
             <ul>
               {group.items.map(({ label, item }, index) => (
                 <li key={index}>
                   <span>{label}</span>
-                  <code>{item?.id || "Unknown item"}</code>
+                  <strong>{item ? itemName(item.id) : "Unknown item"}</strong>
+                  {item && <code>{item.id}</code>}
                   {item?.components != null && (
                     <details>
                       <summary>Item data</summary>

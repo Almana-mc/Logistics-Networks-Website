@@ -6,10 +6,10 @@ export function useReveal(key: unknown, steps: number) {
   useEffect(() => {
     if (!key || still) return;
     const timers = Array.from({ length: steps }, (_, index) =>
-      setTimeout(() => setShown({ key, step: index + 1 }), 200 + index * 210),
+      setTimeout(() => setShown({ key, step: index + 1 }), 120 + index * 120),
     );
     timers.push(
-      setTimeout(() => setShown({ key, step: steps + 1 }), 320 + steps * 210),
+      setTimeout(() => setShown({ key, step: steps + 1 }), 200 + steps * 120),
     );
     return () => timers.forEach(clearTimeout);
   }, [key, steps, still]);
