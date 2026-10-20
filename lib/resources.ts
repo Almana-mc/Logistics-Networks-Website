@@ -17,5 +17,10 @@ export const links = {
   github: "https://github.com/Almana-mc/LogisticsNetworks",
   discord: "https://discord.gg/xTeHR2tdYh",
   curseforge: "https://www.curseforge.com/minecraft/mc-mods/logistics-network",
-  modrinth: "https://modrinth.com/mod/logisticsnetwork",
+  releases: "https://github.com/Almana-mc/LogisticsNetworks/releases",
+  maven: "https://maven.almanax21.com/#/snapshots/me/almana/logisticsnetworks",
+  kofi: "https://ko-fi.com/almanax21",
+  patreon: "https://patreon.com/AlmanaX21",
+  paypal: "https://paypal.me/almanax21",
+  site: "https://almanax21.com",
 };

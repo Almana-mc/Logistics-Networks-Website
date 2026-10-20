@@ -12,6 +12,7 @@ export type GraphData = {
 export type Graph = {
   setData: (data: GraphData) => void;
   start: () => void;
+  stop: () => void;
   destroy: () => void;
   resize: () => void;
   select: (index: number) => void;

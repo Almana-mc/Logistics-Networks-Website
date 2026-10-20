@@ -10,32 +10,31 @@ export default function NetworkFileBar({
   onReset: () => void;
 }) {
   const url = useDownloadUrl(loaded.raw);
+  const { stats } = loaded.network;
   return (
     <header className="network-file-bar">
       <div className="network-file-name">
-        <span>
-          <Icon name="file" size={16} />
-          {loaded.name}
-        </span>
+        <Icon name="file" size={16} />
+        <span>{loaded.name}</span>
         <h2>{loaded.network.network}</h2>
       </div>
       <p className="network-stats">
         <span>
-          <b>{loaded.network.stats.nodes}</b> nodes
+          <b>{stats.nodes}</b> nodes
         </span>
         <span>
-          <b>{loaded.network.stats.links}</b> links
+          <b>{stats.links}</b> links
         </span>
         <span>
-          <b>{loaded.network.stats.activeChannels}</b> active channels
+          <b>{stats.activeChannels}</b> active channels
         </span>
       </p>
       <div className="actions">
-        <a className="button secondary" href={url} download={loaded.name}>
-          Download .lnet <Icon name="download" size={16} />
+        <a className="button secondary small" href={url} download={loaded.name}>
+          <Icon name="download" size={15} /> Download .lnet
         </a>
-        <button className="button text-button" onClick={onReset}>
-          New file
+        <button className="button secondary small" onClick={onReset}>
+          <Icon name="reset" size={15} /> New file
         </button>
       </div>
     </header>

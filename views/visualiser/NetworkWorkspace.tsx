@@ -1,11 +1,9 @@
-import NodePicker from "./NodePicker";
-import NetworkNotes from "./NetworkNotes";
 import { useState } from "react";
+import NetworkNotes from "./NetworkNotes";
 import type { LoadedNetwork } from "./useNetworkFile";
 import NetworkFileBar from "./NetworkFileBar";
 import GraphCanvas from "./GraphCanvas";
 import NodeDetail from "./NodeDetail";
-import ResourceLegend from "../../components/ResourceLegend";
 
 export default function NetworkWorkspace({
   loaded,
@@ -18,28 +16,20 @@ export default function NetworkWorkspace({
   const { network } = loaded;
   return (
     <section className="network-workspace" aria-label="Network inspection">
-      <NetworkFileBar loaded={loaded} onReset={onReset} />
-      <NodePicker
-        nodes={network.nodes}
-        selected={selected}
-        onSelect={setSelected}
-      />
-      <div className="workspace-layout">
-        <div className="graph-region">
+      <div className="workspace-card">
+        <NetworkFileBar loaded={loaded} onReset={onReset} />
+        <div className="workspace-layout">
           <GraphCanvas
             network={network}
             selected={selected}
             onSelect={setSelected}
           />
-          <div className="graph-legend">
-            <ResourceLegend />
-            <p>
-              Solid arrows: inferred direction. Dashed: shared channel. Dotted:
-              layout only.
-            </p>
-          </div>
+          <NodeDetail
+            nodes={network.nodes}
+            selected={selected}
+            onSelect={setSelected}
+          />
         </div>
-        <NodeDetail node={selected < 0 ? null : network.nodes[selected]} />
       </div>
       <NetworkNotes warnings={network.warnings} />
     </section>

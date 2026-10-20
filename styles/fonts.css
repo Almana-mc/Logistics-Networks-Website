@@ -1,18 +1,19 @@
 @font-face {
-  font-family: Barlow;
-  src: url("../assets/fonts/barlow-400.woff2") format("woff2");
-  font-weight: 400;
+  font-family: Archivo;
+  src: url("../assets/fonts/archivo-variable.woff2") format("woff2");
+  font-weight: 400 800;
+  font-stretch: 62% 125%;
   font-display: swap;
 }
 @font-face {
-  font-family: Barlow;
-  src: url("../assets/fonts/barlow-600.woff2") format("woff2");
-  font-weight: 600;
+  font-family: "JetBrains Mono";
+  src: url("../assets/fonts/jetbrains-mono-variable.woff2") format("woff2");
+  font-weight: 400 600;
   font-display: swap;
 }
 @font-face {
-  font-family: Barlow;
-  src: url("../assets/fonts/barlow-700.woff2") format("woff2");
+  font-family: "Pixel Operator";
+  src: url("../assets/fonts/pixel-operator-700.woff2") format("woff2");
   font-weight: 700;
   font-display: swap;
 }

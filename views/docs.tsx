@@ -1,6 +1,7 @@
 import { createRoot } from "react-dom/client";
-import DocsHeader from "./docs/DocsHeader";
-import DocsFooter from "./docs/DocsFooter";
+import SiteHeader from "../components/SiteHeader";
+import SiteFooter from "../components/SiteFooter";
+import Icon from "../components/Icon";
 import DocsNavigation from "./docs/DocsNavigation";
 import DocsArticle from "./docs/DocsArticle";
 import DocsContents from "./docs/DocsContents";
@@ -13,7 +14,18 @@ function Docs() {
   const menu = useDocsMenu(docs.route, docs.branch);
   return (
     <>
-      <DocsHeader menuOpen={menu.open} onMenu={menu.toggle} />
+      <SiteHeader current="Docs">
+        <button
+          type="button"
+          className="docs-menu"
+          aria-expanded={menu.open}
+          aria-controls="docs-sidebar"
+          onClick={menu.toggle}
+        >
+          <Icon name="menu" size={18} />
+          Contents
+        </button>
+      </SiteHeader>
       <main id="main" className="shell docs-layout" tabIndex={-1}>
         <DocsNavigation
           versions={docs.versions}
@@ -33,7 +45,7 @@ function Docs() {
         />
         <DocsContents toc={docs.page?.toc || []} route={docs.route.key} />
       </main>
-      <DocsFooter branch={docs.branch} />
+      <SiteFooter note="Guides are served from the mod's in-game guide." />
     </>
   );
 }

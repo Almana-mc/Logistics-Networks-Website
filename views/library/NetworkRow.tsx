@@ -28,12 +28,12 @@ export default function NetworkRow({ entry }: { entry: NetworkEntry }) {
       </div>
       <div className="network-row-actions">
         <a
-          className="button secondary"
+          className="button primary"
           href={`visualiser.html?net=${encodeURIComponent(entry.file)}`}
         >
           Open network <Icon name="arrow" size={18} />
         </a>
-        <a className="network-download" href={libraryFile(entry.file)} download>
+        <a className="button secondary" href={libraryFile(entry.file)} download>
           Download .lnet <Icon name="download" size={16} />
         </a>
       </div>

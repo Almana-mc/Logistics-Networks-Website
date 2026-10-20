@@ -30,21 +30,12 @@ for (const route of [
           () => document.documentElement.scrollWidth <= innerWidth,
         ),
       ).toBeTruthy();
-      const collapsed = width <= 1024 && route !== "docs.html";
-      if (collapsed)
-        await page.getByRole("button", { name: "Menu", exact: true }).click();
       for (const name of ["Home", "Library", "Docs", "Visualiser"])
         await expect(
           page
             .getByRole("navigation", { name: "Primary", exact: true })
             .getByRole("link", { name, exact: true }),
         ).toBeVisible();
-      if (collapsed) {
-        await page.keyboard.press("Escape");
-        await expect(
-          page.getByRole("button", { name: "Menu", exact: true }),
-        ).toBeFocused();
-      }
     }
     const favicon = await page.locator('link[rel="icon"]').getAttribute("href");
     const image = await page.request.get(favicon!);
@@ -69,7 +60,7 @@ for (const route of [
           .locator("header img")
           .evaluate((node) => (node as HTMLImageElement).naturalWidth),
       )
-      .toBe(route === "docs.html" ? 72 : 104);
+      .toBe(80);
     await page.evaluate(
       await readFile(require.resolve("axe-core/axe.min.js"), "utf8"),
     );
@@ -92,7 +83,7 @@ test("homepage actions and download destinations", async ({ page }) => {
   await page.goto("index.html");
   await page
     .locator(".hero-copy")
-    .getByRole("link", { name: "Get Logistics Network" })
+    .getByRole("link", { name: "All downloads" })
     .click();
   await expect(page).toHaveURL(/#download$/);
   await expect(
@@ -101,23 +92,30 @@ test("homepage actions and download destinations", async ({ page }) => {
     "href",
     "https://www.curseforge.com/minecraft/mc-mods/logistics-network",
   );
+  await expect(
+    page.getByRole("button", { name: "Copy Maven coordinates" }),
+  ).toBeVisible();
   await page
-    .locator(".hero-copy")
-    .getByRole("link", { name: "Open visualiser" })
+    .getByRole("navigation", { name: "Primary", exact: true })
+    .getByRole("link", { name: "Visualiser", exact: true })
     .click();
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-    "Network visualiser",
+    "See your network breathe.",
   );
 });
 
-test("homepage hero artwork has no opaque background", async ({ page }) => {
+test("homepage hero draws the decorative network", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("index.html");
-  const transparent = await page.locator(".hero-art img").evaluate((node) => {
-    const canvas = document.createElement("canvas");
-    canvas.width = 1;
-    canvas.height = 1;
-    canvas.getContext("2d")!.drawImage(node as HTMLImageElement, 0, 0);
-    return canvas.getContext("2d")!.getImageData(0, 0, 1, 1).data[3] === 0;
-  });
-  expect(transparent).toBeTruthy();
+  await expect
+    .poll(() =>
+      page.locator(".hero-stage canvas").evaluate((node) => {
+        const canvas = node as HTMLCanvasElement;
+        return canvas
+          .getContext("2d")!
+          .getImageData(0, 0, canvas.width, canvas.height)
+          .data.some((value, index) => index % 4 === 3 && value > 0);
+      }),
+    )
+    .toBeTruthy();
 });

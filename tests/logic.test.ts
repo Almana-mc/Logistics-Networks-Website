@@ -6,6 +6,8 @@ import { createElement } from "react";
 import { filterEntries, libraryFile, normalizeEntry } from "../lib/library";
 import { readStored, writeStored } from "../lib/storage";
 import { mdLink, parseMarkdown } from "../lib/docs-markdown";
+import { readCount } from "../lib/downloads";
+import { buildHeroNetwork } from "../lib/hero-network";
 import {
   buildNav,
   flattenNav,
@@ -145,4 +147,29 @@ test("flattened guide order drives previous and next pages", () => {
     ["", "nodes", "nodes/header", "links"],
   );
   assert.deepEqual(keys(["filters/small.md"]), ["filters", "filters/small"]);
+});
+
+test("download counts accept both sources and reject bad values", () => {
+  assert.equal(readCount({ downloads: { total: 3674267 } }), 3674267);
+  assert.equal(
+    readCount({ projects: { "logistics-network": { raw: 42 } } }),
+    42,
+  );
+  for (const bad of [
+    null,
+    {},
+    { downloads: { total: "9" } },
+    { downloads: { total: 0 } },
+  ])
+    assert.equal(readCount(bad), null);
+});
+
+test("hero network is deterministic and stays in range", () => {
+  const first = buildHeroNetwork(7);
+  assert.deepEqual(first.edges, buildHeroNetwork(7).edges);
+  assert.equal(first.nodes.length, 16);
+  for (const edge of first.edges) {
+    assert.notEqual(edge.from, edge.to);
+    assert.ok(edge.to < 16 && edge.from < 16);
+  }
 });

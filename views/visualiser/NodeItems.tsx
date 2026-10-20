@@ -12,7 +12,7 @@ export default function NodeItems({
         .filter((group) => group.items.length)
         .map((group) => (
           <section className="node-items" key={group.title}>
-            <h3>{group.title}</h3>
+            <h4 className="detail-label">{group.title}</h4>
             <ul>
               {group.items.map(({ label, item }, index) => (
                 <li key={index}>

@@ -8,11 +8,12 @@ function createGraph(
   network: Network,
   onSelect: (index: number) => void,
 ) {
+  const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const next = new window.NetworkGraph(canvas, {
-    style: "wireframe",
-    pulseSpeed: 0,
-    breathing: false,
-    nodePulse: false,
+    style: "glow",
+    pulseSpeed: still ? 0 : 1,
+    breathing: !still,
+    nodePulse: !still,
     interactive: true,
   });
   next.setData({

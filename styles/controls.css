@@ -2,31 +2,40 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
+  gap: 0.625rem;
   min-width: 44px;
-  min-height: 46px;
-  padding: 0.65rem 1.25rem;
+  min-height: 44px;
+  padding: 0.75rem 1.25rem;
   border: 1px solid transparent;
-  border-radius: 3px;
+  border-radius: 12px;
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1.4;
+  white-space: nowrap;
 }
 .primary {
-  background: var(--accent);
+  background: var(--accent-2);
   color: var(--accent-ink);
 }
 .primary:hover {
-  background: var(--fg);
+  filter: brightness(1.08);
   color: var(--accent-ink);
 }
 .secondary {
-  border-color: var(--control);
+  border-color: var(--line-strong);
   color: var(--fg);
   background: transparent;
+  font-weight: 600;
 }
 .secondary:hover {
-  background: var(--bg-3);
+  border-color: rgb(242 236 225 / 0.5);
+  background: rgb(242 236 225 / 0.04);
+}
+.button.small {
+  min-height: 40px;
+  padding: 0.5rem 0.75rem;
+  border-radius: 9px;
+  font-size: 0.8125rem;
 }
 .text-button {
   background: transparent;
@@ -44,14 +53,28 @@
 }
 input[type="search"],
 select {
-  min-height: 46px;
+  min-height: 44px;
   max-width: 100%;
   min-width: 0;
-  padding: 0.65rem 0.85rem;
-  border: 1px solid var(--control);
-  border-radius: 3px;
+  padding: 0.625rem 0.875rem;
+  border: 1px solid rgb(242 236 225 / 0.16);
+  border-radius: 10px;
   color: var(--fg);
-  background: var(--bg-0);
+  background: var(--bg-2);
+}
+select {
+  padding-right: 2.25rem;
+  appearance: none;
+  background: var(--bg-2)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23f2ece1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")
+    no-repeat right 0.875rem center;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  cursor: pointer;
+}
+input[type="search"]:hover,
+select:hover {
+  border-color: rgb(242 236 225 / 0.3);
 }
 input::placeholder {
   color: var(--fg-mute);
@@ -71,22 +94,24 @@ summary {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 0.5rem 1.5rem;
+  gap: 0.5rem 1.25rem;
   list-style: none;
   padding: 0;
   margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
 }
 .resource-legend li {
   display: inline-flex;
   align-items: center;
-  gap: 0.55rem;
-  font-size: 0.9375rem;
+  gap: 0.5rem;
 }
 .resource-dot {
   display: inline-block;
   flex-shrink: 0;
   width: 8px;
   height: 8px;
+  border-radius: 50%;
   background: var(--resource);
 }
 .resource-label {

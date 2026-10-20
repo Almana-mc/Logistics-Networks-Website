@@ -2,7 +2,7 @@
   box-sizing: border-box;
 }
 html {
-  scroll-padding-top: 2rem;
+  scroll-padding-top: 6rem;
 }
 body {
   margin: 0;
@@ -35,6 +35,7 @@ a {
   text-underline-offset: 0.22em;
 }
 a:hover {
+  color: var(--fg);
   text-decoration-thickness: 2px;
 }
 p {
@@ -47,20 +48,29 @@ h2,
 h3,
 h4 {
   margin: 0;
-  font-weight: 600;
-  line-height: 1.15;
+  line-height: 1;
   text-wrap: balance;
 }
+h1,
+h2,
+h3 {
+  font-family: var(--font-pixel);
+  font-weight: 700;
+  letter-spacing: 0;
+}
 h1 {
-  font-size: 2.75rem;
-  letter-spacing: -0.025em;
+  font-size: clamp(2.5rem, 5.4vw, 4.5rem);
+  line-height: 0.95;
 }
 h2 {
-  font-size: clamp(2rem, 3.5vw, 3.25rem);
-  letter-spacing: -0.025em;
+  font-size: clamp(2.25rem, 4.4vw, 3.5rem);
 }
 h3 {
-  font-size: 1.4rem;
+  font-size: 1.625rem;
+}
+h4 {
+  font-size: 1.125rem;
+  font-weight: 600;
 }
 code,
 pre {
@@ -84,17 +94,53 @@ main:focus {
   padding-inline: var(--gutter);
 }
 .page-main {
-  padding-block: 3.5rem 6rem;
+  padding-block: clamp(1rem, 4vh, 3rem) clamp(4rem, 10vw, 7.5rem);
   min-height: 65vh;
 }
-.page-intro {
-  margin-bottom: 2.5rem;
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
 }
-.page-intro p {
-  margin: 1rem 0 0;
+.eyebrow::before {
+  content: "";
+  width: 22px;
+  height: 1px;
+  background: currentColor;
+}
+.wordmark {
+  font-weight: 800;
+  font-stretch: 118%;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.wordmark strong {
+  font-weight: inherit;
+  color: var(--accent);
+}
+.page-intro {
+  display: flex;
+  flex-direction: column;
+  gap: 1.125rem;
+  margin-bottom: 2.25rem;
+}
+.page-intro p:last-child {
+  margin: 0;
   max-width: 62ch;
-  color: var(--fg-dim);
   font-size: 1.125rem;
+  color: var(--fg-dim);
+}
+.page-intro code {
+  font-size: 0.9em;
+  color: var(--fg);
 }
 .sr-only {
   position: absolute;
@@ -123,7 +169,11 @@ main:focus {
 .empty-state {
   padding: 3rem 1.5rem;
   border: 1px solid var(--line);
+  border-radius: 18px;
   text-align: center;
+}
+.empty-state h2 {
+  font-size: 1.75rem;
 }
 .empty-state p {
   color: var(--fg-dim);
@@ -135,6 +185,7 @@ main:focus {
 }
 .loading-state {
   min-height: 14rem;
+  border-radius: 14px;
   background: var(--bg-2);
   padding: 2rem;
 }
@@ -156,12 +207,4 @@ main:focus {
   min-height: 44px;
   color: var(--accent);
   font-weight: 600;
-}
-@media (max-width: 40rem) {
-  h1 {
-    font-size: 2.25rem;
-  }
-  .page-main {
-    padding-block: 2rem 4rem;
-  }
 }

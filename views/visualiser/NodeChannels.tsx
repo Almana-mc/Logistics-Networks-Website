@@ -1,11 +1,12 @@
 import ChannelSettings from "./ChannelSettings";
+import ChannelSummary from "./ChannelSummary";
 import type { Channel } from "../../lib/network";
 import { resourceStyle } from "../../lib/resources";
 
 export default function NodeChannels({ channels }: { channels: Channel[] }) {
   return (
     <section className="node-channels">
-      <h3>Active channels</h3>
+      <h4 className="detail-label">Channels</h4>
       {!channels.length && <p>No active channels.</p>}
       {channels.map((channel) => (
         <details
@@ -13,11 +14,7 @@ export default function NodeChannels({ channels }: { channels: Channel[] }) {
           key={channel.index}
           style={resourceStyle(channel.type)}
         >
-          <summary>
-            <span className="resource-dot" />
-            <strong>Channel {channel.index + 1}</strong>
-            <span>{channel.mode}</span>
-          </summary>
+          <ChannelSummary channel={channel} />
           <ChannelSettings channel={channel} />
         </details>
       ))}

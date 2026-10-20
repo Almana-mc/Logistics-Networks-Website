@@ -1,26 +1,39 @@
-import logo from "../../assets/logistic-icon-no-bg.png";
-import HeroCopy from "./HeroCopy";
-import ResourceLegend from "../../components/ResourceLegend";
+import Icon from "../../components/Icon";
+import HeroGraph from "./HeroGraph";
+import { links } from "../../lib/resources";
 
-export default function HomeHero() {
+export default function HomeHero({ version }: { version: string }) {
   return (
-    <section className="home-hero">
-      <div className="shell hero-layout">
-        <HeroCopy />
-        <div className="hero-art">
-          <img
-            src={logo}
-            alt="Logistics Network, a charcoal block frame with stone-colored pixel lettering"
-            width="400"
-            height="400"
-            fetchPriority="high"
-          />
+    <section className="shell home-hero" aria-labelledby="home-title">
+      <div className="hero-copy">
+        <div className="hero-meta">
+          <p className="eyebrow">Minecraft mod</p>
+          {version && <span className="version-pill">v{version}</span>}
+        </div>
+        <h1 id="home-title" className="hero-title">
+          <span>Logistics</span> <span>Network</span>
+        </h1>
+        <p className="hero-lead">
+          Slap a node on any chest, tank or machine, pick what moves, and it
+          moves. Items, fluids, energy and chemicals. No pipes, no cables, no
+          clutter in your base.
+        </p>
+        <div className="actions">
+          <a
+            className="button primary hero-cta"
+            href={links.curseforge}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <Icon name="download" size={18} />
+            Download on CurseForge
+          </a>
+          <a className="button secondary hero-cta" href="#download">
+            All downloads
+          </a>
         </div>
       </div>
-      <div className="hero-resources shell">
-        <span>One network. Five resources.</span>
-        <ResourceLegend />
-      </div>
+      <HeroGraph />
     </section>
   );
 }

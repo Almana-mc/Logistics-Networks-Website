@@ -54,7 +54,7 @@
         accent: resolveColor('--accent', '#4fd6e0'),
         accent2: resolveColor('--accent-2', '#e8954a'),
         bg0: resolveColor('--bg-0', '#0d1117'),
-        line: resolveColor('--control', '#a4b4b0'),
+        line: resolveColor('--graph-line', '#3a4150'),
         fg: resolveColor('--fg', '#f3f5f8'),
         fgmute: resolveColor('--fg-mute', '#8893a8'),
         link: resolveColor('--line', '#2b3550')
@@ -440,7 +440,7 @@
       if (n.label && !this.opts.decorative && (this.cw > 520 || isSel || isHov)) {
         ctx.globalAlpha = 1;
         ctx.fillStyle = isSel ? this.col.fg : this.col.fgmute;
-        ctx.font = `${isSel ? 600 : 400} 13px Barlow, sans-serif`;
+        ctx.font = `${isSel ? 600 : 500} 12px 'JetBrains Mono', monospace`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'top';
         const txt = n.label.length > 16 ? n.label.slice(0, 15) + '…' : n.label;

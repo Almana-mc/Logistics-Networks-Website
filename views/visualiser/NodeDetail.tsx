@@ -1,27 +1,47 @@
 import type { NetworkNode } from "../../lib/network";
+import NodePicker from "./NodePicker";
 import NodeChannels from "./NodeChannels";
 import NodeItems from "./NodeItems";
 
-export default function NodeDetail({ node }: { node: NetworkNode | null }) {
-  if (!node)
-    return (
-      <aside className="node-detail empty-detail">
-        <h2>Every node has a story.</h2>
-        <p>Select a node to inspect its channels, filters and upgrades.</p>
-      </aside>
-    );
+type Props = {
+  nodes: NetworkNode[];
+  selected: number;
+  onSelect: (index: number) => void;
+};
+
+export default function NodeDetail({ nodes, selected, onSelect }: Props) {
+  const node = selected < 0 ? null : nodes[selected];
   return (
-    <aside className="node-detail" aria-label="Selected node details">
-      <header className="node-detail-heading">
-        <span>Selected node</span>
-        <h2>{node.label}</h2>
-        <p>
-          {node.visible ? "Visible in game" : "Hidden in game"} ·{" "}
-          {node.config.activeChannels.length} of 9 channels active
+    <aside
+      className="node-detail"
+      aria-label={node ? "Selected node details" : "Node details"}
+    >
+      <NodePicker nodes={nodes} selected={selected} onSelect={onSelect} />
+      {node ? (
+        <>
+          <header className="node-heading">
+            <p className="detail-label">Node</p>
+            <h3>{node.label}</h3>
+            <p className="node-chips">
+              <span className={node.visible ? "chip is-visible" : "chip"}>
+                {node.visible ? "visible" : "hidden"}
+              </span>
+              <span className="chip">
+                {node.config.activeChannels.length} / 9 channels
+              </span>
+            </p>
+          </header>
+          <NodeChannels channels={node.config.activeChannels} />
+          <NodeItems config={node.config} />
+        </>
+      ) : (
+        <p className="detail-empty">
+          <span aria-hidden="true" />
+          Select a node
+          <br />
+          Inspect its channels
         </p>
-      </header>
-      <NodeChannels channels={node.config.activeChannels} />
-      <NodeItems config={node.config} />
+      )}
     </aside>
   );
 }

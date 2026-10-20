@@ -2,15 +2,9 @@ import type { Channel } from "../../lib/network";
 export default function ChannelSettings({ channel }: { channel: Channel }) {
   return (
     <div className="channel-settings">
-      <p className="channel-resource">
-        {channel.type}
-        {channel.name ? ` · ${channel.name}` : ""}
-      </p>
+      {channel.name && <p className="channel-resource">{channel.name}</p>}
       <dl>
         {[
-          ["Batch", channel.batch.toLocaleString()],
-          ["Delay", `${channel.delay} ticks`],
-          ["Side", channel.io],
           ["Priority", channel.priority],
           ["Redstone", channel.redstone],
           ["Distribution", channel.distribution],

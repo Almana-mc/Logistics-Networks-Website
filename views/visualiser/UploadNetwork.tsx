@@ -19,11 +19,12 @@ export default function UploadNetwork({
   const dropTarget = useDropTarget(onFile);
   return (
     <div {...dropTarget}>
-      <div className="upload-symbol" aria-hidden="true">
-        <Icon name="upload" size={34} />
+      <div className="upload-rings" aria-hidden="true">
+        <span>
+          <Icon name="upload" size={28} />
+        </span>
       </div>
-      <h2>Bring your network into view.</h2>
-      <p>Drop your export here, or choose a file from your device.</p>
+      <h2>Drop a .lnet file here</h2>
       <NetworkFileInput busy={busy} onFile={onFile} />
       <UploadActions busy={busy} error={error} onExample={onExample} />
     </div>
@@ -33,7 +34,7 @@ export default function UploadNetwork({
 function useDropTarget(onFile: (file: File) => void) {
   const [drag, setDrag] = useState(false);
   return {
-    className: `upload-zone${drag ? " is-dragging" : ""}`,
+    className: `stage upload-zone${drag ? " is-dragging" : ""}`,
     onDragOver: (event: DragEvent<HTMLDivElement>) => {
       event.preventDefault();
       setDrag(true);
