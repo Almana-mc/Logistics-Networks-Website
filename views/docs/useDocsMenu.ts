@@ -6,6 +6,8 @@ export function useDocsMenu(
 ) {
   const [open, setOpen] = useState(false);
   useEffect(() => {
+    if (open && document.activeElement?.closest("#docs-sidebar"))
+      document.getElementById("main")!.focus({ preventScroll: true });
     setOpen(false);
     if (!route.anchor) window.scrollTo(0, 0);
   }, [route.key, branch]);

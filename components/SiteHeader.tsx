@@ -1,18 +1,15 @@
-import type { ReactNode } from "react";
 import logo from "../assets/logistic-icon-80.png";
 import Icon from "./Icon";
 import { links } from "../lib/resources";
 
 const pages = [
-  ["Home", "index.html"],
   ["Download", "index.html#download"],
   ["Library", "library.html"],
   ["Visualiser", "visualiser.html"],
   ["Docs", "docs.html"],
 ];
 
-type Props = { current: string; children?: ReactNode };
-export default function SiteHeader({ current, children }: Props) {
+export default function SiteHeader({ current }: { current: string }) {
   return (
     <header className="site-header">
       <nav className="site-header__nav" aria-label="Primary">
@@ -20,6 +17,7 @@ export default function SiteHeader({ current, children }: Props) {
           className="brand"
           href="index.html"
           aria-label="Logistics Network home"
+          aria-current={current === "Home" ? "page" : undefined}
         >
           <img src={logo} alt="" width="40" height="40" />
           <span className="wordmark">
@@ -36,10 +34,14 @@ export default function SiteHeader({ current, children }: Props) {
               {label}
             </a>
           ))}
-          <a href={links.github} target="_blank" rel="noreferrer">
+          <a
+            className="header-github"
+            href={links.github}
+            target="_blank"
+            rel="noreferrer"
+          >
             GitHub <Icon name="external" size={14} />
           </a>
-          {children}
         </div>
       </nav>
     </header>

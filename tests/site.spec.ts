@@ -30,7 +30,13 @@ for (const route of [
           () => document.documentElement.scrollWidth <= innerWidth,
         ),
       ).toBeTruthy();
-      for (const name of ["Home", "Library", "Docs", "Visualiser"])
+      for (const name of [
+        "Logistics Network home",
+        "Download",
+        "Library",
+        "Docs",
+        "Visualiser",
+      ])
         await expect(
           page
             .getByRole("navigation", { name: "Primary", exact: true })
