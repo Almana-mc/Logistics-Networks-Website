@@ -8,6 +8,7 @@ import { readStored, writeStored } from "../lib/storage";
 import { mdLink, parseMarkdown } from "../lib/docs-markdown";
 import { readCount } from "../lib/downloads";
 import { buildHeroNetwork } from "../lib/hero-network";
+import { afterFirstPaint } from "../lib/first-paint";
 import {
   buildNav,
   flattenNav,
@@ -162,6 +163,36 @@ test("download counts accept both sources and reject bad values", () => {
     { downloads: { total: 0 } },
   ])
     assert.equal(readCount(bad), null);
+});
+
+test("first paint gate waits for a paint entry when supported", async () => {
+  await afterFirstPaint();
+  const original = globalThis.PerformanceObserver;
+  let paint: () => void = () => assert.fail("observer never created");
+  let disconnected = false;
+  class Observer {
+    static supportedEntryTypes = ["paint"];
+    constructor(callback: (list: null, observer: Observer) => void) {
+      paint = () => callback(null, this);
+    }
+    observe() {}
+    disconnect() {
+      disconnected = true;
+    }
+  }
+  globalThis.PerformanceObserver =
+    Observer as unknown as typeof PerformanceObserver;
+  try {
+    let done = false;
+    const gate = afterFirstPaint().then(() => (done = true));
+    await Promise.resolve();
+    assert.equal(done, false);
+    paint();
+    await gate;
+    assert.equal(disconnected, true);
+  } finally {
+    globalThis.PerformanceObserver = original;
+  }
 });
 
 test("hero network is deterministic and stays in range", () => {

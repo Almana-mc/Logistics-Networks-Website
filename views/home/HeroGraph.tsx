@@ -5,6 +5,7 @@ import { buildHeroNetwork } from "../../lib/hero-network";
 import { graphData, loadLibraryNetwork } from "../../lib/network";
 import type { NetworkEntry } from "../../lib/library";
 import type { GraphData } from "../../lib/graph";
+import { afterFirstPaint } from "../../lib/first-paint";
 
 type Stage = { data: GraphData; entry?: NetworkEntry };
 
@@ -54,7 +55,16 @@ export default function HeroGraph({ entry, ready }: Props) {
   const canvas = useRef<HTMLCanvasElement>(null);
   const stage = useStage(entry, ready);
   useEffect(() => {
-    if (stage) return mountGraph(canvas.current!, stage);
+    if (!stage) return;
+    let unmount = () => {};
+    let live = true;
+    afterFirstPaint().then(() => {
+      if (live) unmount = mountGraph(canvas.current!, stage);
+    });
+    return () => {
+      live = false;
+      unmount();
+    };
   }, [stage]);
   const shown = stage?.entry;
   return (

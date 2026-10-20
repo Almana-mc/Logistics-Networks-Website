@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import { links } from "./resources";
 import { readStored, writeStored } from "./storage";
+import { afterFirstPaint } from "./first-paint";
 
 type Release = { version: string; released: string; url: string };
 type Cache = { at: number; data: Release };
+const latest =
+  "https://api.github.com/repos/Almana-mc/LogisticsNetworks/releases/latest";
 const fallback = {
   version: "",
   released: "",
@@ -28,10 +31,8 @@ export function useRelease() {
       if (Date.now() - cached.at < 3600000) return;
     }
     const abort = new AbortController();
-    fetch(
-      "https://api.github.com/repos/Almana-mc/LogisticsNetworks/releases/latest",
-      { signal: abort.signal },
-    )
+    afterFirstPaint()
+      .then(() => fetch(latest, { signal: abort.signal }))
       .then((response) => {
         if (!response.ok) throw new Error("Release unavailable");
         return response.json();

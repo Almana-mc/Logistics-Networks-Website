@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { readStored, writeStored } from "./storage";
+import { afterFirstPaint } from "./first-paint";
 
 const sources = [
   "https://api.cfwidget.com/minecraft/mc-mods/logistics-network",
@@ -34,7 +35,8 @@ export function useDownloadCount() {
         .then((response) => (response.ok ? response.json() : null))
         .then(readCount)
         .catch(() => null);
-    get(sources[0])
+    afterFirstPaint()
+      .then(() => get(sources[0]))
       .then((value) => value ?? get(sources[1]))
       .then((value) => {
         if (abort.signal.aborted) return;
