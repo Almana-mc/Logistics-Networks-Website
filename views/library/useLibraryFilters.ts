@@ -21,6 +21,8 @@ export function useLibraryFilters(entries: NetworkEntry[]) {
   return {
     toolbar: {
       ...filters,
+      counts: (type: string) =>
+        entries.filter((entry) => entry.types.includes(type)).length,
       onQuery: (query: string) => update({ query }),
       onSort: (sort: string) => update({ sort }),
       onType: (type: string) =>

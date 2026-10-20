@@ -1,9 +1,13 @@
 import { resources, resourceStyle } from "../../lib/resources";
-type Props = { types: string[]; onType: (type: string) => void };
-export default function ResourceFilters({ types, onType }: Props) {
+type Props = {
+  types: string[];
+  counts: (type: string) => number;
+  onType: (type: string) => void;
+};
+export default function ResourceFilters({ types, counts, onType }: Props) {
   return (
     <fieldset className="resource-filters">
-      <legend>Filter by resource</legend>
+      <legend>Moves any of</legend>
       {resources.map((type) => (
         <button
           key={type.id}
@@ -14,6 +18,7 @@ export default function ResourceFilters({ types, onType }: Props) {
         >
           <span className="resource-dot" />
           {type.label}
+          <span className="filter-count">{counts(type.id)}</span>
         </button>
       ))}
     </fieldset>

@@ -5,19 +5,20 @@ export default function LibraryEmpty({ total, onClear }: Props) {
     <div className="empty-state">
       <h2>
         {total
-          ? "No matching networks"
+          ? "No saved network matches yet"
           : "The library is waiting for its first network"}
       </h2>
       <p>
         {total
-          ? "Try another search or clear the resource filters."
+          ? "Nobody has shared a setup like this so far. Clear the filters to see every network, or share yours so the next player finds it."
           : "Share a .lnet setup with the community on Discord."}
       </p>
-      {total ? (
-        <button className="button primary" onClick={onClear}>
-          Clear filters
-        </button>
-      ) : (
+      <div className="actions">
+        {total > 0 && (
+          <button className="button secondary" onClick={onClear}>
+            Clear filters
+          </button>
+        )}
         <a
           className="button primary"
           href={links.discord}
@@ -26,7 +27,7 @@ export default function LibraryEmpty({ total, onClear }: Props) {
         >
           Share a network
         </a>
-      )}
+      </div>
     </div>
   );
 }

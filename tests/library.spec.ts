@@ -6,9 +6,9 @@ test("library search, filters, reset and handoff", async ({ page }) => {
   await expect(page.locator(".network-card")).toHaveCount(3);
   await page.getByLabel("Find a network").fill("pilpoh");
   await expect(page.locator(".network-card")).toHaveCount(1);
-  await page.getByRole("button", { name: "Chemicals", exact: true }).click();
+  await page.getByRole("button", { name: "Chemicals 0", exact: true }).click();
   await expect(
-    page.getByRole("heading", { name: "No matching networks" }),
+    page.getByRole("heading", { name: "No saved network matches yet" }),
   ).toBeVisible();
   await page.getByRole("button", { name: "Clear filters" }).first().click();
   await expect(page.locator(".network-card")).toHaveCount(3);
@@ -19,7 +19,7 @@ test("library search, filters, reset and handoff", async ({ page }) => {
   await page
     .locator(".network-card")
     .first()
-    .getByRole("link", { name: "Open network" })
+    .getByRole("link", { name: "Bee Automation" })
     .click();
   await expect(page.getByLabel("Inspect a node")).toBeVisible();
   await expect(page.locator(".network-stats")).toContainText("6 nodes");

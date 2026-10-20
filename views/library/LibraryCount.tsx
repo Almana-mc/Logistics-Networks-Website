@@ -23,7 +23,7 @@ export default function LibraryCount({
           : " to explore"}
         {pages > 1 && ` · page ${page} of ${pages}`}
       </p>
-      {filtered && (
+      {filtered && count > 0 && (
         <button className="button text-button" onClick={onClear}>
           Clear filters
         </button>

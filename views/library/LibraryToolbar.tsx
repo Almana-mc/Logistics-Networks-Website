@@ -4,6 +4,7 @@ type Props = {
   query: string;
   onQuery: (value: string) => void;
   types: string[];
+  counts: (type: string) => number;
   onType: (type: string) => void;
   sort: string;
   onSort: (value: string) => void;
@@ -13,6 +14,7 @@ export default function LibraryToolbar({
   query,
   onQuery,
   types,
+  counts,
   onType,
   sort,
   onSort,
@@ -26,7 +28,7 @@ export default function LibraryToolbar({
           type="search"
           value={query}
           onChange={(event) => onQuery(event.target.value)}
-          placeholder="Search names, authors or descriptions"
+          placeholder="Try “bees” or “Pilpoh”"
         />
       </div>
       <div className="library-sort">
@@ -40,7 +42,7 @@ export default function LibraryToolbar({
           <option value="name">Name, A to Z</option>
         </select>
       </div>
-      <ResourceFilters types={types} onType={onType} />
+      <ResourceFilters types={types} counts={counts} onType={onType} />
     </div>
   );
 }
