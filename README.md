@@ -24,4 +24,4 @@ Deploy the contents of `dist/` at the domain root. The root HTML files are build
 
 `views/` contains routes and their components, `components/` contains shared UI, `lib/` contains data and markdown code, and `styles/` contains tokens and route styles. The existing `.lnet` parser is in `js/lnet.js`; the canvas renderer is in `js/graph.js`. Library submissions remain in `library/index.json`.
 
-The supplied artwork is preserved in `assets/logistic-icon.png` and used as both logo and favicon. Fonts are self-hosted: Barlow (included SIL Open Font License) on most pages, and Archivo, JetBrains Mono and Pixel Operator on the docs page. Audit and verification records are in `artifacts/`.
+The supplied artwork is preserved in `assets/logistic-icon.png` and used as both logo and favicon. Fonts are self-hosted: Archivo and JetBrains Mono under the included SIL Open Font License, and Pixel Operator (CC0 1.0). Audit and verification records are in `artifacts/`.
