@@ -7,7 +7,6 @@
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
-  justify-content: space-between;
   gap: 1.5rem 3rem;
 }
 .download-total {
@@ -52,6 +51,9 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
+  background: var(--fg-mute);
+}
+.download-status[data-status="live"]::before {
   background: var(--type-chemical);
   box-shadow: 0 0 10px var(--type-chemical);
 }
@@ -116,6 +118,11 @@ a.download-card:hover {
   line-height: 1.55;
   color: var(--fg-dim);
 }
+.card-body .card-note {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--fg);
+}
 .card-cta {
   display: flex;
   align-items: center;
@@ -159,10 +166,8 @@ a.download-card:hover {
 }
 .maven-coords code {
   min-width: 0;
-  overflow: hidden;
   font-size: 0.8125rem;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
 }
 .maven-coords button {
   flex-shrink: 0;
@@ -171,7 +176,7 @@ a.download-card:hover {
   border: 0;
   border-radius: 7px;
   background: rgb(242 236 225 / 0.08);
-  color: var(--accent);
+  color: var(--fg);
   font-family: var(--font-mono);
   font-size: 0.75rem;
   font-weight: 600;

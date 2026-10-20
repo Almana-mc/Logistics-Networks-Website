@@ -2,6 +2,7 @@
 .network-card,
 .pager-page,
 .download-card,
+.community-setups a,
 .support-links a {
   transition:
     color 160ms var(--ease-out),

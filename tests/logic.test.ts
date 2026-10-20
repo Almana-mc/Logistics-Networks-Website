@@ -173,3 +173,44 @@ test("hero network is deterministic and stays in range", () => {
     assert.ok(edge.to < 16 && edge.from < 16);
   }
 });
+
+test("item ids read as names and release tags split into versions", async () => {
+  const { itemName } = await import("../lib/items");
+  const { splitVersion } = await import("../lib/release");
+  assert.equal(itemName("logisticsnetworks:small_filter"), "Small Filter");
+  assert.equal(itemName("stone"), "Stone");
+  assert.equal(itemName("mod:double__gap"), "Double Gap");
+  assert.deepEqual(splitVersion("v26.1.2-1.13.0"), {
+    minecraft: "26.1.2",
+    mod: "1.13.0",
+  });
+  assert.deepEqual(splitVersion("1.21-2.0.0-beta"), {
+    minecraft: "1.21",
+    mod: "2.0.0-beta",
+  });
+  assert.equal(splitVersion("v1.13.0"), null);
+  assert.equal(splitVersion(""), null);
+});
+
+test("graph data mirrors parsed nodes and marks hidden nodes", async () => {
+  if (!("window" in globalThis))
+    Object.defineProperty(globalThis, "window", {
+      value: {},
+      configurable: true,
+    });
+  const { parseNetwork, graphData } = await import("../lib/network");
+  const network = parseNetwork(
+    await readFile("library/eldritch-automation.lnet", "utf8"),
+  );
+  const data = graphData(network, 6);
+  assert.equal(data.nodes.length, network.nodes.length);
+  assert.equal(data.edges, network.topology);
+  assert.ok(data.nodes.every((node) => node.baseR === 6));
+  network.nodes[0].visible = false;
+  assert.deepEqual(graphData(network).nodes[0], {
+    label: network.nodes[0].label,
+    dominantType: null,
+    role: "hidden",
+    baseR: 11,
+  });
+});

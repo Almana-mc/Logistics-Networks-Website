@@ -1,22 +1,25 @@
 import Icon from "../../components/Icon";
 import HeroGraph from "./HeroGraph";
 import { links } from "../../lib/resources";
+import VersionPill from "./VersionPill";
+import type { NetworkEntry } from "../../lib/library";
 
-export default function HomeHero({ version }: { version: string }) {
+type Props = { version: string; entry?: NetworkEntry; ready: boolean };
+export default function HomeHero({ version, entry, ready }: Props) {
   return (
     <section className="shell home-hero" aria-labelledby="home-title">
       <div className="hero-copy">
         <div className="hero-meta">
           <p className="eyebrow">Minecraft mod</p>
-          {version && <span className="version-pill">v{version}</span>}
+          <VersionPill version={version} />
         </div>
         <h1 id="home-title" className="hero-title">
           <span>Logistics</span> <span>Network</span>
         </h1>
         <p className="hero-lead">
           Slap a node on any chest, tank or machine, pick what moves, and it
-          moves. Items, fluids, energy and chemicals. No pipes, no cables, no
-          clutter in your base.
+          moves. Items, fluids, energy, chemicals and Source. No pipes, no
+          cables, no clutter in your base.
         </p>
         <div className="actions">
           <a
@@ -33,7 +36,7 @@ export default function HomeHero({ version }: { version: string }) {
           </a>
         </div>
       </div>
-      <HeroGraph />
+      <HeroGraph entry={entry} ready={ready} />
     </section>
   );
 }

@@ -8,6 +8,10 @@ const statusText = {
   cached: "Last fetched count",
   fallback: "Approximate count",
 };
+const compact = new Intl.NumberFormat("en-US", {
+  notation: "compact",
+  maximumFractionDigits: 1,
+});
 
 export default function DownloadSection({ version }: { version: string }) {
   const count = useDownloadCount();
@@ -25,12 +29,18 @@ export default function DownloadSection({ version }: { version: string }) {
               Downloads
             </h2>
             <p className="download-number">
-              {shown ? shown.toLocaleString("en-US") : "—"}
+              {count.status === "fallback"
+                ? `≈${compact.format(count.value)}`
+                : shown
+                  ? shown.toLocaleString("en-US")
+                  : "—"}
             </p>
           </div>
           <p className="download-caption">
             <span>downloads on CurseForge</span>
-            <span className="download-status">{statusText[count.status]}</span>
+            <span className="download-status" data-status={count.status}>
+              {statusText[count.status]}
+            </span>
           </p>
         </div>
         <DownloadCards version={version} />

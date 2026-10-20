@@ -10,6 +10,11 @@ const fallback = {
   url: `${links.github}/releases/latest`,
 };
 
+export function splitVersion(tag: string) {
+  const match = tag.replace(/^v/, "").match(/^(\d+\.\d+(?:\.\d+)?)-(.+)$/);
+  return match ? { minecraft: match[1], mod: match[2] } : null;
+}
+
 export function useRelease() {
   const [release, setRelease] = useState<Release>(fallback);
   useEffect(() => {

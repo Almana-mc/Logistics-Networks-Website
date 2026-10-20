@@ -5,7 +5,7 @@ import PageIntro from "../components/PageIntro";
 import LibraryToolbar from "./library/LibraryToolbar";
 import LibraryResults from "./library/LibraryResults";
 import { useLibraryFilters } from "./library/useLibraryFilters";
-import { useLibrary } from "./library/useLibrary";
+import { useLibrary } from "../lib/library";
 import { links } from "../lib/resources";
 import "../styles/index.css";
 import "../styles/views/library.css";

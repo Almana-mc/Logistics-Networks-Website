@@ -1,26 +1,31 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import "../../js/graph.js";
 import ResourceLegend from "../../components/ResourceLegend";
 import { buildHeroNetwork } from "../../lib/hero-network";
+import { graphData, loadLibraryNetwork } from "../../lib/network";
+import type { NetworkEntry } from "../../lib/library";
+import type { GraphData } from "../../lib/graph";
 
-function mountGraph(canvas: HTMLCanvasElement) {
+type Stage = { data: GraphData; entry?: NetworkEntry };
+
+function mountGraph(canvas: HTMLCanvasElement, { data, entry }: Stage) {
   const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const graph = new window.NetworkGraph(canvas, {
     style: "glow",
     pulseSpeed: still ? 0 : 1.6,
     breathing: !still,
     nodePulse: !still,
-    decorative: true,
+    decorative: !entry,
     interactive: false,
   });
-  graph.setData(buildHeroNetwork(7));
+  graph.setData(data);
   graph.start();
   const resize = new ResizeObserver(() => {
     graph.resize();
     graph._frame();
   });
-  const onScreen = new IntersectionObserver(([entry]) =>
-    entry.isIntersecting ? graph.start() : graph.stop(),
+  const onScreen = new IntersectionObserver(([view]) =>
+    view.isIntersecting ? graph.start() : graph.stop(),
   );
   resize.observe(canvas);
   onScreen.observe(canvas);
@@ -31,20 +36,45 @@ function mountGraph(canvas: HTMLCanvasElement) {
   };
 }
 
-export default function HeroGraph() {
+function useStage(entry: NetworkEntry | undefined, ready: boolean) {
+  const [stage, setStage] = useState<Stage | null>(null);
+  useEffect(() => {
+    if (!ready) return;
+    const fallback = () => setStage({ data: buildHeroNetwork(7) });
+    if (!entry) return fallback();
+    loadLibraryNetwork(entry.file)
+      .then((network) => setStage({ data: graphData(network), entry }))
+      .catch(fallback);
+  }, [entry, ready]);
+  return stage;
+}
+
+type Props = { entry?: NetworkEntry; ready: boolean };
+export default function HeroGraph({ entry, ready }: Props) {
   const canvas = useRef<HTMLCanvasElement>(null);
-  useEffect(() => mountGraph(canvas.current!), []);
+  const stage = useStage(entry, ready);
+  useEffect(() => {
+    if (stage) return mountGraph(canvas.current!, stage);
+  }, [stage]);
+  const shown = stage?.entry;
   return (
-    <div className="hero-stage">
-      <canvas ref={canvas} aria-hidden="true" />
+    <figure className="hero-stage">
+      <div className="hero-canvas">
+        <canvas ref={canvas} aria-hidden="true" />
+      </div>
       <span className="stage-corner top left" aria-hidden="true" />
       <span className="stage-corner top right" aria-hidden="true" />
       <span className="stage-corner bottom left" aria-hidden="true" />
       <span className="stage-corner bottom right" aria-hidden="true" />
-      <p className="stage-badge" aria-hidden="true">
-        Live topology · sim
-      </p>
-      <ResourceLegend />
-    </div>
+      {shown && (
+        <figcaption className="stage-credit">
+          <a href={`visualiser.html?net=${encodeURIComponent(shown.file)}`}>
+            {shown.name}
+          </a>
+          <span>by {shown.author}</span>
+        </figcaption>
+      )}
+      <ResourceLegend types={shown?.types} />
+    </figure>
   );
 }
