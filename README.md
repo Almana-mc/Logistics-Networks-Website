@@ -24,6 +24,16 @@ Install Playwright browsers with `npx playwright install chromium firefox webkit
 
 The supplied artwork is preserved in `assets/logistic-icon.png` and used as both logo and favicon. Fonts are self-hosted: Archivo and JetBrains Mono under the included SIL Open Font License, and Pixel Operator (CC0 1.0). Audit and verification records are in `artifacts/`.
 
+Archivo and JetBrains Mono are trimmed to the axis ranges the styles use: Archivo `wght` 400–800 and `wdth` 100–118, JetBrains Mono `wght` 400–600. To regenerate them from the full-axis latin files in commit `c3faf4f`, install Python `fonttools` and `brotli`, then run from Git Bash:
+
+```sh
+git show c3faf4f:assets/fonts/archivo-variable.woff2 > archivo-full.woff2
+fonttools varLib.instancer archivo-full.woff2 wght=400:800 wdth=100:118 -o archivo-trim.woff2
+pyftsubset archivo-trim.woff2 --unicodes="*" --layout-features="*" --name-IDs="*" --name-languages="*" --flavor=woff2 --output-file=assets/fonts/archivo-variable.woff2
+```
+
+Repeat for `jetbrains-mono-variable.woff2` with `wght=400:600`. Widen the ranges here and in `styles/fonts.css` before using other weights or widths.
+
 ## Hosting
 
 The site runs on a VPS behind Caddy. Pushing to `main` runs lint, typecheck, unit tests and the build, then `rsync`s `dist/`, the account API and the share service to `/srv/logistics-network/` and restarts both services. `deploy/Caddyfile` sets TLS, the CSP and security headers, and caching. `_headers` mirrors those headers, except HSTS, for the local preview. Keep the two in sync.
