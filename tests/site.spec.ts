@@ -20,7 +20,7 @@ for (const route of [
         timeout: 30000,
       });
     if (route === "library.html")
-      await expect(page.locator(".network-row")).toHaveCount(3);
+      await expect(page.locator(".network-card")).toHaveCount(3);
     for (const width of [320, 390, 768, 1024, 1440]) {
       await page.setViewportSize({ width, height: 900 });
       await expect(page.locator("main")).toHaveCount(1);

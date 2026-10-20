@@ -1,56 +1,60 @@
+import { useRef } from "react";
 import { type NetworkEntry } from "../../lib/library";
 import LibraryStatus from "./LibraryStatus";
 import LibraryEmpty from "./LibraryEmpty";
 import LibraryCount from "./LibraryCount";
-import NetworkRow from "./NetworkRow";
+import LibraryPager from "./LibraryPager";
+import NetworkGrid from "./NetworkGrid";
 
 type Props = {
   entries: NetworkEntry[];
+  count: number;
   total: number;
   status: string;
-  limit: number;
+  page: number;
+  pages: number;
   filtered: boolean;
-  onMore: () => void;
+  onPage: (page: number) => void;
   onRetry: () => void;
   onClear: () => void;
 };
 
 export default function LibraryResults({
   entries,
+  count,
   total,
   status,
-  limit,
+  page,
+  pages,
   filtered,
-  onMore,
+  onPage,
   onRetry,
   onClear,
 }: Props) {
+  const top = useRef<HTMLDivElement>(null);
   if (status !== "ready")
     return <LibraryStatus status={status} onRetry={onRetry} />;
+  const turn = (next: number) => {
+    onPage(next);
+    top.current?.focus({ preventScroll: true });
+    top.current?.scrollIntoView();
+  };
   return (
-    <>
+    <div className="library-results" ref={top} tabIndex={-1}>
       <LibraryCount
-        count={entries.length}
+        count={count}
         total={total}
+        page={page}
+        pages={pages}
         filtered={filtered}
         onClear={onClear}
       />
       {entries.length ? (
-        <div className="network-list">
-          {entries.slice(0, limit).map((entry) => (
-            <NetworkRow key={entry.file} entry={entry} />
-          ))}
-        </div>
+        <NetworkGrid entries={entries} />
       ) : (
         <LibraryEmpty total={total} onClear={onClear} />
       )}
-      {entries.length > limit && (
-        <div className="load-more">
-          <button className="button secondary" onClick={onMore}>
-            Load more networks
-          </button>
-        </div>
-      )}
-    </>
+      {pages > 1 && <LibraryPager page={page} pages={pages} onPage={turn} />}
+    </div>
   );
 }

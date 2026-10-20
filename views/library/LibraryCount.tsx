@@ -1,12 +1,16 @@
 type Props = {
   count: number;
   total: number;
+  page: number;
+  pages: number;
   filtered: boolean;
   onClear: () => void;
 };
 export default function LibraryCount({
   count,
   total,
+  page,
+  pages,
   filtered,
   onClear,
 }: Props) {
@@ -17,6 +21,7 @@ export default function LibraryCount({
         {filtered
           ? ` matching your filters, ${total} in the library`
           : " to explore"}
+        {pages > 1 && ` · page ${page} of ${pages}`}
       </p>
       {filtered && (
         <button className="button text-button" onClick={onClear}>

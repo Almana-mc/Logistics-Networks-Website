@@ -1,20 +1,22 @@
 import { useMemo, useState } from "react";
 import { filterEntries, type NetworkEntry } from "../../lib/library";
 
+const pageSize = 20;
+
 export function useLibraryFilters(entries: NetworkEntry[]) {
   const [filters, setFilters] = useState({
     query: "",
     types: [] as string[],
     sort: "new",
   });
-  const [limit, setLimit] = useState(24);
+  const [page, setPage] = useState(1);
   const filtered = useMemo(
     () => filterEntries(entries, filters.query, filters.types, filters.sort),
     [entries, filters],
   );
   const update = (change: Partial<typeof filters>) => {
     setFilters({ ...filters, ...change });
-    setLimit(24);
+    setPage(1);
   };
   return {
     toolbar: {
@@ -29,10 +31,12 @@ export function useLibraryFilters(entries: NetworkEntry[]) {
         }),
     },
     results: {
-      entries: filtered,
-      limit,
+      entries: filtered.slice((page - 1) * pageSize, page * pageSize),
+      count: filtered.length,
+      page,
+      pages: Math.ceil(filtered.length / pageSize),
       filtered: !!filters.query || filters.types.length > 0,
-      onMore: () => setLimit(limit + 24),
+      onPage: setPage,
       onClear: () => update({ query: "", types: [] }),
     },
   };
