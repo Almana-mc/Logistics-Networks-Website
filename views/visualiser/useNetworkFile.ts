@@ -5,34 +5,61 @@ import {
   type NetworkEntry,
 } from "../../lib/library";
 import { parseNetwork, type Network } from "../../lib/network";
+import { fetchShare, shareError, type Share } from "../../lib/share";
 
 export type LoadedNetwork = {
   network: Network;
   name: string;
   raw: string;
   entry?: NetworkEntry;
+  share?: Share;
 };
+
+type Read = () => Promise<Omit<LoadedNetwork, "network">>;
+
+const readLibrary =
+  (name: string): Read =>
+  async () => {
+    const [response, entries] = await Promise.all([
+      fetch(libraryFile(name)),
+      fetchLibrary().catch(() => []),
+    ]);
+    if (!response.ok)
+      throw new Error(
+        `Could not find ${name} in the library. It may have been renamed or removed.`,
+      );
+    const entry = entries.find((e) => e.file === name);
+    return { raw: await response.text(), name, entry };
+  };
+
+const readShare =
+  (id: string): Read =>
+  async () => {
+    const shared = await fetchShare(id).catch((failure: unknown) => {
+      throw new Error(
+        shareError(
+          failure,
+          "Couldn't open this share link right now. Try again in a few minutes.",
+        ),
+      );
+    });
+    const share = { id, expiresAt: shared.expiresAt };
+    return { raw: shared.lnet, name: shared.name, share };
+  };
 
 export function useNetworkFile() {
   const reader = useNetworkReader();
   const { open, request } = reader;
   const openLibrary = (name: string) => {
     history.replaceState(null, "", `?net=${encodeURIComponent(name)}`);
-    return open(async () => {
-      const [response, entries] = await Promise.all([
-        fetch(libraryFile(name)),
-        fetchLibrary().catch(() => []),
-      ]);
-      if (!response.ok)
-        throw new Error(
-          `Could not find ${name} in the library. It may have been renamed or removed.`,
-        );
-      return [await response.text(), entries.find((e) => e.file === name)];
-    }, name);
+    return open(readLibrary(name));
   };
   useEffect(() => {
-    const name = new URLSearchParams(location.search).get("net");
-    if (name) void openLibrary(name);
+    const params = new URLSearchParams(location.search);
+    const share = params.get("share");
+    const name = params.get("net");
+    if (share) void open(readShare(share));
+    else if (name) void openLibrary(name);
     return () => {
       request.current++;
     };
@@ -49,26 +76,24 @@ export function useNetworkFile() {
     openExample: () => openLibrary("pilpohs-bee-setup.lnet"),
     openFile: (file: File) => {
       local();
-      return open(async () => [await file.text()], file.name);
+      return open(async () => ({ raw: await file.text(), name: file.name }));
     },
   };
 }
-
-type Read = () => Promise<[string, NetworkEntry?]>;
 
 function useNetworkReader() {
   const [loaded, setLoaded] = useState<LoadedNetwork | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const request = useRef(0);
-  const open = async (read: Read, name: string) => {
+  const open = async (read: Read) => {
     const id = ++request.current;
     setError("");
     setBusy(true);
     try {
-      const [raw, entry] = await read();
+      const file = await read();
       if (request.current === id)
-        setLoaded({ network: parseNetwork(raw), raw, name, entry });
+        setLoaded({ ...file, network: parseNetwork(file.raw) });
     } catch (failure) {
       if (request.current === id)
         setError(

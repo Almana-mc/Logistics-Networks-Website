@@ -1,0 +1,57 @@
+.share-dialog {
+  width: min(100% - 2rem, 30rem);
+  padding: 1.5rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 18px;
+  color: var(--fg);
+  background: var(--bg-2);
+}
+.share-dialog[open] {
+  display: grid;
+  justify-items: start;
+  gap: 1rem;
+}
+.share-dialog::backdrop {
+  background: rgb(0 0 0 / 0.6);
+}
+.share-dialog h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+.share-dialog p {
+  margin: 0;
+}
+.share-dialog .error-text:empty {
+  display: none;
+}
+.share-url {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  width: 100%;
+}
+.share-url input {
+  flex: 1 1 14rem;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0.625rem 0.875rem;
+  border: 1px solid rgb(242 236 225 / 0.16);
+  border-radius: 10px;
+  color: var(--fg);
+  background: var(--bg-1);
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+}
+.share-url input:hover {
+  border-color: rgb(242 236 225 / 0.3);
+}
+.share-status {
+  color: var(--accent);
+  font-size: 0.875rem;
+}
+.share-dialog code {
+  overflow-wrap: anywhere;
+}
+.share-dialog [aria-disabled="true"] {
+  cursor: progress;
+}

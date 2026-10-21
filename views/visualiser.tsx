@@ -12,6 +12,7 @@ import "../styles/index.css";
 import "../styles/views/visualiser.css";
 import "../styles/views/visualiser-workspace.css";
 import "../styles/views/node-detail.css";
+import "../styles/views/share.css";
 
 function Visualiser() {
   const file = useNetworkFile();
@@ -42,7 +43,7 @@ function Visualiser() {
           <NetworkWorkspace loaded={file.loaded} onReset={file.reset} />
         )}
       </main>
-      <SiteFooter note=".lnet files are parsed in your browser." />
+      <SiteFooter note=".lnet files are parsed in your browser and uploaded only when you share a link." />
     </>
   );
 }

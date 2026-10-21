@@ -1,10 +1,11 @@
 import { useEffect, useRef } from "react";
 import type { LoadedNetwork } from "./useNetworkFile";
 import Icon from "../../components/Icon";
+import { expiryText } from "../../lib/share";
 
 export default function NetworkIntro({ loaded }: { loaded: LoadedNetwork }) {
   const title = useLandingFocus();
-  const { entry, network } = loaded;
+  const { entry, network, share } = loaded;
   return (
     <header className="page-intro network-intro">
       {entry && (
@@ -20,10 +21,15 @@ export default function NetworkIntro({ loaded }: { loaded: LoadedNetwork }) {
           <>
             By {entry.author} · saved in game as <code>{network.network}</code>
           </>
+        ) : share ? (
+          <>
+            Shared link · from <code>{loaded.name}</code> ·{" "}
+            {expiryText(share.expiresAt)}
+          </>
         ) : (
           <>
-            From <code>{loaded.name}</code>, read in your browser and never
-            uploaded.
+            From <code>{loaded.name}</code>, read in your browser and only
+            uploaded if you share it.
           </>
         )}
       </p>

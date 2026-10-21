@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import type { LoadedNetwork } from "./useNetworkFile";
 import Icon from "../../components/Icon";
+import ShareAction from "./ShareAction";
 
 export default function NetworkFileBar({
   loaded,
@@ -32,6 +33,7 @@ export default function NetworkFileBar({
         <a className="button secondary small" href={url} download={loaded.name}>
           <Icon name="download" size={15} /> Download .lnet
         </a>
+        <ShareAction loaded={loaded} />
         <button className="button secondary small" onClick={onReset}>
           <Icon name="reset" size={15} /> New file
         </button>

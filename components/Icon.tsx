@@ -8,7 +8,9 @@ type Props = {
     | "menu"
     | "download"
     | "book"
-    | "reset";
+    | "reset"
+    | "link"
+    | "copy";
   size?: number;
 };
 
@@ -23,6 +25,8 @@ export default function Icon({ name, size = 20 }: Props) {
     download: "M12 4v12m-6-6 6 6 6-6M4 17v3h16v-3",
     book: "M4 19V6a2 2 0 0 1 2-2h11v15H6a2 2 0 0 0-2 2zM17 4v15",
     reset: "M3 12a9 9 0 1 0 3-6.7M3 4v4h4",
+    link: "M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1-1",
+    copy: "M8 8h12v12H8zM16 8V4H4v12h4",
   };
   return (
     <svg

@@ -28,7 +28,7 @@ export default function CommunitySection({
         <div className="visualiser-teaser">
           <p>
             <strong>Have your own export?</strong> Open it in the visualiser. It
-            is read in your browser and never uploaded.
+            is read in your browser and only uploaded if you share a link.
           </p>
           <a className="button secondary" href="visualiser.html">
             Open the visualiser

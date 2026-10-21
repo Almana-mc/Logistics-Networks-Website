@@ -3,7 +3,8 @@ export default function UploadActions({ busy, error, onExample }: Props) {
   return (
     <>
       <p id="file-privacy" className="file-privacy">
-        Parsed entirely in your browser, nothing is uploaded.
+        Parsed entirely in your browser. Nothing is uploaded unless you create a
+        share link.
       </p>
       {busy && <p role="status">Reading network…</p>}
       <p

@@ -49,6 +49,7 @@
 }
 .network-intro .network-meta {
   font-size: 1rem;
+  overflow-wrap: anywhere;
 }
 .network-stats {
   display: flex;
