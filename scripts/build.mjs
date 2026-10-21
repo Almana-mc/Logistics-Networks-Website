@@ -78,8 +78,6 @@ for (const [file, view] of Object.entries(routes)) {
   await writeFile(`dist/${file}.html`, html);
 }
 await cp("library", "dist/library", { recursive: true });
-await cp("CNAME", "dist/CNAME");
-await cp("_headers", "dist/_headers");
 await cp("assets/fonts/OFL.txt", "dist/assets/OFL.txt");
 await mkdir("artifacts", { recursive: true });
 await writeFile(
