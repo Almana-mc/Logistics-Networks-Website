@@ -4,8 +4,17 @@ import { resolve, extname, sep } from "node:path";
 import { gzipSync } from "node:zlib";
 import { createApi } from "../server/api.ts";
 import { readConfig } from "../server/config.ts";
+import {
+  createShareApi,
+  readConfig as readShareConfig,
+} from "../shares/api.ts";
 
 const api = createApi({ ...readConfig(), rateLimits: false });
+const shares = createShareApi({
+  ...readShareConfig(),
+  origin: process.env.ORIGIN || `http://localhost:${process.env.PORT || 8794}`,
+  rateLimits: false,
+});
 const root = resolve("dist");
 const types = {
   ".html": "text/html; charset=utf-8",
@@ -27,7 +36,13 @@ const headers = Object.fromEntries(
     }),
 );
 createServer(async (request, response) => {
+  if (request.url.startsWith("/api/shares")) return shares(request, response);
   if (request.url.startsWith("/api/")) return api(request, response);
+  const share = /^\/s\/([A-Za-z0-9_-]{11})$/.exec(request.url.split("?")[0]);
+  if (share)
+    return void response
+      .writeHead(302, { Location: `/visualiser.html?share=${share[1]}` })
+      .end();
   try {
     const pathname = decodeURIComponent(
       new URL(request.url, "http://localhost").pathname,

@@ -1,13 +1,13 @@
 # Logistics Network website
 
-Homepage, community network library, versioned documentation and a local `.lnet` visualiser. React and strict TypeScript compile to four static pages with esbuild. No upload service is used.
+Homepage, community network library, versioned documentation and a local `.lnet` visualiser. React and strict TypeScript compile to six static pages with esbuild. Accounts are served by a Node API in `server/`, and share links are kept for 12 hours by a small Node service in `shares/`.
 
 ```sh
 npm ci
 npm run dev
 ```
 
-Open `http://localhost:8794` (passkeys refuse IP addresses). The preview mounts the API from `server/`, keeps its SQLite file in `.data/`, and writes emails to `.data/outbox/` instead of sending them. `dev` builds and starts the preview; run `npm run build` again after editing. `npm run preview` serves an existing build. Set `PORT` to change the preview port.
+Open `http://localhost:8794` (passkeys refuse IP addresses, and the account and share APIs only accept that origin in the preview). The preview mounts both APIs, from `server/` and `shares/`, keeps their SQLite files in `.data/`, and writes emails to `.data/outbox/` instead of sending them. `dev` builds and starts the preview; run `npm run build` again after editing. `npm run preview` serves an existing build. Set `PORT` to change the preview port.
 
 ```sh
 npm run lint
@@ -26,11 +26,11 @@ The supplied artwork is preserved in `assets/logistic-icon.png` and used as both
 
 ## Hosting
 
-The site runs on a VPS behind Caddy. Pushing to `main` runs lint, typecheck, unit tests and the build, then `rsync`s `dist/` to `/srv/logistics-network/dist/`. `deploy/Caddyfile` sets TLS, the CSP and security headers, and caching. `_headers` mirrors those headers, except HSTS, for the local preview. Keep the two in sync.
+The site runs on a VPS behind Caddy. Pushing to `main` runs lint, typecheck, unit tests and the build, then `rsync`s `dist/`, the account API and the share service to `/srv/logistics-network/` and restarts both services. `deploy/Caddyfile` sets TLS, the CSP and security headers, and caching. `_headers` mirrors those headers, except HSTS, for the local preview. Keep the two in sync.
 
 ### VPS setup (once)
 
-1. Install Node 24.7 or later (nodejs.org), Caddy 2 (caddyserver.com/docs/install) and `rsync`. `node` and `npm` must be on the default `PATH` at `/usr/bin/node` (the systemd unit and the deploy's non-interactive SSH use it); for a tarball install, `sudo ln -s /usr/local/bin/node /usr/bin/node` and the same for `npm`. Give the VPS at least 1 GB of RAM, and open ports 80 and 443.
+1. Install Node 24.7 or later system-wide from NodeSource (distro packages are too old) so that `node` and `npm` are in `/usr/bin` (the systemd units and the deploy's non-interactive SSH use them), plus Caddy 2 (caddyserver.com/docs/install) and `rsync`. Check with `node --version`. Give the VPS at least 1 GB of RAM, and open ports 80 and 443.
 2. Create the deploy user and site folder:
    `sudo adduser --disabled-password --gecos "" deploy`, then `sudo install -d -m 700 -o deploy -g deploy /home/deploy/.ssh`, put the CI public key in `/home/deploy/.ssh/authorized_keys` (owned by `deploy`, mode 600), and `sudo install -d -o deploy -g deploy /srv/logistics-network /srv/logistics-network/dist`.
 3. Point `logistics-network.almanax21.com` (A/AAAA) at the VPS.
@@ -46,7 +46,13 @@ The site runs on a VPS behind Caddy. Pushing to `main` runs lint, typecheck, uni
    - Configure an SMTP provider. Publish SPF, DKIM and DMARC records for the `MAIL_FROM` domain before going live.
    - Time one password hash on the VPS: `cd /srv/logistics-network && node -e "import('./server/passwords.ts').then(async (p) => { const t = Date.now(); await p.hashPassword('timing check password', Buffer.alloc(32)); console.log(Date.now() - t + ' ms'); })"`. Keep it between 100 and 500 ms. If it is slower, lower `memory` in `current` in `server/passwords.ts` (floor: 19456 KiB with `passes: 2`). Existing hashes keep working and are upgraded on the next sign-in.
 
-To switch over without downtime, do steps 1, 2, 4, 5 and 7 first, merge to `main` so the first deploy fills `/srv/logistics-network/dist`, then point DNS (step 3) and turn off GitHub Pages (step 6). Pages keeps serving its last build until then.
+8. Share link service (once, before the first deploy that includes `shares/`), from a clone of this repo:
+   - `sudo cp deploy/logistics-shares.service /etc/systemd/system/ && sudo systemctl daemon-reload && sudo systemctl enable logistics-shares`
+   - `echo 'deploy ALL=(root) NOPASSWD: /usr/bin/systemctl restart logistics-shares' | sudo tee /etc/sudoers.d/logistics-shares && sudo chmod 0440 /etc/sudoers.d/logistics-shares && sudo visudo -cf /etc/sudoers.d/logistics-shares`
+   - Copy `deploy/Caddyfile` to `/etc/caddy/Caddyfile` (again, if step 4 used an older copy) and reload Caddy.
+   - The deploy's restart starts the service. It needs no secrets; its settings are `Environment=` lines in the unit and its data lives in `/var/lib/logistics-shares/`.
+
+To switch over without downtime, do steps 1, 2, 4, 5, 7 and 8 first, merge to `main` so the first deploy fills `/srv/logistics-network/dist`, then point DNS (step 3) and turn off GitHub Pages (step 6). Pages keeps serving its last build until then.
 
 ### API environment
 

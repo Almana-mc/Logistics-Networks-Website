@@ -35,6 +35,15 @@ jobs:
         env:
           VPS_KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}
           VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+      - name: Upload the share service and restart it
+        run: |
+          rsync -az --delete -e "$SSH" shares/ "$TARGET:/srv/logistics-network/shares/"
+          rsync -az -e "$SSH" package.json "$TARGET:/srv/logistics-network/"
+          $SSH "$TARGET" "sudo systemctl restart logistics-shares"
+          $SSH "$TARGET" "sleep 2 && systemctl is-active logistics-shares"
+        env:
+          TARGET: ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}
+          SSH: ssh -i ~/.ssh/deploy -o IdentitiesOnly=yes -o BatchMode=yes
       - name: Upload the site
         run: rsync -az --delete -e "ssh -i ~/.ssh/deploy -o IdentitiesOnly=yes -o BatchMode=yes" dist/ "$TARGET:/srv/logistics-network/dist/"
         env:
