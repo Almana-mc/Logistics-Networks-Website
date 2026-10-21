@@ -2,7 +2,10 @@ import { createServer } from "node:http";
 import { readFile, stat } from "node:fs/promises";
 import { resolve, extname, sep } from "node:path";
 import { gzipSync } from "node:zlib";
+import { createApi } from "../server/api.ts";
+import { readConfig } from "../server/config.ts";
 
+const api = createApi({ ...readConfig(), rateLimits: false });
 const root = resolve("dist");
 const types = {
   ".html": "text/html; charset=utf-8",
@@ -24,6 +27,7 @@ const headers = Object.fromEntries(
     }),
 );
 createServer(async (request, response) => {
+  if (request.url.startsWith("/api/")) return api(request, response);
   try {
     const pathname = decodeURIComponent(
       new URL(request.url, "http://localhost").pathname,
@@ -59,5 +63,5 @@ createServer(async (request, response) => {
     response.writeHead(404, headers).end("Not found");
   }
 }).listen(Number(process.env.PORT || 8794), "127.0.0.1", () =>
-  console.log("Preview: http://127.0.0.1:" + (process.env.PORT || 8794)),
+  console.log("Preview: http://localhost:" + (process.env.PORT || 8794)),
 );

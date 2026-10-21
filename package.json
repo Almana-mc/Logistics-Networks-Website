@@ -7,21 +7,23 @@
     "build": "node scripts/build.mjs",
     "dev": "npm run build && node scripts/serve.mjs",
     "preview": "node scripts/serve.mjs",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p server",
     "lint": "eslint .",
-    "format": "prettier --write views components lib styles scripts tests *.json *.html",
-    "format:check": "prettier --check views components lib styles scripts tests *.json *.html",
-    "test:unit": "node --import tsx --test tests/logic.test.ts",
+    "format": "prettier --write views components lib server styles scripts tests *.json *.html",
+    "format:check": "prettier --check views components lib server styles scripts tests *.json *.html",
+    "test:unit": "node --import tsx --test tests/logic.test.ts tests/server.test.ts tests/api.test.ts tests/api-edges.test.ts",
     "test": "playwright test",
     "audit:performance": "node scripts/lighthouse.mjs"
   },
   "dependencies": {
+    "nodemailer": "10.1.7",
     "react": "18.3.1",
     "react-dom": "18.3.1"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
     "@playwright/test": "1.63.0",
+    "@types/node": "24.19.2",
     "@types/react": "18.3.31",
     "@types/react-dom": "18.3.7",
     "autoprefixer": "10.6.0",

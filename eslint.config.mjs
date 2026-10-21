@@ -19,7 +19,7 @@ export default tseslint.config(
   },
   ...tseslint.configs.recommended,
   {
-    files: ["{views,components,lib}/**/*.{ts,tsx}"],
+    files: ["{views,components,lib,server}/**/*.{ts,tsx}"],
     rules: {
       "max-lines": ["error", 250],
       "max-lines-per-function": ["error", 40],

@@ -1,0 +1,22 @@
+[Unit]
+Description=Logistics Network API
+After=network.target
+
+[Service]
+User=lnet
+Group=lnet
+WorkingDirectory=/srv/logistics-network
+EnvironmentFile=/etc/logistics-network/env
+ExecStart=/usr/bin/node server/main.ts
+Restart=on-failure
+RestartSec=2
+UMask=0077
+StateDirectory=logistics-network
+StateDirectoryMode=0700
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
