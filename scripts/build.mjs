@@ -10,6 +10,8 @@ const routes = {
   library: "library",
   docs: "docs",
   visualiser: "visualiser",
+  "sign-in": "sign-in",
+  account: "account",
 };
 const output = resolve("dist");
 if (dirname(output) !== process.cwd() || basename(output) !== "dist")
@@ -84,4 +86,4 @@ await writeFile(
   "artifacts/build.json",
   JSON.stringify(result.metafile, null, 2),
 );
-console.log("Built all four routes.");
+console.log("Built all routes.");

@@ -9,7 +9,7 @@ const chrome = await launch({ chromeFlags: ["--headless"], userDataDir });
 const results = [];
 await mkdir("artifacts/lighthouse", { recursive: true });
 try {
-  for (const route of ["index", "library", "docs", "visualiser"]) {
+  for (const route of ["index", "library", "docs", "visualiser", "sign-in"]) {
     const report = await lighthouse(`http://127.0.0.1:8794/${route}.html`, {
       port: chrome.port,
       output: ["html", "json"],

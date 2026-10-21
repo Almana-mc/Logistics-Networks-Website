@@ -1,5 +1,6 @@
 import logo from "../assets/logistic-icon-80.png";
 import Icon from "./Icon";
+import AccountLink from "./AccountLink";
 import { links } from "../lib/resources";
 
 const pages = [
@@ -34,6 +35,7 @@ export default function SiteHeader({ current }: { current: string }) {
               {label}
             </a>
           ))}
+          <AccountLink current={current} />
           <a
             className="header-github"
             href={links.github}

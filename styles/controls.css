@@ -52,6 +52,9 @@
   gap: 0.75rem 1.25rem;
 }
 input[type="search"],
+input[type="email"],
+input[type="text"],
+input[type="password"],
 select {
   min-height: 44px;
   max-width: 100%;
@@ -73,6 +76,9 @@ select {
   cursor: pointer;
 }
 input[type="search"]:hover,
+input[type="email"]:hover,
+input[type="text"]:hover,
+input[type="password"]:hover,
 select:hover {
   border-color: rgb(242 236 225 / 0.3);
 }
