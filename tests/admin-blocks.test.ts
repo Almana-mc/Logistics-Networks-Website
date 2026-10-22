@@ -82,6 +82,12 @@ test("an exact block stops a pending signup and an existing account", async (t) 
   assert.equal((await user.call("GET", "/api/me")).body, null);
   const listed = (await admin.call("GET", "/api/admin/blocks")).body;
   assert.equal(listed.length, 2);
+  api.sql("UPDATE users SET suspended_at = 1 WHERE id = 2");
+  await admin.call("DELETE", "/api/admin/blocks", {
+    pattern: "member@example.com",
+  });
+  await api.mail("member@example.com");
+  await assert.rejects(api.mail("member@example.com"));
 });
 
 test("a block never covers an admin, even a locked-out one", async (t) => {

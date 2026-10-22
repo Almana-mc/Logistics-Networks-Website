@@ -4,13 +4,15 @@ import { emailBlocked } from "./blocks.ts";
 import type { Context, Routes } from "./context.ts";
 import { HttpError, param, send } from "./http.ts";
 import { mails, sendLater } from "./mail.ts";
-import { dropTokens } from "./tokens.ts";
+import { dropTokens, endAllSessions } from "./tokens.ts";
 import {
   active,
   checkEmail,
   checkUsername,
   findUser,
+  lockedOut,
   updateUser,
+  type User,
 } from "./users.ts";
 
 type Row = {
@@ -52,6 +54,13 @@ function targetUser(context: Context, id: unknown) {
   return user;
 }
 
+function targetOther(context: Context, id: unknown): User {
+  const user = targetUser(context, id);
+  if (context.config.adminIds.includes(user.id))
+    throw new HttpError(409, "admin-target");
+  return user;
+}
+
 export const adminUserRoutes: Routes = {
   "GET /api/admin/users": (context) => {
     context.requireAdmin();
@@ -88,11 +97,11 @@ export const adminUserRoutes: Routes = {
     const username = sameName ? user.username : checkUsername(body.username);
     const email =
       body.email === undefined ? user.email : checkEmail(body.email);
-    if (email !== user.email && emailBlocked(db, email))
+    const moved = email !== user.email;
+    if (moved && emailBlocked(db, email))
       throw new HttpError(409, "email-blocked");
     updateUser(db, user.id, username, email);
     const renamed = username !== user.username;
-    const moved = email !== user.email;
     if (moved) dropTokens(db, "reset", user.id);
     if (renamed)
       log("user.rename", `user:${user.id}`, {
@@ -107,5 +116,49 @@ export const adminUserRoutes: Routes = {
       sendLater(config, mails.emailAdded(email, username));
     }
     send(context.response, 200, describeUser(context, user.id));
+  },
+  "POST /api/admin/user/suspend": async (context) => {
+    const { db, config } = context;
+    const log = adminChange(context);
+    const body = await context.body();
+    const user = targetOther(context, body.id);
+    const suspend = body.suspended === true;
+    if (suspend !== (user.suspended_at !== null)) {
+      db.prepare("UPDATE users SET suspended_at = ? WHERE id = ?").run(
+        suspend ? Date.now() : null,
+        user.id,
+      );
+      if (suspend) endAllSessions(db, user.id);
+      log(suspend ? "user.suspend" : "user.lift", `user:${user.id}`, {});
+      if (suspend) sendLater(config, mails.suspended(user.email));
+      else if (!lockedOut(db, user.id))
+        sendLater(config, mails.restored(user.email));
+    }
+    send(context.response, 200, describeUser(context, user.id));
+  },
+  "POST /api/admin/user/signout": async (context) => {
+    const log = adminChange(context);
+    const user = targetOther(context, (await context.body()).id);
+    endAllSessions(context.db, user.id);
+    log("user.signout", `user:${user.id}`, {});
+    sendLater(context.config, mails.signedOut(user.email));
+    send(context.response, 204);
+  },
+  "DELETE /api/admin/user": async (context) => {
+    const { db, config } = context;
+    const log = adminChange(context);
+    const user = targetOther(context, (await context.body()).id);
+    const { networks } = describeUser(context, user.id);
+    db.prepare("DELETE FROM users WHERE id = ?").run(user.id);
+    // Ids can be reused
+    dropTokens(db, "reset", user.id);
+    dropTokens(db, "reauth", user.id);
+    log("user.delete", `user:${user.id}`, {
+      username: user.username,
+      email: user.email,
+      networks,
+    });
+    sendLater(config, mails.deleted(user.email, user.username));
+    send(context.response, 204);
   },
 };
