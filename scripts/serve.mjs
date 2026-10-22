@@ -9,7 +9,13 @@ import {
   readConfig as readShareConfig,
 } from "../shares/api.ts";
 
-const api = createApi({ ...readConfig(), rateLimits: false });
+const config = readConfig();
+// Preview only: e2e seeds id 1000000
+const api = createApi({
+  ...config,
+  rateLimits: false,
+  adminIds: [...config.adminIds, 1_000_000],
+});
 const shares = createShareApi({
   ...readShareConfig(),
   origin: process.env.ORIGIN || `http://localhost:${process.env.PORT || 8794}`,
