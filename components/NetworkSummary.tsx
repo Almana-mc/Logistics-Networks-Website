@@ -1,7 +1,7 @@
-import ResourceLegend from "../../components/ResourceLegend";
-import { formatDate } from "../../lib/account";
-import { entryLink } from "../../lib/library";
-import { uploadEntry, type Upload } from "../../lib/uploads";
+import ResourceLegend from "./ResourceLegend";
+import { formatDate } from "../lib/account";
+import { entryLink } from "../lib/library";
+import { uploadEntry, type Upload } from "../lib/uploads";
 
 export default function NetworkSummary({ upload }: { upload: Upload }) {
   return (

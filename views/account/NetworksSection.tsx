@@ -1,7 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import AccountPanel from "../../components/AccountPanel";
-import { fetchOwnUploads, type Upload } from "../../lib/uploads";
-import NetworkRow from "./NetworkRow";
+import NetworkRow from "../../components/NetworkRow";
+import {
+  deleteUpload,
+  editUpload,
+  fetchOwnUploads,
+  type Upload,
+} from "../../lib/uploads";
 
 export default function NetworksSection() {
   const { uploads, notice, note, saved, deleted } = useOwnUploads();
@@ -19,6 +24,8 @@ export default function NetworksSection() {
             <NetworkRow
               key={upload.id}
               upload={upload}
+              save={editUpload}
+              remove={deleteUpload}
               onSaved={saved}
               onDeleted={deleted}
             />

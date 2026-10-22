@@ -1,6 +1,6 @@
 import { useState } from "react";
-import FormSubmit from "../../components/FormSubmit";
-import { api, useSubmit } from "../../lib/account";
+import FormSubmit from "./FormSubmit";
+import { api, useSubmit } from "../lib/account";
 import ReauthCodeEntry from "./ReauthCodeEntry";
 
 export default function ReauthCode({ onDone }: { onDone: () => void }) {

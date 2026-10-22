@@ -1,16 +1,20 @@
-import { describeError, useSubmit } from "../../lib/account";
-import { deleteUpload, type Upload } from "../../lib/uploads";
+import { describeError, useSubmit } from "../lib/account";
+import type { Upload } from "../lib/uploads";
 
 type Props = {
   upload: Upload;
+  remove: (id: string) => Promise<unknown>;
   onDeleted: (upload: Upload) => void;
   onCancel: () => void;
 };
 
-export default function NetworkDelete({ upload, onDeleted, onCancel }: Props) {
-  const form = useSubmit(() =>
-    deleteUpload(upload.id).then(() => onDeleted(upload)),
-  );
+export default function NetworkDelete({
+  upload,
+  remove,
+  onDeleted,
+  onCancel,
+}: Props) {
+  const form = useSubmit(() => remove(upload.id).then(() => onDeleted(upload)));
   return (
     <form className="network-delete" onSubmit={form.onSubmit}>
       <p className="account-note">

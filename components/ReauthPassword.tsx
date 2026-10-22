@@ -1,7 +1,7 @@
 import { useState } from "react";
-import Field from "../../components/Field";
-import FormSubmit from "../../components/FormSubmit";
-import { api, useSubmit } from "../../lib/account";
+import Field from "./Field";
+import FormSubmit from "./FormSubmit";
+import { api, useSubmit } from "../lib/account";
 
 export default function ReauthPassword({ onDone }: { onDone: () => void }) {
   const [password, setPassword] = useState("");

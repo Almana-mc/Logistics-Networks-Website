@@ -2,8 +2,8 @@ import type { Account } from "../../lib/account";
 import AccountSummary from "./AccountSummary";
 import NetworksSection from "./NetworksSection";
 import PasswordSection from "./PasswordSection";
-import ReauthDialog from "./ReauthDialog";
-import { useReauth } from "./useReauth";
+import ReauthDialog from "../../components/ReauthDialog";
+import { useReauth } from "../../lib/useReauth";
 
 export default function AccountSettings({ account }: { account: Account }) {
   const reauth = useReauth();

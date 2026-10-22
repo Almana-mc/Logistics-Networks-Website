@@ -1,21 +1,27 @@
 import { useState } from "react";
-import FormActions from "../../components/FormActions";
-import NetworkFields from "../../components/NetworkFields";
-import { useSubmit } from "../../lib/account";
-import { editUpload, type Upload } from "../../lib/uploads";
+import FormActions from "./FormActions";
+import NetworkFields from "./NetworkFields";
+import { useSubmit } from "../lib/account";
+import type { Details, Upload } from "../lib/uploads";
 
 type Props = {
   upload: Upload;
+  save: (id: string, details: Details) => Promise<Upload>;
   onSaved: (upload: Upload) => void;
   onCancel: () => void;
 };
 
-export default function NetworkEditForm({ upload, onSaved, onCancel }: Props) {
+export default function NetworkEditForm({
+  upload,
+  save,
+  onSaved,
+  onCancel,
+}: Props) {
   const [details, setDetails] = useState({
     name: upload.name,
     description: upload.description,
   });
-  const form = useSubmit(() => editUpload(upload.id, details).then(onSaved));
+  const form = useSubmit(() => save(upload.id, details).then(onSaved));
   return (
     <form
       className="account-form"

@@ -3,7 +3,7 @@ import AccountPanel from "../../components/AccountPanel";
 import Field from "../../components/Field";
 import FormSubmit from "../../components/FormSubmit";
 import { accountChanged, api, newPassword, useSubmit } from "../../lib/account";
-import type { Reauth } from "./useReauth";
+import type { Reauth } from "../../lib/useReauth";
 
 type Props = { hasPassword: boolean; guard: Reauth["guard"] };
 
