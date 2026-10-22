@@ -15,7 +15,7 @@ export type Row = {
 
 const hour = 3_600_000;
 const perUser = 50;
-const typeIds = ["ITEM", "FLUID", "ENERGY", "CHEMICAL", "SOURCE"];
+export const typeIds = ["ITEM", "FLUID", "ENERGY", "CHEMICAL", "SOURCE"];
 const select = `SELECT n.id, n.name, n.description, n.types, n.created_at, u.username AS author
   FROM networks n JOIN users u ON u.id = n.user_id`;
 
@@ -31,7 +31,11 @@ export const publicNetwork = (row: Row) => ({
 const findNetwork = (db: DatabaseSync, id: string) =>
   publicNetwork(db.prepare(`${select} WHERE n.id = ?`).get(id) as Row);
 
-const listNetworks = (db: DatabaseSync, where = "", ...params: number[]) =>
+export const listNetworks = (
+  db: DatabaseSync,
+  where = "",
+  ...params: (string | number)[]
+) =>
   (
     db
       .prepare(`${select} ${where} ORDER BY n.created_at DESC`)

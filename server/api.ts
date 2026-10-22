@@ -8,6 +8,7 @@ import { accountRoutes } from "./account.ts";
 import { adminNetworkRoutes } from "./admin-networks.ts";
 import { auditRoutes } from "./audit.ts";
 import { blockRoutes } from "./blocks.ts";
+import { libraryRoutes } from "./library.ts";
 import { loginRoutes } from "./login.ts";
 import { networkRoutes } from "./networks.ts";
 import { reauthRoutes } from "./reauth.ts";
@@ -18,6 +19,7 @@ const routes: Routes = {
   ...adminNetworkRoutes,
   ...auditRoutes,
   ...blockRoutes,
+  ...libraryRoutes,
   ...loginRoutes,
   ...networkRoutes,
   ...reauthRoutes,

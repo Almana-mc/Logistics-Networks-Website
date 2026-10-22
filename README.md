@@ -22,6 +22,8 @@ Install Playwright browsers with `npx playwright install chromium firefox webkit
 
 `views/` contains routes and their components, `components/` contains shared UI, `lib/` contains data and markdown code, and `styles/` contains tokens and route styles. The existing `.lnet` parser is in `js/lnet.js`; the canvas renderer is in `js/graph.js`. Library submissions remain in `library/index.json`.
 
+The read-only library API for bots and other tools (search, network details and graph images) is documented in [API.md](API.md).
+
 The supplied artwork is preserved in `assets/logistic-icon.png` and used as both logo and favicon. Fonts are self-hosted: Archivo and JetBrains Mono under the included SIL Open Font License, and Pixel Operator (CC0 1.0). Audit and verification records are in `artifacts/`.
 
 Archivo and JetBrains Mono are trimmed to the axis ranges the styles use: Archivo `wght` 400–800 and `wdth` 100–118, JetBrains Mono `wght` 400–600. To regenerate them from the full-axis latin files in commit `c3faf4f`, install Python `fonttools` and `brotli`, then run from Git Bash:
