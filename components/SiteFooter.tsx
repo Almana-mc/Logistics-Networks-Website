@@ -1,10 +1,10 @@
 import { links } from "../lib/resources";
 
 const pages = [
-  ["Home", "index.html"],
-  ["Library", "library.html"],
-  ["Visualiser", "visualiser.html"],
-  ["Docs", "docs.html"],
+  ["Home", "/index.html"],
+  ["Library", "/library.html"],
+  ["Visualiser", "/visualiser.html"],
+  ["Docs", "/docs.html"],
 ];
 const external = [
   ["CurseForge", links.curseforge],
