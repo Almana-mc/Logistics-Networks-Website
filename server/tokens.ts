@@ -1,5 +1,6 @@
 import { createHash, randomBytes } from "node:crypto";
 import type { DatabaseSync } from "node:sqlite";
+import { active } from "./users.ts";
 
 const minute = 60_000;
 const lifetimes = {
@@ -112,7 +113,9 @@ export function readSession(
   const hash = hashToken(token);
   const row = db
     .prepare(
-      "SELECT user_id, expires_at, authed_at FROM sessions WHERE token_hash = ? AND expires_at > ?",
+      `SELECT s.user_id, s.expires_at, s.authed_at FROM sessions s
+      JOIN users u ON u.id = s.user_id
+      WHERE s.token_hash = ? AND s.expires_at > ? AND ${active}`,
     )
     .get(hash, now) as
     { user_id: number; expires_at: number; authed_at: number } | undefined;

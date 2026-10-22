@@ -13,6 +13,7 @@ import {
   findUser,
   findUserByEmail,
   findUserByLogin,
+  lockedOut,
   publicUser,
   setPassword,
   swapPassword,
@@ -45,6 +46,7 @@ export const loginRoutes: Routes = {
     // Reset may land mid-login
     if (findUser(db, user.id)?.password_hash !== hash)
       throw new HttpError(401, "invalid-login");
+    if (lockedOut(db, user.id)) throw new HttpError(403, "account-suspended");
     context.signIn(user.id);
     send(context.response, 200, { user: publicUser(user) });
   },
@@ -61,7 +63,7 @@ export const loginRoutes: Routes = {
     send(context.response, 202);
     const user = findUserByEmail(db, email);
     const token = issue(db, "reset", { userId: user?.id ?? 0 });
-    if (user)
+    if (user && !lockedOut(db, user.id))
       sendLater(config, mails.reset(email, signInLink(config, "reset", token)));
   },
   "POST /api/reset/complete": async (context) => {
@@ -71,6 +73,7 @@ export const loginRoutes: Routes = {
     const pending = peek<{ userId: number }>(db, "reset", body.token);
     const user = pending && findUser(db, pending.userId);
     if (!user) throw new HttpError(400, "link-expired");
+    if (lockedOut(db, user.id)) throw new HttpError(403, "account-suspended");
     const password = await checkPassword(config, body.password, user.username);
     if (!consume(db, "reset", body.token))
       throw new HttpError(400, "link-expired");

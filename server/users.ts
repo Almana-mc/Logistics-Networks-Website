@@ -11,6 +11,7 @@ export type User = {
   require_key: number;
   webauthn_id: Uint8Array;
   created_at: number;
+  suspended_at: number | null;
 };
 
 const reserved = new Set([
@@ -59,12 +60,30 @@ export const findUserByLogin = (db: DatabaseSync, login: string) =>
     .prepare("SELECT * FROM users WHERE username = ? OR email = ?")
     .get(login, login) as User | undefined;
 
+export const active = `u.suspended_at IS NULL AND NOT EXISTS (
+  SELECT 1 FROM blocked_emails b
+  WHERE b.pattern IN (u.email, substr(u.email, instr(u.email, '@'))))`;
+
+export const lockedOut = (db: DatabaseSync, userId: number) =>
+  db
+    .prepare(`SELECT 1 FROM users u WHERE u.id = ? AND ${active}`)
+    .get(userId) === undefined;
+
 export const publicUser = (user: User) => ({
   id: user.id,
   username: user.username,
   email: user.email,
   createdAt: user.created_at,
 });
+
+function uniqueError(error: unknown) {
+  const { errcode, message } = error as { errcode?: number; message: string };
+  if (errcode === 2067 && message.endsWith("users.username"))
+    return new HttpError(409, "username-taken");
+  if (errcode === 2067 && message.endsWith("users.email"))
+    return new HttpError(409, "email-taken");
+  return error;
+}
 
 export function createUser(
   db: DatabaseSync,
@@ -82,12 +101,7 @@ export function createUser(
     };
     return row.id;
   } catch (error) {
-    const { errcode, message } = error as { errcode?: number; message: string };
-    if (errcode === 2067 && message.endsWith("users.username"))
-      throw new HttpError(409, "username-taken");
-    if (errcode === 2067 && message.endsWith("users.email"))
-      throw new HttpError(409, "email-taken");
-    throw error;
+    throw uniqueError(error);
   }
 }
 
@@ -115,3 +129,20 @@ export const swapPassword = (
       )
       .run(to, userId, from).changes,
   ) > 0;
+
+export function updateUser(
+  db: DatabaseSync,
+  userId: number,
+  username: string,
+  email: string,
+) {
+  try {
+    db.prepare("UPDATE users SET username = ?, email = ? WHERE id = ?").run(
+      username,
+      email,
+      userId,
+    );
+  } catch (error) {
+    throw uniqueError(error);
+  }
+}

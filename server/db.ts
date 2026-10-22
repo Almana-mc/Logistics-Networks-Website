@@ -66,6 +66,19 @@ const migrations = [
   );
   CREATE INDEX networks_user ON networks (user_id);
   CREATE INDEX networks_created ON networks (created_at);`,
+  `ALTER TABLE users ADD COLUMN suspended_at INTEGER;
+  CREATE TABLE blocked_emails (
+    pattern TEXT PRIMARY KEY COLLATE NOCASE,
+    created_at INTEGER NOT NULL
+  );
+  CREATE TABLE admin_log (
+    id INTEGER PRIMARY KEY,
+    admin_id INTEGER NOT NULL,
+    action TEXT NOT NULL,
+    target TEXT NOT NULL,
+    detail TEXT NOT NULL,
+    created_at INTEGER NOT NULL
+  );`,
 ];
 
 export function openDb(path: string) {

@@ -2,8 +2,9 @@ import { randomBytes } from "node:crypto";
 import type { DatabaseSync } from "node:sqlite";
 import type { Context, Routes } from "./context.ts";
 import { HttpError, send } from "./http.ts";
+import { active } from "./users.ts";
 
-type Row = {
+export type Row = {
   id: string;
   name: string;
   description: string;
@@ -15,10 +16,10 @@ type Row = {
 const hour = 3_600_000;
 const perUser = 50;
 const typeIds = ["ITEM", "FLUID", "ENERGY", "CHEMICAL", "SOURCE"];
-const select = `SELECT n.id, n.name, n.description, n.types, n.created_at, u.username AS author
+export const select = `SELECT n.id, n.name, n.description, n.types, n.created_at, u.username AS author
   FROM networks n JOIN users u ON u.id = n.user_id`;
 
-const publicNetwork = (row: Row) => ({
+export const publicNetwork = (row: Row) => ({
   id: row.id,
   name: row.name,
   description: row.description,
@@ -63,7 +64,7 @@ const checkTypes = (value: unknown) =>
     .filter((type) => Array.isArray(value) && value.includes(type))
     .join(",");
 
-async function readDetails(context: Context, limit?: number) {
+export async function readDetails(context: Context, limit?: number) {
   const body = await context.body(limit);
   return {
     body,
@@ -75,7 +76,7 @@ async function readDetails(context: Context, limit?: number) {
 
 export const networkRoutes: Routes = {
   "GET /api/networks": ({ db, response }) =>
-    send(response, 200, listNetworks(db)),
+    send(response, 200, listNetworks(db, `WHERE ${active}`)),
   "GET /api/me/networks": (context) => {
     const userId = context.requireUser();
     send(
@@ -90,7 +91,10 @@ export const networkRoutes: Routes = {
       "id",
     );
     const row = context.db
-      .prepare("SELECT lnet FROM networks WHERE id = ?")
+      .prepare(
+        `SELECT n.lnet FROM networks n JOIN users u ON u.id = n.user_id
+        WHERE n.id = ? AND ${active}`,
+      )
       .get(id) as { lnet: string } | undefined;
     if (!row) throw new HttpError(404, "not-found");
     // Content never changes per id
