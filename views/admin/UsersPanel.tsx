@@ -2,7 +2,7 @@ import { useState } from "react";
 import AccountPanel from "../../components/AccountPanel";
 import type { AdminUser } from "../../lib/admin";
 import { useNotice } from "../../lib/useNotice";
-import { useUserList } from "../../lib/useUserList";
+import { useUserList } from "./useUserList";
 import type { Reauth } from "../../lib/useReauth";
 import UserDetail from "./UserDetail";
 import UserSearch from "./UserSearch";

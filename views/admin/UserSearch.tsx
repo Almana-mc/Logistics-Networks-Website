@@ -2,7 +2,7 @@ import Field from "../../components/Field";
 import FormSubmit from "../../components/FormSubmit";
 import { useSubmit } from "../../lib/account";
 import { searchUsers } from "../../lib/admin";
-import type { UserList as Users } from "../../lib/useUserList";
+import type { UserList as Users } from "./useUserList";
 import UserList from "./UserList";
 
 type Props = {
