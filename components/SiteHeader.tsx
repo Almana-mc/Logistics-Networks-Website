@@ -4,9 +4,9 @@ import AccountLink from "./AccountLink";
 import { links } from "../lib/resources";
 
 const pages = [
-  ["Library", "library.html"],
-  ["Visualiser", "visualiser.html"],
-  ["Docs", "docs.html"],
+  ["Library", "/library.html"],
+  ["Visualiser", "/visualiser.html"],
+  ["Docs", "/docs.html"],
 ];
 
 export default function SiteHeader({ current }: { current: string }) {
@@ -15,7 +15,7 @@ export default function SiteHeader({ current }: { current: string }) {
       <nav className="site-header__nav" aria-label="Primary">
         <a
           className="brand"
-          href="index.html"
+          href="/index.html"
           aria-label="Logistics Network home"
           aria-current={current === "Home" ? "page" : undefined}
         >

@@ -9,6 +9,7 @@ for (const route of [
   "docs.html",
   "visualiser.html",
   "sign-in.html",
+  "no-such-page.html",
 ]) {
   test(`${route}: responsive landmarks, logo, navigation and accessibility`, async ({
     page,

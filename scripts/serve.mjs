@@ -35,6 +35,14 @@ const headers = Object.fromEntries(
       return [line.slice(0, at).trim(), line.slice(at + 1).trim()];
     }),
 );
+const fail = async (response, status) =>
+  response
+    .writeHead(status, {
+      ...headers,
+      "Content-Type": types[".html"],
+      "Cache-Control": "no-cache",
+    })
+    .end(await readFile(resolve(root, `errors/${status}.html`)));
 createServer(async (request, response) => {
   if (request.url.startsWith("/api/shares")) return shares(request, response);
   if (request.url.startsWith("/api/")) return api(request, response);
@@ -48,10 +56,8 @@ createServer(async (request, response) => {
       new URL(request.url, "http://localhost").pathname,
     );
     let path = resolve(root, "." + pathname);
-    if (path !== root && !path.startsWith(root + sep)) {
-      response.writeHead(403).end();
-      return;
-    }
+    if (path !== root && !path.startsWith(root + sep))
+      return await fail(response, 403);
     if ((await stat(path)).isDirectory()) path = resolve(path, "index.html");
     let body = await readFile(path);
     const compressed =
@@ -74,8 +80,9 @@ createServer(async (request, response) => {
         : "no-cache",
     });
     response.end(body);
-  } catch {
-    response.writeHead(404, headers).end("Not found");
+  } catch (error) {
+    const missing = ["ENOENT", "ENOTDIR"].includes(error.code);
+    await fail(response, error instanceof URIError ? 400 : missing ? 404 : 500);
   }
 }).listen(Number(process.env.PORT || 8794), "127.0.0.1", () =>
   console.log("Preview: http://localhost:" + (process.env.PORT || 8794)),

@@ -173,3 +173,26 @@ summary {
   color: var(--fg-dim);
   font-size: 0.9375rem;
 }
+.stage-corner {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border: 0 solid var(--accent);
+  opacity: 0.8;
+}
+.stage-corner.top {
+  top: 14px;
+  border-top-width: 2px;
+}
+.stage-corner.bottom {
+  bottom: 14px;
+  border-bottom-width: 2px;
+}
+.stage-corner.left {
+  left: 14px;
+  border-left-width: 2px;
+}
+.stage-corner.right {
+  right: 14px;
+  border-right-width: 2px;
+}

@@ -2,6 +2,7 @@ import { build } from "esbuild";
 import { readFile, writeFile, mkdir, cp, rm } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { resolve, dirname, basename } from "node:path";
+import { pathToFileURL } from "node:url";
 import postcss from "postcss";
 import autoprefixer from "autoprefixer";
 
@@ -18,7 +19,9 @@ if (dirname(output) !== process.cwd() || basename(output) !== "dist")
   throw new Error("Build output must stay inside this workspace.");
 await rm(output, { recursive: true, force: true });
 const result = await build({
-  entryPoints: Object.values(routes).map((route) => `views/${route}.tsx`),
+  entryPoints: [...Object.values(routes), "error"].map(
+    (route) => `views/${route}.tsx`,
+  ),
   bundle: true,
   splitting: true,
   format: "esm",
@@ -56,7 +59,7 @@ const logo = `assets/logistic-icon-${createHash("sha256")
   .digest("hex")
   .slice(0, 12)}.png`;
 await writeFile(`dist/${logo}`, logoBytes);
-for (const [file, view] of Object.entries(routes)) {
+async function page(file, view) {
   const [script, info] = outputs.find(
     ([, entry]) => entry.entryPoint === `views/${view}.tsx`,
   );
@@ -65,20 +68,50 @@ for (const [file, view] of Object.entries(routes)) {
     .filter((entry) => entry.kind === "import-statement")
     .map(
       (entry) =>
-        `<link rel="modulepreload" href="${entry.path.replace("dist/", "")}" />`,
+        `<link rel="modulepreload" href="${entry.path.replace("dist/", "/")}" />`,
     );
   for (const { path } of result.metafile.outputs[info.cssBundle].imports)
     if (path.endsWith(".woff2"))
       preloads.push(
-        `<link rel="preload" href="${path.replace("dist/", "")}" as="font" type="font/woff2" crossorigin />`,
+        `<link rel="preload" href="${path.replace("dist/", "/")}" as="font" type="font/woff2" crossorigin />`,
       );
-  const html = source
-    .replace("__STYLE__", info.cssBundle.replace("dist/", ""))
-    .replace("__SCRIPT__", script.replace("dist/", ""))
-    .replaceAll("__LOGO__", logo)
+  return source
+    .replace("__STYLE__", info.cssBundle.replace("dist/", "/"))
+    .replace("__SCRIPT__", script.replace("dist/", "/"))
+    .replaceAll("__LOGO__", `/${logo}`)
     .replace("</head>", `${preloads.join("\n")}\n</head>`);
-  await writeFile(`dist/${file}.html`, html);
 }
+for (const [file, view] of Object.entries(routes))
+  await writeFile(`dist/${file}.html`, await page(file, view));
+const renderer = await build({
+  entryPoints: ["views/error/render.tsx"],
+  bundle: true,
+  platform: "node",
+  format: "esm",
+  packages: "external",
+  outdir: "artifacts",
+  publicPath: "/",
+  assetNames: "assets/[name]-[hash]",
+  loader: { ".png": "file" },
+  write: false,
+});
+const rendererFile = resolve("artifacts/error-render.mjs");
+await writeFile(
+  rendererFile,
+  renderer.outputFiles.find(({ path }) => path.endsWith(".js")).contents,
+);
+const { pages } = await import(pathToFileURL(rendererFile).href);
+await rm(rendererFile);
+const errorPage = await page("error", "error");
+await mkdir("dist/errors");
+for (const error of pages)
+  await writeFile(
+    `dist/errors/${error.file}.html`,
+    errorPage
+      .replace("__TITLE__", error.title)
+      .replace("__DESCRIPTION__", error.description)
+      .replace("__BODY__", () => error.body),
+  );
 await cp("library", "dist/library", { recursive: true });
 await cp("assets/fonts/OFL.txt", "dist/assets/OFL.txt");
 await mkdir("artifacts", { recursive: true });
