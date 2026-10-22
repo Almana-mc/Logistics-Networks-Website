@@ -11,7 +11,7 @@
     "lint": "eslint .",
     "format": "prettier --write views components lib server shares styles scripts tests *.json *.html",
     "format:check": "prettier --check views components lib server shares styles scripts tests *.json *.html",
-    "test:unit": "node --import tsx --test tests/logic.test.ts tests/server.test.ts tests/api.test.ts tests/api-edges.test.ts tests/share-client.test.ts tests/shares.test.ts tests/networks.test.ts tests/admin-users.test.ts tests/admin-networks.test.ts",
+    "test:unit": "node --import tsx --test tests/logic.test.ts tests/server.test.ts tests/api.test.ts tests/api-edges.test.ts tests/share-client.test.ts tests/shares.test.ts tests/networks.test.ts tests/admin-users.test.ts tests/admin-networks.test.ts tests/admin-blocks.test.ts",
     "test": "playwright test",
     "audit:performance": "node scripts/lighthouse.mjs"
   },

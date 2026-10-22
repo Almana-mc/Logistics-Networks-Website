@@ -1,3 +1,4 @@
+import { emailBlocked } from "./blocks.ts";
 import type { Routes } from "./context.ts";
 import { HttpError, send } from "./http.ts";
 import { mails, sendMail, signInLink } from "./mail.ts";
@@ -9,6 +10,7 @@ import {
   createUser,
   findUser,
   findUserByEmail,
+  lockedOut,
   publicUser,
   usernameTaken,
 } from "./users.ts";
@@ -23,6 +25,7 @@ export const signupRoutes: Routes = {
     const body = await context.body();
     const username = checkUsername(body.username);
     const email = checkEmail(body.email);
+    if (emailBlocked(db, email)) throw new HttpError(403, "email-blocked");
     if (usernameTaken(db, username)) throw new HttpError(409, "username-taken");
     context.limit(`signup-ip:${context.ip}`, 5, quarter);
     context.limit(`signup-email:${email}`, 3, quarter);
@@ -30,11 +33,13 @@ export const signupRoutes: Routes = {
     const passwordHash = await hashPassword(password, config.pepper);
     const existing = findUserByEmail(db, email);
     if (existing) {
-      const token = issue(db, "reset", { userId: existing.id });
-      await sendMail(
-        config,
-        mails.existing(email, signInLink(config, "reset", token)),
-      );
+      if (!lockedOut(db, existing.id)) {
+        const token = issue(db, "reset", { userId: existing.id });
+        await sendMail(
+          config,
+          mails.existing(email, signInLink(config, "reset", token)),
+        );
+      }
     } else {
       const token = issue(db, "signup", { username, email, passwordHash });
       await sendMail(
@@ -55,6 +60,8 @@ export const signupRoutes: Routes = {
     // Link alone must not sign in
     if (!(await verifyPassword(pending.passwordHash, password, config.pepper)))
       throw new HttpError(401, "signup-password");
+    if (emailBlocked(db, pending.email))
+      throw new HttpError(403, "email-blocked");
     if (!consume(db, "signup", body.token))
       throw new HttpError(400, "link-expired");
     const userId = createUser(
