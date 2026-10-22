@@ -20,7 +20,6 @@ function Home() {
       <SiteHeader current="Home" />
       <main id="main" tabIndex={-1}>
         <HomeHero
-          version={version}
           entry={library.entries[0]}
           ready={library.status !== "loading"}
         />

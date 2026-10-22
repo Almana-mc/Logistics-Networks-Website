@@ -23,40 +23,6 @@
   line-height: 0.9;
   font-variant-numeric: tabular-nums;
 }
-.download-caption {
-  display: flex;
-  flex-direction: column;
-  gap: 0.625rem;
-  max-width: 20rem;
-  margin: 0;
-  padding-bottom: 0.625rem;
-}
-.download-caption > span:first-child {
-  font-size: 1.25rem;
-  font-weight: 600;
-  font-stretch: 108%;
-}
-.download-status {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--fg-dim);
-}
-.download-status::before {
-  content: "";
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--fg-mute);
-}
-.download-status[data-status="live"]::before {
-  background: var(--type-chemical);
-  box-shadow: 0 0 10px var(--type-chemical);
-}
 .download-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));

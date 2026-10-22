@@ -2,12 +2,6 @@ import { useDownloadCount } from "../../lib/downloads";
 import { useCountUp } from "./useCountUp";
 import DownloadCards from "./DownloadCards";
 
-const statusText = {
-  loading: "Fetching from CurseForge",
-  live: "Live from CurseForge",
-  cached: "Last fetched count",
-  fallback: "Approximate count",
-};
 const compact = new Intl.NumberFormat("en-US", {
   notation: "compact",
   maximumFractionDigits: 1,
@@ -36,12 +30,6 @@ export default function DownloadSection({ version }: { version: string }) {
                   : "—"}
             </p>
           </div>
-          <p className="download-caption">
-            <span>downloads on CurseForge</span>
-            <span className="download-status" data-status={count.status}>
-              {statusText[count.status]}
-            </span>
-          </p>
         </div>
         <DownloadCards version={version} />
       </div>

@@ -17,16 +17,6 @@
   align-items: center;
   gap: 0.75rem;
 }
-.version-pill {
-  padding: 4px 10px;
-  border: 1px solid rgb(242 236 225 / 0.18);
-  border-radius: 999px;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.06em;
-  color: var(--fg-dim);
-  white-space: nowrap;
-}
 .hero-title {
   display: flex;
   flex-direction: column;
