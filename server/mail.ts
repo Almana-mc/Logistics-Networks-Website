@@ -61,4 +61,49 @@ export const mails = {
     subject: "Your Logistics Network password was reset",
     text: "Your password was reset and every device was signed out.\n\nIf this wasn't you, reset your password again from the sign-in page.",
   }),
+  renamed: (to: string, username: string): Mail => ({
+    to,
+    subject: "Your Logistics Network username changed",
+    text: `An administrator changed your username to "${username}". Use it or your email to sign in.`,
+  }),
+  emailMoved: (to: string, email: string): Mail => ({
+    to,
+    subject: "Your Logistics Network email changed",
+    text: `An administrator moved your account to ${email}. This address no longer signs in.\n\nIf you didn't expect this, contact the site administrator.`,
+  }),
+  emailAdded: (to: string, username: string): Mail => ({
+    to,
+    subject: "This email now signs in to Logistics Network",
+    text: `An administrator set this address as the email for the account "${username}". Use Forgot password on the sign-in page if you need a new password.`,
+  }),
+  suspended: (to: string): Mail => ({
+    to,
+    subject: "Your Logistics Network account is suspended",
+    text: "An administrator suspended your account. You can't sign in, and your published networks are hidden from the library until it's lifted.",
+  }),
+  restored: (to: string): Mail => ({
+    to,
+    subject: "Your Logistics Network account is active again",
+    text: "You can sign in again, and your published networks are back in the library.",
+  }),
+  signedOut: (to: string): Mail => ({
+    to,
+    subject: "You were signed out of Logistics Network",
+    text: "An administrator signed your account out on every device.\n\nIf you think someone else had access, reset your password from the sign-in page.",
+  }),
+  deleted: (to: string, username: string): Mail => ({
+    to,
+    subject: "Your Logistics Network account was deleted",
+    text: `An administrator deleted the account "${username}" and every network it published.`,
+  }),
+  networkEdited: (to: string, name: string): Mail => ({
+    to,
+    subject: "An administrator edited your network",
+    text: `An administrator changed the name or description of your network "${name}". See the new version on your account page.`,
+  }),
+  networkDeleted: (to: string, name: string): Mail => ({
+    to,
+    subject: "An administrator removed your network",
+    text: `An administrator removed your network "${name}" from the library.`,
+  }),
 };

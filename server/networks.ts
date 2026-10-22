@@ -16,7 +16,7 @@ export type Row = {
 const hour = 3_600_000;
 const perUser = 50;
 const typeIds = ["ITEM", "FLUID", "ENERGY", "CHEMICAL", "SOURCE"];
-export const select = `SELECT n.id, n.name, n.description, n.types, n.created_at, u.username AS author
+const select = `SELECT n.id, n.name, n.description, n.types, n.created_at, u.username AS author
   FROM networks n JOIN users u ON u.id = n.user_id`;
 
 export const publicNetwork = (row: Row) => ({
