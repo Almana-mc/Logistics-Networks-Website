@@ -72,3 +72,83 @@ test("the audit log is admin-only and pages 100 entries", async (t) => {
   assert.equal(rest.body.length, 20);
   assert.equal(rest.body[19].id, 1);
 });
+
+test("admins find users, rename them and move their email", async (t) => {
+  const { api, admin, user } = await startAdmin(t);
+  await user.call("POST", "/api/networks", sampleNetwork);
+  const found = (await admin.call("GET", "/api/admin/users?q=MEM")).body;
+  assert.deepEqual(found, [
+    {
+      id: 2,
+      username: "Member",
+      email: "member@example.com",
+      createdAt: found[0].createdAt,
+      suspendedAt: null,
+      networks: 1,
+      locked: false,
+      admin: false,
+    },
+  ]);
+  assert.equal((await admin.call("GET", "/api/admin/users")).body.length, 2);
+  const detail = (await admin.call("GET", "/api/admin/user?id=2")).body;
+  assert.equal(detail.networkList[0].name, "Bee Automation");
+  assert.equal((await admin.call("GET", "/api/admin/user?id=9")).status, 404);
+  const edit = (body: object) =>
+    admin.call("PUT", "/api/admin/user", { id: 2, ...body });
+  assert.equal((await edit({ username: "x" })).body.error, "bad-username");
+  assert.equal(
+    (await edit({ username: "Admin" })).body.error,
+    "username-taken",
+  );
+  assert.equal((await edit({ username: "boss" })).body.error, "username-taken");
+  assert.equal(
+    (await edit({ email: "BOSS@example.com" })).body.error,
+    "email-taken",
+  );
+  await admin.call("POST", "/api/admin/blocks", { pattern: "@blocked.test" });
+  assert.equal(
+    (await edit({ email: "x@blocked.test" })).body.error,
+    "email-blocked",
+  );
+  assert.equal(
+    (await admin.call("PUT", "/api/admin/user", { id: 9, username: "Ghost" }))
+      .status,
+    404,
+  );
+  await api
+    .client()
+    .call("POST", "/api/reset", { email: "member@example.com" });
+  const link = tokenIn((await api.mail("member@example.com")).text, "reset");
+  const moved = await edit({
+    username: "Builder",
+    email: "Builder@Example.com",
+  });
+  assert.equal(moved.body.username, "Builder");
+  assert.equal(moved.body.email, "builder@example.com");
+  const subjects = [
+    (await api.mail("builder@example.com")).subject,
+    (await api.mail("builder@example.com")).subject,
+  ].sort();
+  assert.deepEqual(subjects, [
+    "This email now signs in to Logistics Network",
+    "Your Logistics Network username changed",
+  ]);
+  assert.match((await api.mail("member@example.com")).subject, /email changed/);
+  const reset = await api.client().call("POST", "/api/reset/complete", {
+    token: link,
+    password: "a brand new gravel path",
+  });
+  assert.equal(reset.body.error, "link-expired");
+  const login = await api
+    .client()
+    .call("POST", "/api/login", { login: "Builder", password });
+  assert.equal(login.status, 200);
+  assert.equal((await edit({ username: "Builder" })).status, 200);
+  const log = (await admin.call("GET", "/api/admin/log")).body;
+  assert.deepEqual(
+    log.slice(0, 2).map((entry: { action: string }) => entry.action),
+    ["user.email", "user.rename"],
+  );
+  assert.deepEqual(log[1].detail, { from: "Member", to: "Builder" });
+  assert.equal(log[0].admin, "Boss");
+});

@@ -6,6 +6,7 @@ import { HttpError, checkRequest, createLimiter, send } from "./http.ts";
 import { sweep } from "./tokens.ts";
 import { accountRoutes } from "./account.ts";
 import { adminNetworkRoutes } from "./admin-networks.ts";
+import { adminUserRoutes } from "./admin-users.ts";
 import { auditRoutes } from "./audit.ts";
 import { blockRoutes } from "./blocks.ts";
 import { libraryRoutes } from "./library.ts";
@@ -17,6 +18,7 @@ import { signupRoutes } from "./signup.ts";
 const routes: Routes = {
   ...accountRoutes,
   ...adminNetworkRoutes,
+  ...adminUserRoutes,
   ...auditRoutes,
   ...blockRoutes,
   ...libraryRoutes,
