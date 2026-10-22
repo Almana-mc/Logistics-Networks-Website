@@ -40,15 +40,15 @@ Search results and network details share these fields:
 GET /api/library/search
 ```
 
-| Parameter | Default  | Meaning                                                                                                                  |
-| --------- | -------- | ------------------------------------------------------------------------------------------------------------------------ |
-| `q`       | none     | Words to find in the name, author or description. Case-insensitive. Every word must match somewhere.                     |
-| `type`    | none     | Comma-separated resource types. A network matches if it moves any of them. Case-insensitive. Unknown types return `400`. |
-| `author`  | none     | Exact author name, case-insensitive.                                                                                     |
-| `source`  | both     | `curated` or `community`.                                                                                                |
-| `sort`    | `newest` | `newest` or `name` (A to Z).                                                                                             |
-| `limit`   | `20`     | Results per page, 0 to 50.                                                                                               |
-| `offset`  | `0`      | Results to skip.                                                                                                         |
+| Parameter | Default  | Meaning                                                                                                                                                     |
+| --------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `q`       | none     | Words to find in the name, author or description. Case-insensitive. Every word must match somewhere. A `q` equal to a network id also returns that network. |
+| `type`    | none     | Comma-separated resource types. A network matches if it moves any of them. Case-insensitive. Unknown types return `400`.                                    |
+| `author`  | none     | Exact author name, case-insensitive.                                                                                                                        |
+| `source`  | both     | `curated` or `community`.                                                                                                                                   |
+| `sort`    | `newest` | `newest` or `name` (A to Z).                                                                                                                                |
+| `limit`   | `20`     | Results per page, 0 to 50.                                                                                                                                  |
+| `offset`  | `0`      | Results to skip.                                                                                                                                            |
 
 `total` counts every match before `limit` and `offset` apply. `limit=0` returns only the count.
 
@@ -77,6 +77,17 @@ GET /api/library/search?q=eldritch
   ]
 }
 ```
+
+### Checking for changes
+
+Every search reply carries an `ETag`. The tag covers the whole filtered library, not only the page returned, so it changes whenever any matching network is published, edited, deleted or hidden. Send the last tag back in `If-None-Match`, and the reply is `304 Not Modified` with no body when nothing has changed:
+
+```
+GET /api/library/search?limit=50
+If-None-Match: "kO2…"
+```
+
+A bot that keeps its own copy of the library can poll the first page this way and re-read the rest only when it gets a `200`. A `304` still counts towards the rate limit.
 
 ## Network details
 
@@ -143,23 +154,23 @@ Use the URL directly as a Discord embed image; Discord fetches and caches it. Ne
 
 ## Errors
 
-| Status | `error`              | When                                                                       |
-| ------ | -------------------- | -------------------------------------------------------------------------- |
-| 400    | `bad-type`           | `type` names an unknown resource.                                          |
-| 400    | `bad-source`         | `source` is not `curated` or `community`.                                  |
-| 404    | `not-found`          | No network has that id, or its author's account is suspended.              |
-| 422    | `unreadable-network` | The stored `.lnet` file cannot be parsed. Search results still list it.    |
-| 422    | `too-many-nodes`     | Details or image asked for a network with more than 300 nodes.             |
-| 429    | `rate-limited`       | Too many requests from one IP address. Wait up to 5 minutes and try again. |
+| Status | `error`              | When                                                                      |
+| ------ | -------------------- | ------------------------------------------------------------------------- |
+| 400    | `bad-type`           | `type` names an unknown resource.                                         |
+| 400    | `bad-source`         | `source` is not `curated` or `community`.                                 |
+| 404    | `not-found`          | No network has that id, or its author's account is suspended.             |
+| 422    | `unreadable-network` | The stored `.lnet` file cannot be parsed. Search results still list it.   |
+| 422    | `too-many-nodes`     | Details or image asked for a network with more than 300 nodes.            |
+| 429    | `rate-limited`       | Too many requests from one IP address. Wait the seconds in `Retry-After`. |
 
 ## Rate limits
 
-Per client IP address, over a rolling 5-minute window:
+Per client IP address, in a 5-minute window that starts with the first request:
 
 - Search and network details: 300 requests combined.
 - Images: 30 newly drawn images. Images already drawn are served from memory and do not count.
 
-A bot that caches search results for a few minutes stays well inside these limits.
+A `429` reply has a `Retry-After` header giving the whole seconds until the window resets. A bot that caches search results for a few minutes stays well inside these limits.
 
 ## Discord bot example
 
