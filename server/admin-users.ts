@@ -121,15 +121,19 @@ export const adminUserRoutes: Routes = {
     const { db, config } = context;
     const log = adminChange(context);
     const body = await context.body();
+    if (typeof body.suspended !== "boolean")
+      throw new HttpError(400, "bad-request");
     const user = targetOther(context, body.id);
-    const suspend = body.suspended === true;
+    const suspend = body.suspended;
     if (suspend !== (user.suspended_at !== null)) {
       db.prepare("UPDATE users SET suspended_at = ? WHERE id = ?").run(
         suspend ? Date.now() : null,
         user.id,
       );
       if (suspend) endAllSessions(db, user.id);
-      log(suspend ? "user.suspend" : "user.lift", `user:${user.id}`, {});
+      log(suspend ? "user.suspend" : "user.lift", `user:${user.id}`, {
+        username: user.username,
+      });
       if (suspend) sendLater(config, mails.suspended(user.email));
       else if (!lockedOut(db, user.id))
         sendLater(config, mails.restored(user.email));
@@ -140,7 +144,7 @@ export const adminUserRoutes: Routes = {
     const log = adminChange(context);
     const user = targetOther(context, (await context.body()).id);
     endAllSessions(context.db, user.id);
-    log("user.signout", `user:${user.id}`, {});
+    log("user.signout", `user:${user.id}`, { username: user.username });
     sendLater(context.config, mails.signedOut(user.email));
     send(context.response, 204);
   },

@@ -1,6 +1,12 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { password, sampleNetwork, startAdmin, tokenIn } from "./api-client.ts";
+import {
+  password,
+  sampleNetwork,
+  signUp,
+  startAdmin,
+  tokenIn,
+} from "./api-client.ts";
 import { readConfig } from "../server/config.ts";
 
 test("only listed ids are admins", async (t) => {
@@ -200,6 +206,10 @@ test("admins suspend and lift accounts but never another admin", async (t) => {
   await user.call("POST", "/api/networks", sampleNetwork);
   const suspend = (id: number, suspended: boolean) =>
     admin.call("POST", "/api/admin/user/suspend", { id, suspended });
+  assert.equal(
+    (await admin.call("POST", "/api/admin/user/suspend", { id: 2 })).body.error,
+    "bad-request",
+  );
   assert.equal((await suspend(1, true)).body.error, "admin-target");
   const suspended = await suspend(2, true);
   assert.equal(suspended.body.locked, true);
@@ -209,6 +219,13 @@ test("admins suspend and lift accounts but never another admin", async (t) => {
     0,
   );
   assert.match((await api.mail("member@example.com")).subject, /suspended/);
+  await suspend(2, true);
+  assert.equal(
+    api.row(
+      "SELECT count(*) AS count FROM admin_log WHERE action = 'user.suspend'",
+    ).count,
+    1,
+  );
   const networks = (await admin.call("GET", "/api/admin/networks")).body;
   assert.equal(networks[0].hidden, true);
   const lifted = await suspend(2, false);
@@ -220,6 +237,13 @@ test("admins suspend and lift accounts but never another admin", async (t) => {
     log.map((entry: { action: string }) => entry.action),
     ["user.lift", "user.suspend"],
   );
+  await suspend(2, true);
+  await api.mail("member@example.com");
+  await admin.call("POST", "/api/admin/blocks", {
+    pattern: "member@example.com",
+  });
+  await suspend(2, false);
+  await assert.rejects(api.mail("member@example.com"));
 });
 
 test("admins sign users out and delete accounts", async (t) => {
@@ -238,6 +262,10 @@ test("admins sign users out and delete accounts", async (t) => {
     (await call("DELETE", "/api/admin/user", 1)).body.error,
     "admin-target",
   );
+  await api
+    .client()
+    .call("POST", "/api/reset", { email: "member@example.com" });
+  const link = tokenIn((await api.mail("member@example.com")).text, "reset");
   assert.equal((await call("DELETE", "/api/admin/user", 2)).status, 204);
   assert.match((await api.mail("member@example.com")).text, /"Member"/);
   assert.equal(api.row("SELECT count(*) AS count FROM networks").count, 0);
@@ -249,6 +277,12 @@ test("admins sign users out and delete accounts", async (t) => {
     email: "member@example.com",
     networks: 1,
   });
+  await signUp(api, api.client(), "Fresh", "fresh@example.com");
+  const reset = await api.client().call("POST", "/api/reset/complete", {
+    token: link,
+    password: "a brand new gravel path",
+  });
+  assert.equal(reset.body.error, "link-expired");
 });
 
 test("log entries outlive a missing admin", async (t) => {
