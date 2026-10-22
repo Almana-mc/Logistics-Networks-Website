@@ -77,6 +77,53 @@ test("search filters, sorts and pages", async (t) => {
   assert.equal((await search("source=community")).total, 0);
 });
 
+test("search finds ids and says when nothing changed", async (t) => {
+  const api = await startApi();
+  t.after(api.close);
+  const { owner, id } = await withForge(api);
+  const guest = api.client();
+  const search = (query: string, tag = "") =>
+    guest.call("GET", `/api/library/search?${query}`, undefined, {
+      "If-None-Match": tag,
+    });
+  const names = async (query: string) =>
+    (await search(query)).body.results.map(
+      (entry: { name: string }) => entry.name,
+    );
+  assert.deepEqual(await names(`q=${id}`), ["Lava Forge"]);
+  assert.deepEqual(await names("q=%20eldritch-automation.lnet"), [
+    "Eldritch Automation",
+  ]);
+  const tag = (await search("sort=name&limit=1")).headers.get("etag")!;
+  assert.match(tag, /^"[A-Za-z0-9_-]{27}"$/);
+  const same = await search("sort=name&limit=1", tag);
+  assert.equal(same.status, 304);
+  assert.equal(same.body, undefined);
+  assert.notEqual((await search("sort=name&limit=2")).headers.get("etag"), tag);
+  await owner.call("PUT", "/api/networks", {
+    id,
+    name: "Lava Works",
+    description: "Smelts ore with lava",
+  });
+  const changed = await search("sort=name&limit=1", tag);
+  assert.equal(changed.status, 200);
+  assert.equal(changed.body.results[0].name, "Bee Automation");
+  assert.notEqual(changed.headers.get("etag"), tag);
+});
+
+test("rate-limited replies say when to retry", async (t) => {
+  const api = await startApi({ rateLimits: true });
+  t.after(api.close);
+  const guest = api.client();
+  for (let index = 0; index < 300; index++)
+    await guest.call("GET", "/api/library/search?limit=0");
+  const refused = await guest.call("GET", "/api/library/search?limit=0");
+  assert.equal(refused.status, 429);
+  assert.equal(refused.body.error, "rate-limited");
+  const wait = Number(refused.headers.get("retry-after"));
+  assert.ok(wait > 0 && wait <= 300);
+});
+
 test("network details include stats and nodes", async (t) => {
   const api = await startApi();
   t.after(api.close);

@@ -2,9 +2,11 @@ import type { IncomingMessage, ServerResponse } from "node:http";
 
 export class HttpError extends Error {
   status: number;
-  constructor(status: number, code: string) {
+  retryAfter?: number;
+  constructor(status: number, code: string, retryAfter?: number) {
     super(code);
     this.status = status;
+    this.retryAfter = retryAfter;
   }
 }
 
@@ -71,7 +73,12 @@ export function createLimiter(enabled: boolean) {
       if (!entry || entry.reset <= now)
         return void entries.set(key, { count: 1, reset: now + span });
       entry.count += 1;
-      if (entry.count > max) throw new HttpError(429, "rate-limited");
+      if (entry.count > max)
+        throw new HttpError(
+          429,
+          "rate-limited",
+          Math.ceil((entry.reset - now) / 1000),
+        );
     },
     sweep(now = Date.now()) {
       for (const [key, entry] of entries)

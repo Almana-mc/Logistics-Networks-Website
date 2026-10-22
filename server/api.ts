@@ -56,10 +56,12 @@ export function createApi(config: Config) {
       const known = error instanceof HttpError;
       if (!known)
         console.error(`Unhandled ${(error as Error).name}:${frames(error)}`);
-      if (!response.headersSent)
-        send(response, known ? error.status : 500, {
-          error: known ? error.message : "server",
-        });
+      if (response.headersSent) return;
+      if (known && error.retryAfter)
+        response.setHeader("Retry-After", error.retryAfter);
+      send(response, known ? error.status : 500, {
+        error: known ? error.message : "server",
+      });
     }
   };
 }

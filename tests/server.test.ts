@@ -59,7 +59,7 @@ test("rate limiter allows the window then refuses until reset", () => {
   limiter.hit("key", 2, 1000, 10);
   assert.throws(
     () => limiter.hit("key", 2, 1000, 20),
-    (error: HttpError) => error.status === 429,
+    (error: HttpError) => error.status === 429 && error.retryAfter === 1,
   );
   limiter.hit("key", 2, 1000, 1000);
   createLimiter(false).hit("key", 0, 1000);

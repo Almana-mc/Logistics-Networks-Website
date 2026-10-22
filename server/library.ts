@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { IncomingMessage } from "node:http";
@@ -64,7 +65,8 @@ function withLinks(origin: string, entry: Entry) {
 }
 
 function matcher(request: IncomingMessage) {
-  const terms = param(request, "q").toLowerCase().split(/\s+/).filter(Boolean);
+  const query = param(request, "q").trim();
+  const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
   const author = param(request, "author").toLowerCase();
   const source = param(request, "source");
   const types = param(request, "type").toUpperCase().split(",").filter(Boolean);
@@ -73,11 +75,12 @@ function matcher(request: IncomingMessage) {
   if (source && source !== "curated" && source !== "community")
     throw new HttpError(400, "bad-source");
   return (entry: Entry) =>
-    terms.every((term) =>
-      `${entry.name} ${entry.author} ${entry.description}`
-        .toLowerCase()
-        .includes(term),
-    ) &&
+    (entry.id === query ||
+      terms.every((term) =>
+        `${entry.name} ${entry.author} ${entry.description}`
+          .toLowerCase()
+          .includes(term),
+      )) &&
     (!author || entry.author.toLowerCase() === author) &&
     (!source || entry.source === source) &&
     (!types.length || entry.types.some((type) => types.includes(type)));
@@ -136,6 +139,13 @@ export const libraryRoutes: Routes = {
       );
     const offset = count(param(request, "offset"), 0, found.length);
     const limit = count(param(request, "limit"), 20, 50);
+    // Any library change changes every page
+    const tag = `"${createHash("sha1")
+      .update(JSON.stringify([offset, limit, found]))
+      .digest("base64url")}"`;
+    context.response.setHeader("ETag", tag);
+    if (request.headers["if-none-match"]?.includes(tag))
+      return send(context.response, 304);
     send(context.response, 200, {
       total: found.length,
       results: found
