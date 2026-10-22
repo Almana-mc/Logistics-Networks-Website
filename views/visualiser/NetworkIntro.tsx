@@ -16,6 +16,7 @@ export default function NetworkIntro({ loaded }: { loaded: LoadedNetwork }) {
       <h1 ref={title} tabIndex={-1}>
         {entry?.name || network.network}
       </h1>
+      {entry && <p className="network-summary">{entry.desc}</p>}
       <p className="network-meta">
         {entry ? (
           <>
@@ -29,7 +30,7 @@ export default function NetworkIntro({ loaded }: { loaded: LoadedNetwork }) {
         ) : (
           <>
             From <code>{loaded.name}</code>, read in your browser and only
-            uploaded if you share it.
+            uploaded if you share or publish it.
           </>
         )}
       </p>

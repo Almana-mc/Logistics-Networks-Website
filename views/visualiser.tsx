@@ -43,7 +43,7 @@ function Visualiser() {
           <NetworkWorkspace loaded={file.loaded} onReset={file.reset} />
         )}
       </main>
-      <SiteFooter note=".lnet files are parsed in your browser and uploaded only when you share a link." />
+      <SiteFooter note=".lnet files are parsed in your browser and uploaded only when you share a link or publish one." />
     </>
   );
 }

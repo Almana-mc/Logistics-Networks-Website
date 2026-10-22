@@ -51,6 +51,12 @@
   font-size: 1rem;
   overflow-wrap: anywhere;
 }
+.network-summary {
+  margin: 0;
+  max-width: 62ch;
+  font-size: 1.125rem;
+  overflow-wrap: anywhere;
+}
 .network-stats {
   display: flex;
   flex-wrap: wrap;

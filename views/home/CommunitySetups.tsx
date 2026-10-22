@@ -11,7 +11,7 @@ export default function CommunitySetups({
       {entries.slice(0, 3).map((entry) => (
         <li key={entry.file}>
           <a href={`visualiser.html?net=${encodeURIComponent(entry.file)}`}>
-            <NetworkThumb file={entry.file} />
+            <NetworkThumb entry={entry} />
             <strong>{entry.name}</strong>
             <span>By {entry.author}</span>
           </a>

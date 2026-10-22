@@ -43,7 +43,7 @@ function useStage(entry: NetworkEntry | undefined, ready: boolean) {
     if (!ready) return;
     const fallback = () => setStage({ data: buildHeroNetwork(7) });
     if (!entry) return fallback();
-    loadLibraryNetwork(entry.file)
+    loadLibraryNetwork(entry)
       .then((network) => setStage({ data: graphData(network), entry }))
       .catch(fallback);
   }, [entry, ready]);

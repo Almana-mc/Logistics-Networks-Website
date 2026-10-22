@@ -55,3 +55,28 @@
 .share-dialog [aria-disabled="true"] {
   cursor: progress;
 }
+.share-dialog .field input,
+.share-dialog textarea {
+  background: var(--bg-1);
+}
+.publish-form {
+  display: grid;
+  justify-items: start;
+  gap: 1rem;
+  width: 100%;
+}
+.publish-file {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.25rem 0.625rem;
+  color: var(--fg-dim);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+}
+.publish-file code {
+  color: var(--fg);
+}
+.publish-file span {
+  grid-column: 2;
+}

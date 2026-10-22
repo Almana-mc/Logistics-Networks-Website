@@ -15,6 +15,7 @@ for (const route of [
   }) => {
     const errors: string[] = [];
     page.on("pageerror", (error) => errors.push(error.message));
+    await page.route("**/api/networks", (route) => route.fulfill({ json: [] }));
     await page.goto(route);
     if (route === "docs.html")
       await expect(page.locator(".doc-context")).toBeVisible({

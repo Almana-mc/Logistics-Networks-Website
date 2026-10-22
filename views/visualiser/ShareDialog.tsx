@@ -2,6 +2,7 @@ import { useEffect, useRef, type RefObject } from "react";
 import ShareConsent from "./ShareConsent";
 import ShareResult from "./ShareResult";
 import { useShare } from "./useShare";
+import { expiryText, shareUrl } from "../../lib/share";
 import type { LoadedNetwork } from "./useNetworkFile";
 
 type Props = {
@@ -30,7 +31,15 @@ export default function ShareDialog({ open, loaded, trigger, onClose }: Props) {
       onClose={onClose}
     >
       {share.created ? (
-        <ShareResult share={share.created} onDone={onClose} />
+        <ShareResult
+          id="share"
+          title="Link ready"
+          label="Share link"
+          url={shareUrl(share.created.id)}
+          onDone={onClose}
+        >
+          <p>Link {expiryText(share.created.expiresAt)}.</p>
+        </ShareResult>
       ) : (
         <ShareConsent
           name={loaded.name}

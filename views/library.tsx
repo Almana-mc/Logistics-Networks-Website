@@ -11,16 +11,17 @@ import "../styles/index.css";
 import "../styles/views/library.css";
 
 function Library() {
-  const { entries, status, retry } = useLibrary();
+  const { entries, status, retry } = useLibrary(true);
   const filters = useLibraryFilters(entries);
   return (
     <>
       <SiteHeader current="Library" />
       <main id="main" className="shell page-main" tabIndex={-1}>
         <PageIntro eyebrow="Library" title="Saved networks">
-          A starting point for your next build. Explore community setups, or{" "}
+          A starting point for your next build. Explore community setups,
+          publish your own from the <a href="visualiser.html">visualiser</a>, or{" "}
           <a href={links.discord} target="_blank" rel="noreferrer">
-            share your own on Discord
+            share them on Discord
           </a>
           .
         </PageIntro>

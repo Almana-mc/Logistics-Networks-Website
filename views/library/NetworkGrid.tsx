@@ -5,7 +5,7 @@ export default function NetworkGrid({ entries }: { entries: NetworkEntry[] }) {
   return (
     <div className="network-grid">
       {entries.map((entry) => (
-        <NetworkCard key={entry.file} entry={entry} />
+        <NetworkCard key={entry.id || entry.file} entry={entry} />
       ))}
     </div>
   );

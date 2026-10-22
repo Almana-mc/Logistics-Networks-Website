@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { fetchUploads } from "./uploads";
 
 export type NetworkEntry = {
   name: string;
@@ -7,6 +8,7 @@ export type NetworkEntry = {
   file: string;
   types: string[];
   added: string;
+  id?: string;
 };
 const typeIds = ["ITEM", "FLUID", "ENERGY", "CHEMICAL", "SOURCE"];
 
@@ -15,6 +17,16 @@ export function libraryFile(file: string) {
     throw new Error("Choose a .lnet or .txt network file from the library.");
   return `library/${encodeURIComponent(file)}`;
 }
+
+export const entryFile = (entry: NetworkEntry) =>
+  entry.id
+    ? `/api/networks/file?id=${encodeURIComponent(entry.id)}`
+    : libraryFile(entry.file);
+
+export const entryLink = (entry: NetworkEntry) =>
+  entry.id
+    ? `visualiser.html?network=${encodeURIComponent(entry.id)}`
+    : `visualiser.html?net=${encodeURIComponent(entry.file)}`;
 
 export function normalizeEntry(raw: unknown): NetworkEntry | null {
   if (typeof raw !== "object" || raw === null) return null;
@@ -82,22 +94,25 @@ export function filterEntries(
     );
 }
 
-export function useLibrary() {
+export function useLibrary(withUploads = false) {
   const [entries, setEntries] = useState<NetworkEntry[]>([]);
   const [status, setStatus] = useState("loading");
   const [attempt, setAttempt] = useState(0);
   useEffect(() => {
     const abort = new AbortController();
     setStatus("loading");
-    fetchLibrary(abort.signal)
-      .then((data) => {
-        setEntries(data);
+    Promise.all([
+      fetchLibrary(abort.signal),
+      withUploads ? fetchUploads().catch(() => []) : [],
+    ])
+      .then(([curated, uploads]) => {
+        setEntries([...curated, ...uploads]);
         setStatus("ready");
       })
       .catch(() => {
         if (!abort.signal.aborted) setStatus("error");
       });
     return () => abort.abort();
-  }, [attempt]);
+  }, [attempt, withUploads]);
   return { entries, status, retry: () => setAttempt(attempt + 1) };
 }

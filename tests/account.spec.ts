@@ -1,44 +1,14 @@
 import { test, expect } from "./browser";
-import type { Page } from "@playwright/test";
 import { randomUUID } from "node:crypto";
-import { readFile, readdir, rm } from "node:fs/promises";
-import { createRequire } from "node:module";
+import { readFile } from "node:fs/promises";
+import { mailTo, violations } from "./accounts";
 
-const require = createRequire(import.meta.url);
 const site = "http://localhost:8794";
 
 test.skip(
   ({ browserName }) => browserName !== "chromium",
   "Account flows run in Chromium",
 );
-
-async function mailTo(email: string) {
-  for (let attempt = 0; attempt < 40; attempt++) {
-    const files = await readdir(".data/outbox").catch(() => [] as string[]);
-    for (const file of files.filter((name) => name.endsWith(".json"))) {
-      const mail = JSON.parse(await readFile(`.data/outbox/${file}`, "utf8"));
-      if (mail.to !== email) continue;
-      await rm(`.data/outbox/${file}`);
-      return mail.text as string;
-    }
-    await new Promise((resolve) => setTimeout(resolve, 250));
-  }
-  throw new Error(`No email for ${email}`);
-}
-
-async function violations(page: Page) {
-  await page.evaluate(
-    await readFile(require.resolve("axe-core/axe.min.js"), "utf8"),
-  );
-  return page.evaluate(
-    async () =>
-      (
-        await window.axe.run(document, {
-          runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21aa"] },
-        })
-      ).violations,
-  );
-}
 
 test("create an account with a password, sign out and sign back in", async ({
   page,

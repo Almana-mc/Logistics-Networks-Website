@@ -3,7 +3,14 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { renderToStaticMarkup } from "react-dom/server";
 import { createElement } from "react";
-import { filterEntries, libraryFile, normalizeEntry } from "../lib/library";
+import {
+  entryFile,
+  entryLink,
+  filterEntries,
+  libraryFile,
+  normalizeEntry,
+} from "../lib/library";
+import { uploadEntry } from "../lib/uploads";
 import { readStored, writeStored } from "../lib/storage";
 import { mdLink, parseMarkdown } from "../lib/docs-markdown";
 import { readCount } from "../lib/downloads";
@@ -244,4 +251,31 @@ test("graph data mirrors parsed nodes and marks hidden nodes", async () => {
     role: "hidden",
     baseR: 11,
   });
+});
+
+test("published uploads become library entries with safe links", () => {
+  const upload = {
+    id: "qy7ThV4NSuc",
+    name: "Bee Farm #2 (Nether)",
+    description: "Honey to tanks",
+    author: "Keeper",
+    types: ["ITEM"],
+    createdAt: Date.UTC(2026, 9, 22, 23, 30),
+  };
+  const entry = uploadEntry(upload);
+  assert.deepEqual(entry, {
+    id: "qy7ThV4NSuc",
+    name: "Bee Farm #2 (Nether)",
+    author: "Keeper",
+    desc: "Honey to tanks",
+    file: "bee-farm-2-nether.lnet",
+    types: ["ITEM"],
+    added: "2026-10-22",
+  });
+  assert.equal(uploadEntry({ ...upload, name: "蜂の巣" }).file, "network.lnet");
+  assert.equal(entryFile(entry), "/api/networks/file?id=qy7ThV4NSuc");
+  assert.equal(entryLink(entry), "visualiser.html?network=qy7ThV4NSuc");
+  const curated = { ...entry, id: undefined, file: "a b.lnet" };
+  assert.equal(entryFile(curated), "library/a%20b.lnet");
+  assert.equal(entryLink(curated), "visualiser.html?net=a%20b.lnet");
 });

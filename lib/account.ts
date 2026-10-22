@@ -25,6 +25,13 @@ const messages: Record<string, string> = {
   "reauth-cancelled": "Not saved. Confirm it's you to make this change.",
   "signed-out": "You were signed out. Sign in again.",
   "rate-limited": "Too many attempts. Wait a few minutes and try again.",
+  "bad-name": "Give the network a name, up to 80 characters.",
+  "bad-description": "Add a description, up to 300 characters.",
+  "bad-network": "This file doesn't look like a .lnet export.",
+  "too-large": "This network is too large to publish (512 KB max).",
+  "network-limit":
+    "One account can publish 50 networks. Delete one from your account to publish another.",
+  "not-found": "That network was already deleted. Reload the page.",
   server: "Something went wrong. Try again.",
 };
 

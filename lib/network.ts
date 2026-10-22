@@ -1,6 +1,6 @@
 import "../js/lnet.js";
 import type { GraphData } from "./graph";
-import { libraryFile } from "./library";
+import { entryFile, type NetworkEntry } from "./library";
 
 export type Channel = {
   index: number;
@@ -100,8 +100,8 @@ export const graphData = (network: Network, baseR = 11): GraphData => ({
   edges: network.topology,
 });
 
-export async function loadLibraryNetwork(file: string) {
-  const response = await fetch(libraryFile(file));
-  if (!response.ok) throw new Error(`Could not load ${file}.`);
+export async function loadLibraryNetwork(entry: NetworkEntry) {
+  const response = await fetch(entryFile(entry));
+  if (!response.ok) throw new Error(`Could not load ${entry.file}.`);
   return parseNetwork(await response.text());
 }

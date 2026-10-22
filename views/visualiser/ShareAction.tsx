@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import Icon from "../../components/Icon";
+import { entryLink } from "../../lib/library";
 import { shareUrl } from "../../lib/share";
 import CopyLinkButton from "./CopyLinkButton";
 import ShareDialog from "./ShareDialog";
@@ -10,9 +11,7 @@ export default function ShareAction({ loaded }: { loaded: LoadedNetwork }) {
   const button = useRef<HTMLButtonElement>(null);
   if (loaded.entry)
     return (
-      <CopyLinkButton
-        url={`${location.origin}/visualiser.html?net=${encodeURIComponent(loaded.entry.file)}`}
-      />
+      <CopyLinkButton url={`${location.origin}/${entryLink(loaded.entry)}`} />
     );
   if (loaded.share) return <CopyLinkButton url={shareUrl(loaded.share.id)} />;
   return (

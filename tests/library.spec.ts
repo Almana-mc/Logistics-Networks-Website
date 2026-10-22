@@ -1,6 +1,10 @@
 import { test, expect } from "./browser";
 import { readFile } from "node:fs/promises";
 
+test.beforeEach(({ page }) =>
+  page.route("**/api/networks", (route) => route.fulfill({ json: [] })),
+);
+
 test("library search, filters, reset and handoff", async ({ page }) => {
   await page.goto("library.html");
   await expect(page.locator(".network-card")).toHaveCount(3);

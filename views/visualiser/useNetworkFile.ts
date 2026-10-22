@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import {
+  entryFile,
   fetchLibrary,
   libraryFile,
   type NetworkEntry,
 } from "../../lib/library";
+import { fetchUploads } from "../../lib/uploads";
 import { parseNetwork, type Network } from "../../lib/network";
 import { fetchShare, shareError, type Share } from "../../lib/share";
 
@@ -32,6 +34,24 @@ const readLibrary =
     return { raw: await response.text(), name, entry };
   };
 
+// ponytail: whole list, add a by-id route when it grows
+const readUpload =
+  (id: string): Read =>
+  async () => {
+    const entries = await fetchUploads().catch(() => {
+      throw new Error(
+        "Couldn't reach the library right now. Try again in a few minutes.",
+      );
+    });
+    const entry = entries.find((e) => e.id === id);
+    const response = entry && (await fetch(entryFile(entry)));
+    if (!entry || !response?.ok)
+      throw new Error(
+        "This network was deleted by its author, or the link is wrong.",
+      );
+    return { raw: await response.text(), name: entry.file, entry };
+  };
+
 const readShare =
   (id: string): Read =>
   async () => {
@@ -47,6 +67,16 @@ const readShare =
     return { raw: shared.lnet, name: shared.name, share };
   };
 
+function readFromUrl() {
+  const params = new URLSearchParams(location.search);
+  const share = params.get("share");
+  const upload = params.get("network");
+  const name = params.get("net");
+  if (share) return readShare(share);
+  if (upload) return readUpload(upload);
+  if (name) return readLibrary(name);
+}
+
 export function useNetworkFile() {
   const reader = useNetworkReader();
   const { open, request } = reader;
@@ -55,11 +85,8 @@ export function useNetworkFile() {
     return open(readLibrary(name));
   };
   useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const share = params.get("share");
-    const name = params.get("net");
-    if (share) void open(readShare(share));
-    else if (name) void openLibrary(name);
+    const read = readFromUrl();
+    if (read) void open(read);
     return () => {
       request.current++;
     };

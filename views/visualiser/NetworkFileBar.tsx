@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import type { LoadedNetwork } from "./useNetworkFile";
 import Icon from "../../components/Icon";
+import PublishAction from "./PublishAction";
 import ShareAction from "./ShareAction";
 
 export default function NetworkFileBar({
@@ -30,6 +31,7 @@ export default function NetworkFileBar({
         </span>
       </p>
       <div className="actions">
+        {!loaded.entry && !loaded.share && <PublishAction loaded={loaded} />}
         <a className="button secondary small" href={url} download={loaded.name}>
           <Icon name="download" size={15} /> Download .lnet
         </a>

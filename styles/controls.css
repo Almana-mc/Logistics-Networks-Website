@@ -55,7 +55,8 @@ input[type="search"],
 input[type="email"],
 input[type="text"],
 input[type="password"],
-select {
+select,
+textarea {
   min-height: 44px;
   max-width: 100%;
   min-width: 0;
@@ -79,8 +80,38 @@ input[type="search"]:hover,
 input[type="email"]:hover,
 input[type="text"]:hover,
 input[type="password"]:hover,
-select:hover {
+select:hover,
+textarea:hover {
   border-color: rgb(242 236 225 / 0.3);
+}
+textarea {
+  min-height: 6rem;
+  line-height: 1.5;
+  resize: vertical;
+}
+.field {
+  display: grid;
+  gap: 0.375rem;
+  width: 100%;
+}
+.field input,
+.field textarea {
+  width: 100%;
+}
+.field-hint {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: none;
+  margin: 0;
+  color: var(--fg-dim);
+  font-size: 0.875rem;
+}
+.field-count {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
 }
 input::placeholder {
   color: var(--fg-mute);
