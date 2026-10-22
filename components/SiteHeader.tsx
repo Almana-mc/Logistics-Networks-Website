@@ -4,7 +4,6 @@ import AccountLink from "./AccountLink";
 import { links } from "../lib/resources";
 
 const pages = [
-  ["Download", "index.html#download"],
   ["Library", "library.html"],
   ["Visualiser", "visualiser.html"],
   ["Docs", "docs.html"],
@@ -35,7 +34,7 @@ export default function SiteHeader({ current }: { current: string }) {
               {label}
             </a>
           ))}
-          <AccountLink current={current} />
+          {["Library", "Visualiser"].includes(current) && <AccountLink />}
           <a
             className="header-github"
             href={links.github}

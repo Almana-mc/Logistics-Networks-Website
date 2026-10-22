@@ -33,7 +33,6 @@ for (const route of [
       ).toBeTruthy();
       for (const name of [
         "Logistics Network home",
-        "Download",
         "Library",
         "Docs",
         "Visualiser",

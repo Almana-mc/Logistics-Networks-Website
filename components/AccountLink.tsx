@@ -1,12 +1,9 @@
 import { useAccount } from "../lib/account";
 
-export default function AccountLink({ current }: { current: string }) {
+export default function AccountLink() {
   const { account } = useAccount();
   return (
-    <a
-      href={account ? "account.html" : "sign-in.html"}
-      aria-current={current === "Account" ? "page" : undefined}
-    >
+    <a href={account ? "account.html" : "sign-in.html"}>
       {account ? account.user.username : "Sign in"}
     </a>
   );
