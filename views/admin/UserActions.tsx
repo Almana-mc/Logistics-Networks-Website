@@ -19,6 +19,13 @@ const lockedNote = (
   </p>
 );
 
+const suspendNote = (wasSuspended: boolean, stillBlocked: boolean) => {
+  if (!wasSuspended) return "Suspended. The user was emailed.";
+  return stillBlocked
+    ? "Suspension lifted. Their email is still blocked."
+    : "Suspension lifted. The user was emailed.";
+};
+
 export default function UserActions(props: Props) {
   const { user, guard, onChanged, onDeleted } = props;
   const [notice, setNotice] = useState("");
@@ -26,11 +33,7 @@ export default function UserActions(props: Props) {
   const suspend = useSubmit(() =>
     guard(() => suspendUser(user.id, !suspended)).then((next) => {
       onChanged(next);
-      setNotice(
-        suspended
-          ? "Suspension lifted. The user was emailed."
-          : "Suspended. The user was emailed.",
-      );
+      setNotice(suspendNote(suspended, next.locked));
     }),
   );
   if (user.admin) return lockedNote;

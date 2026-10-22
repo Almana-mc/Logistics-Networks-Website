@@ -10,11 +10,10 @@ import UserSearch from "./UserSearch";
 export default function UsersPanel({ guard }: { guard: Reauth["guard"] }) {
   const list = useUserList();
   const [chosen, setChosen] = useState<number | null>(null);
-  const [focusId, setFocusId] = useState<number | null>(null);
   const notice = useNotice();
   const choose = (id: number) => {
     setChosen(id);
-    setFocusId(id);
+    list.setFocusId(id);
     notice.clear();
   };
   const back = () => {
@@ -29,7 +28,7 @@ export default function UsersPanel({ guard }: { guard: Reauth["guard"] }) {
   return (
     <AccountPanel title="Users">
       {chosen === null ? (
-        <UserSearch {...{ list, focusId }} onChoose={choose} />
+        <UserSearch list={list} onChoose={choose} />
       ) : (
         <UserDetail
           id={chosen}

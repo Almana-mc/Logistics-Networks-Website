@@ -1,0 +1,19 @@
+import type { LogEntry } from "../../lib/admin";
+
+export default function AuditEntries({ entries }: { entries: LogEntry[] }) {
+  return (
+    <ol className="admin-log">
+      {entries.map((entry) => (
+        <li key={entry.id}>
+          <time dateTime={new Date(entry.createdAt).toISOString()}>
+            {new Date(entry.createdAt).toLocaleString()}
+          </time>
+          <span>
+            {entry.admin ?? "Deleted admin"} · {entry.action} · {entry.target}
+          </span>
+          <code>{JSON.stringify(entry.detail)}</code>
+        </li>
+      ))}
+    </ol>
+  );
+}

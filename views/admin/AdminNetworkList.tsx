@@ -1,6 +1,6 @@
-import { useRef, useState } from "react";
 import NetworkRow from "../../components/NetworkRow";
 import { deleteNetwork, editNetwork, type AdminNetwork } from "../../lib/admin";
+import { useNotice } from "../../lib/useNotice";
 import type { Reauth } from "../../lib/useReauth";
 
 type Props = {
@@ -22,8 +22,7 @@ const byline = (network: AdminNetwork) => (
 
 export default function AdminNetworkList(props: Props) {
   const { networks, filter = "", guard, onChange } = props;
-  const [notice, setNotice] = useState("");
-  const note = useRef<HTMLParagraphElement>(null);
+  const notice = useNotice();
   const shown = networks.filter(matches(filter.trim().toLowerCase()));
   return (
     <>
@@ -45,8 +44,7 @@ export default function AdminNetworkList(props: Props) {
               }
               onDeleted={(gone) => {
                 onChange(networks.filter((old) => old.id !== gone.id));
-                setNotice(`Deleted ${gone.name}.`);
-                note.current!.focus();
+                notice.show(`Deleted ${gone.name}.`);
               }}
             >
               {byline(network)}
@@ -54,8 +52,8 @@ export default function AdminNetworkList(props: Props) {
           ))}
         </ul>
       )}
-      <p ref={note} className="account-note" role="status" tabIndex={-1}>
-        {notice}
+      <p ref={notice.ref} className="account-note" role="status" tabIndex={-1}>
+        {notice.text}
       </p>
     </>
   );
