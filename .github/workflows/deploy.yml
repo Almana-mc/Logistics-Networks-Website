@@ -51,6 +51,7 @@ jobs:
       - name: Upload the API and restart it
         run: |
           rsync -az --delete -e "ssh -i ~/.ssh/deploy -o IdentitiesOnly=yes -o BatchMode=yes" server/ "$TARGET:/srv/logistics-network/server/"
+          rsync -az --delete -e "ssh -i ~/.ssh/deploy -o IdentitiesOnly=yes -o BatchMode=yes" js/ "$TARGET:/srv/logistics-network/js/"
           rsync -az -e "ssh -i ~/.ssh/deploy -o IdentitiesOnly=yes -o BatchMode=yes" package.json package-lock.json "$TARGET:/srv/logistics-network/"
           ssh -i ~/.ssh/deploy -o IdentitiesOnly=yes -o BatchMode=yes "$TARGET" "cd /srv/logistics-network && npm ci --omit=dev && sudo systemctl restart logistics-network && sleep 3 && systemctl is-active --quiet logistics-network"
         env:

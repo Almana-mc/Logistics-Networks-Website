@@ -23,6 +23,7 @@ export async function startApi(overrides: Partial<Config> = {}) {
     origin,
     dbPath: join(dir, "app.db"),
     outbox: join(dir, "outbox"),
+    libraryDir: "library",
     rateLimits: false,
     fetch: clean,
     ...overrides,
