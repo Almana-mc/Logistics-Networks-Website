@@ -86,4 +86,6 @@ MAIL_FROM=Logistics Network <accounts@almanax21.com>
 
 `SERVER_SECRET` is permanent. It derives the password pepper, so losing or changing it invalidates every password. Back it up somewhere separate from the database. Never set `RATE_LIMITS=off` in production; the API refuses to start with it.
 
+`ADMIN_IDS` (optional) is a comma-separated list of user ids that can open `admin.html` and call `/api/admin/*`. Production sets `ADMIN_IDS=2` (AlmanaX21). Admin changes still need a sign-in within the last 10 minutes. Locally, `npm run preview` also admits id `1000000`, which the e2e test seeds.
+
 Percent-encode the SMTP username and password inside `SMTP_URL` (for example with `encodeURIComponent`).
