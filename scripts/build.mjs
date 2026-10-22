@@ -13,6 +13,7 @@ const routes = {
   visualiser: "visualiser",
   "sign-in": "sign-in",
   account: "account",
+  admin: "admin",
 };
 const output = resolve("dist");
 if (dirname(output) !== process.cwd() || basename(output) !== "dist")

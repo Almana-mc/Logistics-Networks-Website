@@ -3,6 +3,7 @@ import { useEffect, useState, type FormEvent } from "react";
 export type Account = {
   user: { id: number; username: string; email: string; createdAt: number };
   hasPassword: boolean;
+  admin: boolean;
 };
 
 const messages: Record<string, string> = {
@@ -31,7 +32,14 @@ const messages: Record<string, string> = {
   "too-large": "This network is too large to publish (512 KB max).",
   "network-limit":
     "One account can publish 50 networks. Delete one from your account to publish another.",
-  "not-found": "That network was already deleted. Reload the page.",
+  "not-found": "That was already deleted. Reload the page.",
+  "email-blocked": "That email can't be used here.",
+  "account-suspended":
+    "This account is suspended. Contact the site administrator.",
+  "bad-pattern":
+    "Enter an email like name@example.com or a domain like @example.com.",
+  "admin-target": "That would lock out an admin account.",
+  "not-admin": "Only admins can do that.",
   server: "Something went wrong. Try again.",
 };
 
