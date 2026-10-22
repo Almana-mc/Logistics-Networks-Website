@@ -5,6 +5,7 @@ import { openDb } from "./db.ts";
 import { HttpError, checkRequest, createLimiter, send } from "./http.ts";
 import { sweep } from "./tokens.ts";
 import { accountRoutes } from "./account.ts";
+import { auditRoutes } from "./audit.ts";
 import { loginRoutes } from "./login.ts";
 import { networkRoutes } from "./networks.ts";
 import { reauthRoutes } from "./reauth.ts";
@@ -12,6 +13,7 @@ import { signupRoutes } from "./signup.ts";
 
 const routes: Routes = {
   ...accountRoutes,
+  ...auditRoutes,
   ...loginRoutes,
   ...networkRoutes,
   ...reauthRoutes,

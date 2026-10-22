@@ -80,3 +80,5 @@ export function createLimiter(enabled: boolean) {
   };
 }
 export type Limiter = ReturnType<typeof createLimiter>;
+export const param = (request: IncomingMessage, key: string) =>
+  new URL(request.url || "/", "http://local").searchParams.get(key) ?? "";
