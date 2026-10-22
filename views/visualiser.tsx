@@ -35,7 +35,7 @@ function Visualiser() {
             busy={file.busy}
             error={file.error}
             onFile={file.openFile}
-            onExample={file.openExample}
+            onLibrary={file.openLibrary}
           />
         ) : step <= steps.length ? (
           <ProcessingSteps step={step} loaded={file.loaded} />

@@ -20,7 +20,7 @@ test("a local network becomes a short link that opens for 12 hours", async ({
     });
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto(`${origin}/visualiser.html`);
-  await page.getByLabel("Choose a .lnet or .txt file").setInputFiles({
+  await page.getByLabel("Choose a .lnet file").setInputFiles({
     name: "shared-bees.lnet",
     mimeType: "text/plain",
     buffer: await readFile("library/bee-automation.lnet"),
@@ -87,5 +87,5 @@ test("an unknown share link explains that links expire", async ({
   await expect(page.getByRole("alert")).toContainText(
     "expired or never existed",
   );
-  await expect(page.getByLabel("Choose a .lnet or .txt file")).toBeVisible();
+  await expect(page.getByLabel("Choose a .lnet file")).toBeVisible();
 });

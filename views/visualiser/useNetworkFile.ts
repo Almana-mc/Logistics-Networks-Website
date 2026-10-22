@@ -73,10 +73,16 @@ export function useNetworkFile() {
       reader.reset();
       local();
     },
-    openExample: () => openLibrary("pilpohs-bee-setup.lnet"),
+    openLibrary,
     openFile: (file: File) => {
       local();
-      return open(async () => ({ raw: await file.text(), name: file.name }));
+      return open(async () => {
+        if (!/\.lnet$/i.test(file.name))
+          throw new Error(
+            "Only .lnet files can be opened. Export one from the in-game Computer screen.",
+          );
+        return { raw: await file.text(), name: file.name };
+      });
     },
   };
 }

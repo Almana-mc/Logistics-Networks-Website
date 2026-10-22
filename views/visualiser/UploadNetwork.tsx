@@ -7,14 +7,14 @@ type Props = {
   busy: boolean;
   error: string;
   onFile: (file: File) => void;
-  onExample: () => void;
+  onLibrary: (file: string) => void;
 };
 
 export default function UploadNetwork({
   busy,
   error,
   onFile,
-  onExample,
+  onLibrary,
 }: Props) {
   const dropTarget = useDropTarget(onFile);
   return (
@@ -26,7 +26,7 @@ export default function UploadNetwork({
       </div>
       <h2>Drop a .lnet file here</h2>
       <NetworkFileInput busy={busy} onFile={onFile} />
-      <UploadActions busy={busy} error={error} onExample={onExample} />
+      <UploadActions busy={busy} error={error} onLibrary={onLibrary} />
     </div>
   );
 }

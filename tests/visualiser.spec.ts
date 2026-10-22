@@ -11,7 +11,7 @@ test("local import, node inspection, static graph, raw download and recovery", a
     if (request.method() !== "GET") sent.push(request.url());
   });
   const bytes = await readFile("library/pilpohs-bee-setup.lnet");
-  await page.getByLabel("Choose a .lnet or .txt file").setInputFiles({
+  await page.getByLabel("Choose a .lnet file").setInputFiles({
     name: "my-local-export.lnet",
     mimeType: "text/plain",
     buffer: bytes,
@@ -54,13 +54,19 @@ test("local import, node inspection, static graph, raw download and recovery", a
     0,
   );
   await page.getByRole("button", { name: "New file", exact: true }).click();
-  await page.getByLabel("Choose a .lnet or .txt file").setInputFiles({
+  await page.getByLabel("Choose a .lnet file").setInputFiles({
     name: "bad.lnet",
     mimeType: "text/plain",
     buffer: Buffer.from("invalid"),
   });
   await expect(page.getByRole("alert")).toContainText("header");
-  await page.getByRole("button", { name: "Load example network" }).click();
+  await page.getByLabel("Choose a .lnet file").setInputFiles({
+    name: "notes.txt",
+    mimeType: "text/plain",
+    buffer: bytes,
+  });
+  await expect(page.getByRole("alert")).toContainText("Only .lnet files");
+  await page.getByRole("button", { name: "Pilpoh's Bee Setup" }).click();
   await expect(page.getByLabel("Inspect a node")).toBeVisible();
   expect(sent).toEqual([]);
 });

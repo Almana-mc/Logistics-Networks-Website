@@ -2,11 +2,11 @@ type Props = { busy: boolean; onFile: (file: File) => void };
 export default function NetworkFileInput({ busy, onFile }: Props) {
   return (
     <div className="file-choice">
-      <label htmlFor="network-file">Choose a .lnet or .txt file</label>
+      <label htmlFor="network-file">Choose a .lnet file</label>
       <input
         id="network-file"
         type="file"
-        accept=".lnet,.txt"
+        accept=".lnet"
         disabled={busy}
         onChange={(event) => {
           const file = event.target.files?.[0];

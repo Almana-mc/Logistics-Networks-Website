@@ -1,5 +1,13 @@
-type Props = { busy: boolean; error: string; onExample: () => void };
-export default function UploadActions({ busy, error, onExample }: Props) {
+import { filterEntries, useLibrary } from "../../lib/library";
+
+type Props = {
+  busy: boolean;
+  error: string;
+  onLibrary: (file: string) => void;
+};
+export default function UploadActions({ busy, error, onLibrary }: Props) {
+  const { entries } = useLibrary();
+  const recent = filterEntries(entries, "", [], "new").slice(0, 3);
   return (
     <>
       <p id="file-privacy" className="file-privacy">
@@ -15,14 +23,17 @@ export default function UploadActions({ busy, error, onExample }: Props) {
         {error}
       </p>
       <div className="upload-alternatives">
-        <p>No export yet?</p>
-        <button
-          className="button secondary small"
-          disabled={busy}
-          onClick={onExample}
-        >
-          Load example network
-        </button>
+        <p>No export yet? Open one from the library:</p>
+        {recent.map((entry) => (
+          <button
+            key={entry.file}
+            className="button secondary small"
+            disabled={busy}
+            onClick={() => onLibrary(entry.file)}
+          >
+            {entry.name}
+          </button>
+        ))}
         <a className="button secondary small" href="library.html">
           Browse the library
         </a>

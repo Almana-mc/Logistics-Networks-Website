@@ -74,7 +74,7 @@ test("documentation chapter, relative link, version and mobile access", async ({
     .getByRole("navigation", { name: "Primary", exact: true })
     .getByRole("link", { name: "Visualiser", exact: true })
     .click();
-  await expect(page.getByLabel("Choose a .lnet or .txt file")).toBeVisible();
+  await expect(page.getByLabel("Choose a .lnet file")).toBeVisible();
 });
 
 test("blocked storage and unavailable guide retain usable chrome", async ({
