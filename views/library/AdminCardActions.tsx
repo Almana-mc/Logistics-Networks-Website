@@ -5,6 +5,7 @@ import ReauthDialog from "../../components/ReauthDialog";
 import RowActions from "../../components/RowActions";
 import { deleteNetwork, editNetwork } from "../../lib/admin";
 import type { NetworkEntry } from "../../lib/library";
+import { uploadEntry } from "../../lib/uploads";
 import { useReauth } from "../../lib/useReauth";
 import { useReturnFocus, type Action } from "../../lib/useReturnFocus";
 
@@ -42,7 +43,7 @@ export default function AdminCardActions(props: Props) {
           upload={upload}
           save={(id, details) => reauth.guard(() => editNetwork(id, details))}
           onSaved={(next) => {
-            onChange({ ...entry, name: next.name, desc: next.description });
+            onChange(uploadEntry(next));
             view();
           }}
           onCancel={view}

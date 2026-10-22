@@ -4,7 +4,7 @@ import { resourceStyle, resources } from "../../lib/resources";
 import Icon from "../../components/Icon";
 import NetworkThumb from "../../components/NetworkThumb";
 
-function TypeList({ types }: { types: string[] }) {
+function typeList(types: string[]) {
   return (
     <ul className="network-types">
       {types.map((type) => (
@@ -38,7 +38,7 @@ export default function NetworkCardView({
         {entry.added && <time dateTime={entry.added}>{entry.added}</time>}
       </p>
       <p className="network-desc">{entry.desc}</p>
-      <TypeList types={entry.types} />
+      {typeList(entry.types)}
       <div className="network-card-actions">
         <span className="network-open" aria-hidden="true">
           Open in visualiser <Icon name="arrow" size={16} />

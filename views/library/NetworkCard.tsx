@@ -1,25 +1,17 @@
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense } from "react";
 import { useAccount } from "../../lib/account";
 import type { NetworkEntry } from "../../lib/library";
 import NetworkCardView from "./NetworkCardView";
 
 const AdminCardActions = lazy(() => import("./AdminCardActions"));
 
-export default function NetworkCard({
-  entry: listed,
-}: {
+type Props = {
   entry: NetworkEntry;
-}) {
+  onChange?: (entry: NetworkEntry, next: NetworkEntry | null) => void;
+};
+
+export default function NetworkCard({ entry, onChange }: Props) {
   const { account } = useAccount();
-  const [entry, setEntry] = useState<NetworkEntry | null>(listed);
-  if (!entry)
-    return (
-      <article className="network-card">
-        <p role="status" tabIndex={-1} ref={(note) => note?.focus()}>
-          Deleted {listed.name}.
-        </p>
-      </article>
-    );
   return (
     <NetworkCardView entry={entry}>
       {account?.admin && entry.id && (
@@ -27,7 +19,7 @@ export default function NetworkCard({
           <AdminCardActions
             entry={entry}
             hasPassword={account.hasPassword}
-            onChange={setEntry}
+            onChange={(next) => onChange?.(entry, next)}
           />
         </Suspense>
       )}

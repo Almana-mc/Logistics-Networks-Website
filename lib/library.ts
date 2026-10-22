@@ -114,5 +114,11 @@ export function useLibrary(withUploads = false) {
       });
     return () => abort.abort();
   }, [attempt, withUploads]);
-  return { entries, status, retry: () => setAttempt(attempt + 1) };
+  const change = (entry: NetworkEntry, next: NetworkEntry | null) =>
+    setEntries((list) =>
+      next
+        ? list.map((item) => (item.id === entry.id ? next : item))
+        : list.filter((item) => item.id !== entry.id),
+    );
+  return { entries, status, retry: () => setAttempt(attempt + 1), change };
 }

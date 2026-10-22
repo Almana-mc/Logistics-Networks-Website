@@ -57,7 +57,9 @@ test("library failures and accessible pagination", async ({ page }) => {
     "aria-current",
     "page",
   );
-  await expect(page.getByRole("status")).toContainText("page 2 of 2");
+  await expect(
+    page.locator(".library-results").getByRole("status"),
+  ).toContainText("page 2 of 2");
   await page.getByLabel("Find a network").fill("network");
   await expect(page.locator(".network-card")).toHaveCount(20);
 });

@@ -17,6 +17,7 @@ type Props = {
   onPage: (page: number) => void;
   onRetry: () => void;
   onClear: () => void;
+  onChange?: (entry: NetworkEntry, next: NetworkEntry | null) => void;
 };
 
 export default function LibraryResults({
@@ -30,6 +31,7 @@ export default function LibraryResults({
   onPage,
   onRetry,
   onClear,
+  onChange,
 }: Props) {
   const top = useRef<HTMLDivElement>(null);
   if (status !== "ready")
@@ -50,7 +52,7 @@ export default function LibraryResults({
         onClear={onClear}
       />
       {entries.length ? (
-        <NetworkGrid entries={entries} />
+        <NetworkGrid entries={entries} onChange={onChange} />
       ) : (
         <LibraryEmpty total={total} onClear={onClear} />
       )}
