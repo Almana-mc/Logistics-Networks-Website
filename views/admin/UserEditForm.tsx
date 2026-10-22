@@ -31,7 +31,7 @@ export default function UserEditForm({ user, guard, onSaved }: Props) {
       onSubmit={form.onSubmit}
     >
       <UserFields values={values} onValues={setValues} />
-       <FormSubmit label={form.busy ? "Saving…" : "Save user"} form={form} />
+      <FormSubmit label={form.busy ? "Saving…" : "Save user"} form={form} />
       <p className="account-note" role="status">
         {saved && "Saved. The user was emailed."}
       </p>
