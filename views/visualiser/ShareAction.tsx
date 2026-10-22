@@ -8,7 +8,12 @@ import type { LoadedNetwork } from "./useNetworkFile";
 export default function ShareAction({ loaded }: { loaded: LoadedNetwork }) {
   const [open, setOpen] = useState(false);
   const button = useRef<HTMLButtonElement>(null);
-  if (loaded.entry) return null;
+  if (loaded.entry)
+    return (
+      <CopyLinkButton
+        url={`${location.origin}/visualiser.html?net=${encodeURIComponent(loaded.entry.file)}`}
+      />
+    );
   if (loaded.share) return <CopyLinkButton url={shareUrl(loaded.share.id)} />;
   return (
     <>

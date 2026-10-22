@@ -3,6 +3,8 @@ import { readFile } from "node:fs/promises";
 
 test("local import, node inspection, static graph, raw download and recovery", async ({
   page,
+  context,
+  browserName,
 }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("visualiser.html");
@@ -68,6 +70,14 @@ test("local import, node inspection, static graph, raw download and recovery", a
   await expect(page.getByRole("alert")).toContainText("Only .lnet files");
   await page.getByRole("button", { name: "Pilpoh's Bee Setup" }).click();
   await expect(page.getByLabel("Inspect a node")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Share link" })).toHaveCount(0);
+  if (browserName === "chromium") {
+    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+    await page.getByRole("button", { name: "Copy link" }).click();
+    expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
+      `${new URL(page.url()).origin}/visualiser.html?net=pilpohs-bee-setup.lnet`,
+    );
+  }
   expect(sent).toEqual([]);
 });
 
