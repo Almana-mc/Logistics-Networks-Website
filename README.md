@@ -64,6 +64,8 @@ The site runs on a VPS behind Caddy. Pushing to `main` runs lint, typecheck, uni
 
 9. Published networks (once, before the first deploy that includes `server/networks.ts`): copy `deploy/Caddyfile` to `/etc/caddy/Caddyfile` again and reload Caddy. It lets `/api/networks` take 1 MiB uploads; the rest of the API stays capped at 64 KB. The API creates the `networks` table itself when it restarts.
 
+10. Error pages (once, after the first deploy that includes `dist/errors/`): copy `deploy/Caddyfile` to `/etc/caddy/Caddyfile` again and reload Caddy. Page errors then get the matching `dist/errors/<status>.html`, or `error.html` for other codes. `/api/*` errors are left as they were.
+
 To switch over without downtime, do steps 1, 2, 4, 5, 7 and 8 first, merge to `main` so the first deploy fills `/srv/logistics-network/dist`, then point DNS (step 3) and turn off GitHub Pages (step 6). Pages keeps serving its last build until then.
 
 ### API environment

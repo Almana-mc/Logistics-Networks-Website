@@ -37,4 +37,13 @@ logistics-network.almanax21.com {
 		header @pages Cache-Control "no-cache"
 		file_server
 	}
+	handle_errors {
+		@page not path /api/*
+		handle @page {
+			root * /srv/logistics-network/dist
+			try_files /errors/{err.status_code}.html /errors/error.html
+			header Cache-Control "no-cache"
+			file_server
+		}
+	}
 }
