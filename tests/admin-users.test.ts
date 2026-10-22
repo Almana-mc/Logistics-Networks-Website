@@ -73,7 +73,7 @@ test("the audit log is admin-only and pages 100 entries", async (t) => {
   assert.equal(rest.body[19].id, 1);
 });
 
-test("admins find users, rename them and move their email", async (t) => {
+test("admins search users and see their networks", async (t) => {
   const { api, admin, user } = await startAdmin(t);
   await user.call("POST", "/api/networks", sampleNetwork);
   const found = (await admin.call("GET", "/api/admin/users?q=MEM")).body;
@@ -93,6 +93,27 @@ test("admins find users, rename them and move their email", async (t) => {
   const detail = (await admin.call("GET", "/api/admin/user?id=2")).body;
   assert.equal(detail.networkList[0].name, "Bee Automation");
   assert.equal((await admin.call("GET", "/api/admin/user?id=9")).status, 404);
+  const byEmail = (await admin.call("GET", "/api/admin/users?q=@EXAMPLE")).body;
+  assert.deepEqual(
+    byEmail.map((row: { username: string; admin: boolean }) => [
+      row.username,
+      row.admin,
+    ]),
+    [
+      ["Member", false],
+      ["Boss", true],
+    ],
+  );
+  api.sql("UPDATE users SET username = 'Admin' WHERE id = 2");
+  const byName = (await admin.call("GET", "/api/admin/users?q=ADM")).body;
+  assert.deepEqual(
+    byName.map((row: { id: number }) => row.id),
+    [2],
+  );
+});
+
+test("admins rename users and move their email", async (t) => {
+  const { api, admin } = await startAdmin(t);
   const edit = (body: object) =>
     admin.call("PUT", "/api/admin/user", { id: 2, ...body });
   assert.equal((await edit({ username: "x" })).body.error, "bad-username");
@@ -151,4 +172,15 @@ test("admins find users, rename them and move their email", async (t) => {
   );
   assert.deepEqual(log[1].detail, { from: "Member", to: "Builder" });
   assert.equal(log[0].admin, "Boss");
+  api.sql("UPDATE users SET username = 'Admin' WHERE id = 2");
+  const kept = await edit({ username: " Admin ", email: "other@example.com" });
+  assert.equal(kept.status, 200);
+  assert.equal(kept.body.username, "Admin");
+  assert.equal(kept.body.email, "other@example.com");
+  assert.equal(
+    api.row(
+      "SELECT count(*) AS count FROM admin_log WHERE action = 'user.rename'",
+    ).count,
+    1,
+  );
 });
