@@ -62,6 +62,8 @@ The site runs on a VPS behind Caddy. Pushing to `main` runs lint, typecheck, uni
    - Copy `deploy/Caddyfile` to `/etc/caddy/Caddyfile` (again, if step 4 used an older copy) and reload Caddy.
    - The deploy's restart starts the service. It needs no secrets; its settings are `Environment=` lines in the unit and its data lives in `/var/lib/logistics-shares/`.
 
+9. Published networks (once, before the first deploy that includes `server/networks.ts`): copy `deploy/Caddyfile` to `/etc/caddy/Caddyfile` again and reload Caddy. It lets `/api/networks` take 1 MiB uploads; the rest of the API stays capped at 64 KB. The API creates the `networks` table itself when it restarts.
+
 To switch over without downtime, do steps 1, 2, 4, 5, 7 and 8 first, merge to `main` so the first deploy fills `/srv/logistics-network/dist`, then point DNS (step 3) and turn off GitHub Pages (step 6). Pages keeps serving its last build until then.
 
 ### API environment

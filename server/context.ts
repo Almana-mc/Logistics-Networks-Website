@@ -24,7 +24,7 @@ export type Context = {
   db: DatabaseSync;
   config: Config;
   ip: string;
-  body: () => Promise<Record<string, unknown>>;
+  body: (limit?: number) => Promise<Record<string, unknown>>;
   session: () => Session | null;
   requireUser: () => number;
   requireRecent: () => number;
@@ -90,7 +90,7 @@ export function createContext(base: Base, limiter: Limiter): Context {
     ...base,
     ...cookie,
     ip: clientIp(base.request, base.config.trustProxy),
-    body: () => readJson(base.request),
+    body: (limit) => readJson(base.request, limit),
     requireUser,
     requireRecent: () => {
       const userId = requireUser();

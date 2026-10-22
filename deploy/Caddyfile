@@ -17,6 +17,12 @@ logistics-network.almanax21.com {
 		}
 		reverse_proxy 127.0.0.1:8796
 	}
+	handle /api/networks {
+		request_body {
+			max_size 1MiB
+		}
+		reverse_proxy 127.0.0.1:8795
+	}
 	handle /api/* {
 		request_body {
 			max_size 64KB

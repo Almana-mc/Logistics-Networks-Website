@@ -55,6 +55,17 @@ const migrations = [
     data TEXT NOT NULL,
     expires_at INTEGER NOT NULL
   );`,
+  `CREATE TABLE networks (
+    id TEXT PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    name TEXT NOT NULL,
+    description TEXT NOT NULL,
+    types TEXT NOT NULL,
+    lnet TEXT NOT NULL,
+    created_at INTEGER NOT NULL
+  );
+  CREATE INDEX networks_user ON networks (user_id);
+  CREATE INDEX networks_created ON networks (created_at);`,
 ];
 
 export function openDb(path: string) {
