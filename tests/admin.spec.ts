@@ -37,13 +37,15 @@ async function createAccount(
 function promote(username: string) {
   const db = new DatabaseSync(".data/app.db");
   db.exec("PRAGMA busy_timeout = 5000; PRAGMA foreign_keys = ON;");
+  db.exec("BEGIN IMMEDIATE");
   db.prepare("DELETE FROM users WHERE id = ?").run(adminId);
   db.prepare("DELETE FROM admin_log WHERE admin_id = ?").run(adminId);
-  db.prepare("UPDATE users SET id = ? WHERE username = ?").run(
-    adminId,
-    username,
-  );
+  const { changes } = db
+    .prepare("UPDATE users SET id = ? WHERE username = ?")
+    .run(adminId, username);
+  db.exec("COMMIT");
   db.close();
+  if (Number(changes) !== 1) throw new Error("admin seed failed");
 }
 
 test("the admin renames, suspends and blocks users and removes networks", async ({
@@ -57,7 +59,7 @@ test("the admin renames, suspends and blocks users and removes networks", async 
   const memberEmail = `${member}@${member}.test`;
   const network = `Hive line ${stamp}`;
   await createAccount(page.request, site, member, memberEmail);
-  await page.request.post(`${site}/api/networks`, {
+  const response = await page.request.post(`${site}/api/networks`, {
     headers,
     data: {
       name: network,
@@ -66,6 +68,7 @@ test("the admin renames, suspends and blocks users and removes networks", async 
       types: ["ITEM"],
     },
   });
+  expect(response.ok()).toBe(true);
   await page.request.post(`${site}/api/logout`, { headers, data: {} });
   const boss = `a${stamp}`;
   const password = await createAccount(
@@ -105,14 +108,18 @@ test("the admin renames, suspends and blocks users and removes networks", async 
   expect(await mailTo(memberEmail)).toContain("suspended");
   expect(await violations(page)).toEqual([]);
   await lift.click();
+  expect(await mailTo(memberEmail)).toContain("sign in again");
   await expect(
     page.getByRole("button", { name: "Suspend", exact: true }),
   ).toBeVisible();
 
-  const blocked = page.locator("strong", { hasText: `@${member}.test` });
+  const blocked = page
+    .getByRole("region", { name: "Blocked emails" })
+    .locator("strong", { hasText: `@${member}.test` });
   await page.getByLabel("Email or @domain").fill(`@${member}.test`);
   await page.getByRole("button", { name: "Block", exact: true }).click();
   await expect(blocked).toBeVisible();
+  expect(await mailTo(memberEmail)).toContain("suspended");
   await page.getByRole("button", { name: `Unblock @${member}.test` }).click();
   await expect(blocked).toHaveCount(0);
 

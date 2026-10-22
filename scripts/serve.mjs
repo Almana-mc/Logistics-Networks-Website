@@ -10,7 +10,7 @@ import {
 } from "../shares/api.ts";
 
 const config = readConfig();
-// Preview only: e2e seeds id 1000000
+// Preview only: e2e admin id
 const api = createApi({
   ...config,
   rateLimits: false,
