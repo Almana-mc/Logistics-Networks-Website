@@ -30,11 +30,9 @@ export const emailBlocked = (db: DatabaseSync, email: string) =>
     .prepare("SELECT 1 FROM blocked_emails WHERE pattern IN (?, ?)")
     .get(email, email.slice(email.indexOf("@"))) !== undefined;
 
-const activeMatches = (db: DatabaseSync, pattern: string) =>
+const matchingUsers = (db: DatabaseSync, pattern: string, extra = "") =>
   db
-    .prepare(
-      `SELECT u.id, u.email FROM users u WHERE ${matching} AND ${active}`,
-    )
+    .prepare(`SELECT u.id, u.email FROM users u WHERE ${matching} ${extra}`)
     .all(pattern, pattern) as Match[];
 
 const listBlocks = (db: DatabaseSync) =>
@@ -61,8 +59,12 @@ export const blockRoutes: Routes = {
     const { db, config } = context;
     const log = adminChange(context);
     const pattern = await readPattern(context);
-    const locking = activeMatches(db, pattern);
-    if (locking.some((user) => config.adminIds.includes(user.id)))
+    const locking = matchingUsers(db, pattern, `AND ${active}`);
+    if (
+      matchingUsers(db, pattern).some((user) =>
+        config.adminIds.includes(user.id),
+      )
+    )
       throw new HttpError(409, "admin-target");
     const { changes } = db
       .prepare(
@@ -86,7 +88,7 @@ export const blockRoutes: Routes = {
       .run(pattern);
     if (!Number(changes)) throw new HttpError(404, "not-found");
     log("block.remove", `block:${pattern}`, {});
-    for (const user of activeMatches(db, pattern))
+    for (const user of matchingUsers(db, pattern, `AND ${active}`))
       sendLater(config, mails.restored(user.email));
     send(context.response, 200, listBlocks(db));
   },

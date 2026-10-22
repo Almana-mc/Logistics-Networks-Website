@@ -10,7 +10,6 @@ import {
   createUser,
   findUser,
   findUserByEmail,
-  lockedOut,
   publicUser,
   usernameTaken,
 } from "./users.ts";
@@ -33,13 +32,11 @@ export const signupRoutes: Routes = {
     const passwordHash = await hashPassword(password, config.pepper);
     const existing = findUserByEmail(db, email);
     if (existing) {
-      if (!lockedOut(db, existing.id)) {
-        const token = issue(db, "reset", { userId: existing.id });
-        await sendMail(
-          config,
-          mails.existing(email, signInLink(config, "reset", token)),
-        );
-      }
+      const token = issue(db, "reset", { userId: existing.id });
+      await sendMail(
+        config,
+        mails.existing(email, signInLink(config, "reset", token)),
+      );
     } else {
       const token = issue(db, "signup", { username, email, passwordHash });
       await sendMail(
