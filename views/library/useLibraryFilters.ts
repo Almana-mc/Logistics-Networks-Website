@@ -3,6 +3,11 @@ import { filterEntries, type NetworkEntry } from "../../lib/library";
 
 const pageSize = 20;
 
+const toggled = (types: string[], type: string) =>
+  types.includes(type)
+    ? types.filter((value) => value !== type)
+    : [...types, type];
+
 export function useLibraryFilters(entries: NetworkEntry[]) {
   const [filters, setFilters] = useState({
     query: "",
@@ -27,12 +32,7 @@ export function useLibraryFilters(entries: NetworkEntry[]) {
         entries.filter((entry) => entry.types.includes(type)).length,
       onQuery: (query: string) => update({ query }),
       onSort: (sort: string) => update({ sort }),
-      onType: (type: string) =>
-        update({
-          types: filters.types.includes(type)
-            ? filters.types.filter((value) => value !== type)
-            : [...filters.types, type],
-        }),
+      onType: (type: string) => update({ types: toggled(filters.types, type) }),
     },
     results: {
       entries: filtered.slice((page - 1) * pageSize, page * pageSize),
