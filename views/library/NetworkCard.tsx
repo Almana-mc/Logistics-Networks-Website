@@ -7,7 +7,7 @@ const AdminCardActions = lazy(() => import("./AdminCardActions"));
 
 type Props = {
   entry: NetworkEntry;
-  onChange?: (entry: NetworkEntry, next: NetworkEntry | null) => void;
+  onChange: (entry: NetworkEntry, next: NetworkEntry | null) => void;
 };
 
 export default function NetworkCard({ entry, onChange }: Props) {
@@ -19,7 +19,7 @@ export default function NetworkCard({ entry, onChange }: Props) {
           <AdminCardActions
             entry={entry}
             hasPassword={account.hasPassword}
-            onChange={(next) => onChange?.(entry, next)}
+            onChange={(next) => onChange(entry, next)}
           />
         </Suspense>
       )}

@@ -9,11 +9,13 @@ export function useLibraryFilters(entries: NetworkEntry[]) {
     types: [] as string[],
     sort: "new",
   });
-  const [page, setPage] = useState(1);
+  const [wanted, setPage] = useState(1);
   const filtered = useMemo(
     () => filterEntries(entries, filters.query, filters.types, filters.sort),
     [entries, filters],
   );
+  const pages = Math.ceil(filtered.length / pageSize);
+  const page = Math.min(wanted, Math.max(pages, 1));
   const update = (change: Partial<typeof filters>) => {
     setFilters({ ...filters, ...change });
     setPage(1);
@@ -36,7 +38,7 @@ export function useLibraryFilters(entries: NetworkEntry[]) {
       entries: filtered.slice((page - 1) * pageSize, page * pageSize),
       count: filtered.length,
       page,
-      pages: Math.ceil(filtered.length / pageSize),
+      pages,
       filtered: !!filters.query || filters.types.length > 0,
       onPage: setPage,
       onClear: () => update({ query: "", types: [] }),

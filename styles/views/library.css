@@ -272,3 +272,9 @@
   position: relative;
   z-index: var(--layer-content);
 }
+.library-notice {
+  margin: 0;
+}
+.library-notice:not(:empty) {
+  margin-top: 1rem;
+}

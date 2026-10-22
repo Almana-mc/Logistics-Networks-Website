@@ -17,7 +17,7 @@ type Props = {
   onPage: (page: number) => void;
   onRetry: () => void;
   onClear: () => void;
-  onChange?: (entry: NetworkEntry, next: NetworkEntry | null) => void;
+  onChange: (entry: NetworkEntry, next: NetworkEntry | null) => void;
 };
 
 export default function LibraryResults({
