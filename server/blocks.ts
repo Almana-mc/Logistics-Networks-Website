@@ -9,7 +9,8 @@ import { active, checkEmail } from "./users.ts";
 type Match = { id: number; email: string };
 
 const domainPattern = /^@[^\s@<>()[\]\\,;:"]+\.[^\s@<>()[\]\\,;:"]+$/;
-const matching = "(u.email = ? OR substr(u.email, instr(u.email, '@')) = ?)";
+const matching =
+  "(lower(u.email) = ? OR substr(lower(u.email), instr(u.email, '@')) = ?)";
 
 export function checkPattern(value: unknown) {
   const text = typeof value === "string" ? value.trim().toLowerCase() : "";

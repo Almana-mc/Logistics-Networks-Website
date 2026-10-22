@@ -102,3 +102,32 @@ test("a block never covers an admin, even a locked-out one", async (t) => {
   });
   assert.equal(blocked.body.error, "admin-target");
 });
+
+test("blocks and search ignore the case of stored emails", async (t) => {
+  const { api, admin, user } = await startAdmin(t);
+  api.sql("UPDATE users SET email = 'Member@Mixed.test' WHERE id = 2");
+  const found = (await admin.call("GET", "/api/admin/users?q=mixed")).body;
+  assert.deepEqual(
+    found.map((row: { id: number }) => row.id),
+    [2],
+  );
+  const added = await admin.call("POST", "/api/admin/blocks", {
+    pattern: "@mixed.test",
+  });
+  assert.equal(added.body[0].accounts, 1);
+  assert.equal((await user.call("GET", "/api/me")).body, null);
+  assert.equal(
+    api.row("SELECT count(*) AS count FROM sessions WHERE user_id = 2").count,
+    0,
+  );
+  assert.match((await api.mail("Member@Mixed.test")).subject, /suspended/);
+});
+
+test("a block never covers a mixed-case admin email", async (t) => {
+  const { api, admin } = await startAdmin(t);
+  api.sql("UPDATE users SET email = 'Boss@Upper.test' WHERE id = 1");
+  const blocked = await admin.call("POST", "/api/admin/blocks", {
+    pattern: "@upper.test",
+  });
+  assert.equal(blocked.body.error, "admin-target");
+});

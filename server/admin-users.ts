@@ -67,7 +67,7 @@ export const adminUserRoutes: Routes = {
     const query = param(context.request, "q").trim().toLowerCase();
     const rows = context.db
       .prepare(
-        `${rowSql} WHERE instr(lower(u.username), ?) OR instr(u.email, ?)
+        `${rowSql} WHERE instr(lower(u.username), ?) OR instr(lower(u.email), ?)
         ORDER BY u.created_at DESC LIMIT 50`,
       )
       .all(query, query) as Row[];
@@ -99,7 +99,7 @@ export const adminUserRoutes: Routes = {
       body.email === undefined ? user.email : checkEmail(body.email);
     const moved = email !== user.email;
     if (moved && emailBlocked(db, email))
-      throw new HttpError(409, "email-blocked");
+      throw new HttpError(403, "email-blocked");
     updateUser(db, user.id, username, email);
     const renamed = username !== user.username;
     if (moved) dropTokens(db, "reset", user.id);

@@ -24,10 +24,10 @@ export const signupRoutes: Routes = {
     const body = await context.body();
     const username = checkUsername(body.username);
     const email = checkEmail(body.email);
-    if (emailBlocked(db, email)) throw new HttpError(403, "email-blocked");
     if (usernameTaken(db, username)) throw new HttpError(409, "username-taken");
     context.limit(`signup-ip:${context.ip}`, 5, quarter);
     context.limit(`signup-email:${email}`, 3, quarter);
+    if (emailBlocked(db, email)) throw new HttpError(403, "email-blocked");
     const password = await checkPassword(config, body.password, username);
     const passwordHash = await hashPassword(password, config.pepper);
     const existing = findUserByEmail(db, email);
