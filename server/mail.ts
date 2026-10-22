@@ -66,10 +66,10 @@ export const mails = {
     subject: "Your Logistics Network username changed",
     text: `An administrator changed your username to "${username}". Use it or your email to sign in.`,
   }),
-  emailMoved: (to: string, email: string): Mail => ({
+  emailMoved: (to: string): Mail => ({
     to,
     subject: "Your Logistics Network email changed",
-    text: `An administrator moved your account to ${email}. This address no longer signs in.\n\nIf you didn't expect this, contact the site administrator.`,
+    text: "An administrator moved your account to a different email address. This address no longer signs in.\n\nIf you didn't expect this, contact the site administrator.",
   }),
   emailAdded: (to: string, username: string): Mail => ({
     to,

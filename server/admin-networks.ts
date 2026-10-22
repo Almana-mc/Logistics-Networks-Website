@@ -24,7 +24,7 @@ const findRow = (db: DatabaseSync, id: unknown) =>
         AdminRow | undefined)
     : undefined;
 
-// ponytail: no paging, add when the library outgrows one response
+// ponytail: no paging yet
 export const adminNetworks = (
   db: DatabaseSync,
   where = "",
@@ -50,11 +50,11 @@ export const adminNetworkRoutes: Routes = {
     db.prepare(
       "UPDATE networks SET name = ?, description = ? WHERE id = ?",
     ).run(name, description, id);
-    sendLater(config, mails.networkEdited(before.email, before.name));
     log("network.edit", `network:${id}`, {
       from: { name: before.name, description: before.description },
       to: { name, description },
     });
+    sendLater(config, mails.networkEdited(before.email, before.name));
     send(context.response, 200, adminNetwork(findRow(db, id)!));
   },
   "DELETE /api/admin/networks": async (context) => {
@@ -63,11 +63,11 @@ export const adminNetworkRoutes: Routes = {
     const before = findRow(db, (await context.body()).id);
     if (!before) throw new HttpError(404, "not-found");
     db.prepare("DELETE FROM networks WHERE id = ?").run(before.id);
-    sendLater(config, mails.networkDeleted(before.email, before.name));
     log("network.delete", `network:${before.id}`, {
       name: before.name,
       author: before.author,
     });
+    sendLater(config, mails.networkDeleted(before.email, before.name));
     send(context.response, 204);
   },
 };
