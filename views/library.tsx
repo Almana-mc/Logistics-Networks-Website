@@ -9,6 +9,8 @@ import { useLibrary } from "../lib/library";
 import { links } from "../lib/resources";
 import "../styles/index.css";
 import "../styles/views/library.css";
+// Reauth dialog and edit forms
+import "../styles/views/account.css";
 
 function Library() {
   const { entries, status, retry } = useLibrary(true);

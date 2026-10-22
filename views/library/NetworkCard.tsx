@@ -1,45 +1,36 @@
-import { entryFile, entryLink, type NetworkEntry } from "../../lib/library";
-import { resourceStyle, resources } from "../../lib/resources";
-import Icon from "../../components/Icon";
-import NetworkThumb from "../../components/NetworkThumb";
+import { lazy, Suspense, useState } from "react";
+import { useAccount } from "../../lib/account";
+import type { NetworkEntry } from "../../lib/library";
+import NetworkCardView from "./NetworkCardView";
 
-export default function NetworkCard({ entry }: { entry: NetworkEntry }) {
+const AdminCardActions = lazy(() => import("./AdminCardActions"));
+
+export default function NetworkCard({
+  entry: listed,
+}: {
+  entry: NetworkEntry;
+}) {
+  const { account } = useAccount();
+  const [entry, setEntry] = useState<NetworkEntry | null>(listed);
+  if (!entry)
+    return (
+      <article className="network-card">
+        <p role="status" tabIndex={-1} ref={(note) => note?.focus()}>
+          Deleted {listed.name}.
+        </p>
+      </article>
+    );
   return (
-    <article className="network-card">
-      <NetworkThumb entry={entry} />
-      <h2>
-        <a href={entryLink(entry)}>{entry.name}</a>
-      </h2>
-      <p className="network-byline">
-        <span>
-          By {entry.author}
-          {entry.id && <span className="network-community">community</span>}
-        </span>
-        {entry.added && <time dateTime={entry.added}>{entry.added}</time>}
-      </p>
-      <p className="network-desc">{entry.desc}</p>
-      <ul className="network-types">
-        {entry.types.map((type) => (
-          <li className="resource-label" key={type} style={resourceStyle(type)}>
-            <span className="resource-dot" />
-            {resources.find((resource) => resource.id === type)?.label || type}
-          </li>
-        ))}
-      </ul>
-      <div className="network-card-actions">
-        <span className="network-open" aria-hidden="true">
-          Open in visualiser <Icon name="arrow" size={16} />
-        </span>
-        <a
-          className="button secondary"
-          href={entryFile(entry)}
-          download={entry.file}
-          aria-label={`Download ${entry.file}`}
-          title="Download .lnet"
-        >
-          <Icon name="download" size={18} />
-        </a>
-      </div>
-    </article>
+    <NetworkCardView entry={entry}>
+      {account?.admin && entry.id && (
+        <Suspense>
+          <AdminCardActions
+            entry={entry}
+            hasPassword={account.hasPassword}
+            onChange={setEntry}
+          />
+        </Suspense>
+      )}
+    </NetworkCardView>
   );
 }

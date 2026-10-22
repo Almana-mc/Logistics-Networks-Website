@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-type Action = "edit" | "delete";
+export type Action = "edit" | "delete";
 
 export function useReturnFocus(mode: Action | "view") {
   const buttons = {

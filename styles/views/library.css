@@ -266,3 +266,9 @@
     display: none;
   }
 }
+.network-card-admin {
+  display: grid;
+  gap: 0.75rem;
+  position: relative;
+  z-index: var(--layer-content);
+}

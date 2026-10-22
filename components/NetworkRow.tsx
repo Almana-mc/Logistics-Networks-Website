@@ -1,11 +1,11 @@
 import { useState, type ReactNode } from "react";
 import type { Details, Upload } from "../lib/uploads";
-import { useReturnFocus } from "../lib/useReturnFocus";
+import { useReturnFocus, type Action } from "../lib/useReturnFocus";
 import NetworkDelete from "./NetworkDelete";
 import NetworkEditForm from "./NetworkEditForm";
 import NetworkSummary from "./NetworkSummary";
+import RowActions from "./RowActions";
 
-type Action = "edit" | "delete";
 type Props = {
   upload: Upload;
   save: (id: string, details: Details) => Promise<Upload>;
@@ -14,29 +14,6 @@ type Props = {
   onDeleted: (upload: Upload) => void;
   children?: ReactNode;
 };
-
-function rowActions(
-  buttons: ReturnType<typeof useReturnFocus>,
-  name: string,
-  setMode: (mode: Action) => void,
-) {
-  const button = (action: Action, label: string) => (
-    <button
-      ref={buttons[action]}
-      type="button"
-      className="button secondary small"
-      onClick={() => setMode(action)}
-    >
-      {label} <span className="sr-only">{name}</span>
-    </button>
-  );
-  return (
-    <div className="actions">
-      {button("edit", "Edit")}
-      {button("delete", "Delete")}
-    </div>
-  );
-}
 
 export default function NetworkRow(props: Props) {
   const { upload, save, remove, onSaved, onDeleted, children } = props;
@@ -70,7 +47,9 @@ export default function NetworkRow(props: Props) {
           onCancel={view}
         />
       )}
-      {mode === "view" && rowActions(buttons, upload.name, setMode)}
+      {mode === "view" && (
+        <RowActions buttons={buttons} name={upload.name} onPick={setMode} />
+      )}
     </li>
   );
 }

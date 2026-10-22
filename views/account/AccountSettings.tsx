@@ -1,4 +1,5 @@
 import type { Account } from "../../lib/account";
+import AccountPanel from "../../components/AccountPanel";
 import AccountSummary from "./AccountSummary";
 import NetworksSection from "./NetworksSection";
 import PasswordSection from "./PasswordSection";
@@ -9,6 +10,13 @@ export default function AccountSettings({ account }: { account: Account }) {
   const reauth = useReauth();
   return (
     <div className="account-settings">
+      {account.admin && (
+        <AccountPanel title="Admin">
+          <p>
+            <a href="admin.html">Open admin tools</a>
+          </p>
+        </AccountPanel>
+      )}
       <NetworksSection />
       <PasswordSection hasPassword={account.hasPassword} guard={reauth.guard} />
       <AccountSummary account={account} />
