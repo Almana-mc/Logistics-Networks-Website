@@ -18,7 +18,8 @@ export default function BlockRow({ block, guard, onRemoved }: Props) {
     <li className="admin-row">
       <form onSubmit={form.onSubmit}>
         <span>
-          <strong>{block.pattern}</strong> · {block.accounts} accounts · since{" "}
+          <strong>{block.pattern}</strong> · {block.accounts}{" "}
+          {block.accounts === 1 ? "account" : "accounts"} · since{" "}
           {formatDate(block.createdAt)}
         </span>
         <button className="button secondary small" disabled={form.busy}>

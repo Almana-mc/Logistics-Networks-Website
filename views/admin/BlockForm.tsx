@@ -5,13 +5,16 @@ import { useSubmit } from "../../lib/account";
 import { addBlock, type Block } from "../../lib/admin";
 import type { Reauth } from "../../lib/useReauth";
 
-type Props = { guard: Reauth["guard"]; onAdded: (blocks: Block[]) => void };
+type Props = {
+  guard: Reauth["guard"];
+  onAdded: (blocks: Block[], pattern: string) => void;
+};
 
 export default function BlockForm({ guard, onAdded }: Props) {
   const [pattern, setPattern] = useState("");
   const form = useSubmit(() =>
     guard(() => addBlock(pattern)).then((list) => {
-      onAdded(list);
+      onAdded(list, pattern);
       setPattern("");
     }),
   );

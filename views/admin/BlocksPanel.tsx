@@ -1,25 +1,25 @@
-import { useEffect, useState } from "react";
 import AccountPanel from "../../components/AccountPanel";
-import { fetchBlocks, type Block } from "../../lib/admin";
+import type { Block } from "../../lib/admin";
 import { useNotice } from "../../lib/useNotice";
 import type { Reauth } from "../../lib/useReauth";
 import BlockForm from "./BlockForm";
 import BlockRow from "./BlockRow";
+import { useBlocks } from "./useBlocks";
 
 export default function BlocksPanel({ guard }: { guard: Reauth["guard"] }) {
-  const [blocks, setBlocks] = useState<Block[] | null>(null);
-  const [failed, setFailed] = useState(false);
+  const { blocks, failed, setBlocks } = useBlocks();
   const notice = useNotice();
-  useEffect(() => {
-    fetchBlocks().then(setBlocks, () => setFailed(true));
-  }, []);
   const removed = (list: Block[], pattern: string) => {
     setBlocks(list);
     notice.show(`Unblocked ${pattern}.`);
   };
+  const added = (list: Block[], pattern: string) => {
+    setBlocks(list);
+    notice.show(`Blocked ${pattern}.`);
+  };
   return (
     <AccountPanel title="Blocked emails">
-      <BlockForm guard={guard} onAdded={setBlocks} />
+      <BlockForm guard={guard} onAdded={added} />
       {failed && (
         <p className="error-text" role="alert">
           Couldn't load blocked emails. Reload to try again.
