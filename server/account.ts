@@ -1,5 +1,4 @@
-import type { DatabaseSync } from "node:sqlite";
-import type { Routes } from "./context.ts";
+import type { Context, Routes } from "./context.ts";
 import { HttpError, send } from "./http.ts";
 import { mails, sendLater } from "./mail.ts";
 import { checkPassword, hashPassword } from "./passwords.ts";
@@ -8,9 +7,13 @@ import { findUser, publicUser, setPassword } from "./users.ts";
 
 const quarter = 15 * 60_000;
 
-function describe(db: DatabaseSync, userId: number) {
-  const user = findUser(db, userId)!;
-  return { user: publicUser(user), hasPassword: user.password_hash !== null };
+function describe(context: Context, userId: number) {
+  const user = findUser(context.db, userId)!;
+  return {
+    user: publicUser(user),
+    hasPassword: user.password_hash !== null,
+    admin: context.config.adminIds.includes(userId),
+  };
 }
 
 export const accountRoutes: Routes = {
@@ -19,7 +22,7 @@ export const accountRoutes: Routes = {
     send(
       context.response,
       200,
-      session ? describe(context.db, session.userId) : null,
+      session ? describe(context, session.userId) : null,
     );
   },
   "PUT /api/me/password": async (context) => {

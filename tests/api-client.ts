@@ -1,4 +1,5 @@
 import { createServer } from "node:http";
+import type { TestContext } from "node:test";
 import { mkdtemp, readFile, readdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -117,4 +118,21 @@ export async function signUp(
   await client.call("POST", "/api/signup", { username, email, password });
   const token = tokenIn((await api.mail(email)).text, "signup");
   return confirm(client, token);
+}
+
+export const sampleNetwork = {
+  name: "Bee Automation",
+  description: "A simple Productive Bees setup",
+  lnet: await readFile("library/bee-automation.lnet", "utf8"),
+  types: ["ITEM"],
+};
+
+export async function startAdmin(t: TestContext) {
+  const api = await startApi({ adminIds: [1] });
+  t.after(api.close);
+  const admin = api.client();
+  await signUp(api, admin, "Boss", "boss@example.com");
+  const user = api.client();
+  await signUp(api, user, "Member", "member@example.com");
+  return { api, admin, user };
 }

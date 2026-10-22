@@ -10,6 +10,7 @@ export type Config = {
   smtpUrl: string;
   mailFrom: string;
   outbox: string;
+  adminIds: number[];
   fetch: typeof fetch;
 };
 
@@ -28,6 +29,10 @@ export function readConfig(env: NodeJS.ProcessEnv = process.env): Config {
     smtpUrl: env.SMTP_URL || "",
     mailFrom: env.MAIL_FROM || "Logistics Network <accounts@localhost>",
     outbox: env.MAIL_OUTBOX || ".data/outbox",
+    adminIds: (env.ADMIN_IDS || "")
+      .split(",")
+      .map(Number)
+      .filter((id) => Number.isInteger(id) && id > 0),
     fetch: globalThis.fetch,
   };
 }

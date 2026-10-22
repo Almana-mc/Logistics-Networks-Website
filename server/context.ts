@@ -28,6 +28,7 @@ export type Context = {
   session: () => Session | null;
   requireUser: () => number;
   requireRecent: () => number;
+  requireAdmin: () => number;
   signIn: (userId: number) => void;
   signOut: () => void;
   markAuthed: () => void;
@@ -96,6 +97,12 @@ export function createContext(base: Base, limiter: Limiter): Context {
       const userId = requireUser();
       if (Date.now() - cookie.session()!.authedAt > reauthWindow)
         throw new HttpError(403, "reauth");
+      return userId;
+    },
+    requireAdmin: () => {
+      const userId = requireUser();
+      if (!base.config.adminIds.includes(userId))
+        throw new HttpError(403, "not-admin");
       return userId;
     },
     markAuthed: () => touchAuthed(base.db, cookie.session()!.hash),
