@@ -22,6 +22,7 @@
   font: inherit;
   text-align: left;
   cursor: pointer;
+  overflow-wrap: anywhere;
 }
 .admin-pick:hover {
   border-color: var(--line-strong);
@@ -79,4 +80,10 @@
   color: var(--fg-dim);
   font-family: var(--font-mono);
   font-size: 0.8rem;
+}
+.admin-pick > * {
+  min-width: 0;
+}
+.admin-email {
+  overflow-wrap: anywhere;
 }

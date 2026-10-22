@@ -1,9 +1,10 @@
 import { useState } from "react";
 import FormSubmit from "../../components/FormSubmit";
 import { useSubmit } from "../../lib/account";
-import { signOutUser, suspendUser, type AdminUser } from "../../lib/admin";
+import { suspendUser, type AdminUser } from "../../lib/admin";
 import type { Reauth } from "../../lib/useReauth";
 import UserDelete from "./UserDelete";
+import UserSignOut from "./UserSignOut";
 
 type Props = {
   user: AdminUser;
@@ -23,12 +24,14 @@ export default function UserActions(props: Props) {
   const [notice, setNotice] = useState("");
   const suspended = user.suspendedAt !== null;
   const suspend = useSubmit(() =>
-    guard(() => suspendUser(user.id, !suspended)).then(onChanged),
-  );
-  const signOut = useSubmit(() =>
-    guard(() => signOutUser(user.id)).then(() =>
-      setNotice("Signed out everywhere. The user was emailed."),
-    ),
+    guard(() => suspendUser(user.id, !suspended)).then((next) => {
+      onChanged(next);
+      setNotice(
+        suspended
+          ? "Suspension lifted. The user was emailed."
+          : "Suspended. The user was emailed.",
+      );
+    }),
   );
   if (user.admin) return lockedNote;
   return (
@@ -40,13 +43,11 @@ export default function UserActions(props: Props) {
           kind="secondary"
         />
       </form>
-      <form onSubmit={signOut.onSubmit}>
-        <FormSubmit
-          label="Sign out everywhere"
-          form={signOut}
-          kind="secondary"
-        />
-      </form>
+      <UserSignOut
+        user={user}
+        guard={guard}
+        onDone={() => setNotice("Signed out everywhere. The user was emailed.")}
+      />
       <UserDelete user={user} guard={guard} onDeleted={onDeleted} />
       <p className="account-note" role="status">
         {notice}

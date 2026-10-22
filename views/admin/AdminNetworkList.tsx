@@ -11,9 +11,7 @@ type Props = {
 };
 
 const matches = (filter: string) => (network: AdminNetwork) =>
-  `${network.name} ${network.author}`
-    .toLowerCase()
-    .includes(filter.trim().toLowerCase());
+  `${network.name} ${network.author}`.toLowerCase().includes(filter);
 
 const byline = (network: AdminNetwork) => (
   <p className="network-row-date">
@@ -26,34 +24,36 @@ export default function AdminNetworkList(props: Props) {
   const { networks, filter = "", guard, onChange } = props;
   const [notice, setNotice] = useState("");
   const note = useRef<HTMLParagraphElement>(null);
-  const shown = networks.filter(matches(filter));
+  const shown = networks.filter(matches(filter.trim().toLowerCase()));
   return (
     <>
       {!shown.length && <p>No networks.</p>}
-      <ul className="network-rows">
-        {shown.map((network) => (
-          <NetworkRow
-            key={network.id}
-            upload={network}
-            save={(id, details) => guard(() => editNetwork(id, details))}
-            remove={(id) => guard(() => deleteNetwork(id))}
-            onSaved={(next) =>
-              onChange(
-                networks.map((old) =>
-                  old.id === next.id ? { ...old, ...next } : old,
-                ),
-              )
-            }
-            onDeleted={(gone) => {
-              onChange(networks.filter((old) => old.id !== gone.id));
-              setNotice(`Deleted ${gone.name}.`);
-              note.current!.focus();
-            }}
-          >
-            {byline(network)}
-          </NetworkRow>
-        ))}
-      </ul>
+      {shown.length > 0 && (
+        <ul className="network-rows">
+          {shown.map((network) => (
+            <NetworkRow
+              key={network.id}
+              upload={network}
+              save={(id, details) => guard(() => editNetwork(id, details))}
+              remove={(id) => guard(() => deleteNetwork(id))}
+              onSaved={(next) =>
+                onChange(
+                  networks.map((old) =>
+                    old.id === next.id ? { ...old, ...next } : old,
+                  ),
+                )
+              }
+              onDeleted={(gone) => {
+                onChange(networks.filter((old) => old.id !== gone.id));
+                setNotice(`Deleted ${gone.name}.`);
+                note.current!.focus();
+              }}
+            >
+              {byline(network)}
+            </NetworkRow>
+          ))}
+        </ul>
+      )}
       <p ref={note} className="account-note" role="status" tabIndex={-1}>
         {notice}
       </p>

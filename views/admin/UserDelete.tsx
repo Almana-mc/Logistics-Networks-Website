@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { describeError, useSubmit } from "../../lib/account";
-import { deleteUser, type AdminUser } from "../../lib/admin";
+import type { AdminUser } from "../../lib/admin";
 import type { Reauth } from "../../lib/useReauth";
+import UserDeleteConfirm from "./UserDeleteConfirm";
 
 type Props = {
   user: AdminUser;
@@ -9,43 +9,27 @@ type Props = {
   onDeleted: () => void;
 };
 
-export default function UserDelete({ user, guard, onDeleted }: Props) {
+export default function UserDelete(props: Props) {
   const [confirming, setConfirming] = useState(false);
-  const form = useSubmit(() =>
-    guard(() => deleteUser(user.id)).then(onDeleted),
-  );
-  if (!confirming)
+  const [reopened, setReopened] = useState(false);
+  if (confirming)
     return (
-      <button
-        type="button"
-        className="button secondary danger"
-        onClick={() => setConfirming(true)}
-      >
-        Delete account…
-      </button>
+      <UserDeleteConfirm
+        {...props}
+        onKeep={() => {
+          setConfirming(false);
+          setReopened(true);
+        }}
+      />
     );
   return (
-    <form className="network-delete" onSubmit={form.onSubmit}>
-      <p className="account-note">
-        Delete {user.username} and their {user.networks} networks? This can't be
-        undone.
-      </p>
-      <div className="actions">
-        <button className="button secondary small danger" disabled={form.busy}>
-          {form.busy ? "Deleting…" : "Delete account"}
-        </button>
-        <button
-          type="button"
-          className="button secondary small"
-          autoFocus
-          onClick={() => setConfirming(false)}
-        >
-          Keep it
-        </button>
-      </div>
-      <p className="error-text" role="alert">
-        {form.error && describeError(form.error)}
-      </p>
-    </form>
+    <button
+      type="button"
+      className="button secondary danger"
+      autoFocus={reopened}
+      onClick={() => setConfirming(true)}
+    >
+      Delete account…
+    </button>
   );
 }

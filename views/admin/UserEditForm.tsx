@@ -16,12 +16,17 @@ export default function UserEditForm({ user, guard, onSaved }: Props) {
     username: user.username,
     email: user.email,
   });
-  const [saved, setSaved] = useState(false);
+  const [saved, setSaved] = useState("");
   const form = useSubmit(() => {
-    setSaved(false);
+    setSaved("");
     return guard(() => saveUser(user.id, values)).then((next) => {
+      const changed =
+        next.username !== user.username || next.email !== user.email;
+      setValues({ username: next.username, email: next.email });
       onSaved(next);
-      setSaved(true);
+      setSaved(
+        changed ? "Saved. The user was emailed." : "No changes to save.",
+      );
     });
   });
   return (
@@ -33,7 +38,7 @@ export default function UserEditForm({ user, guard, onSaved }: Props) {
       <UserFields values={values} onValues={setValues} />
       <FormSubmit label={form.busy ? "Saving…" : "Save user"} form={form} />
       <p className="account-note" role="status">
-        {saved && "Saved. The user was emailed."}
+        {saved}
       </p>
     </form>
   );

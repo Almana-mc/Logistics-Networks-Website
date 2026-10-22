@@ -10,7 +10,9 @@ export default function UserBadges({ user }: { user: AdminUser }) {
       {user.locked && user.suspendedAt === null && (
         <span className="admin-badge warn">blocked</span>
       )}
-      <span className="admin-badge">{user.networks} networks</span>
+      <span className="admin-badge">
+        {user.networks} {user.networks === 1 ? "network" : "networks"}
+      </span>
     </span>
   );
 }

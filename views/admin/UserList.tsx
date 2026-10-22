@@ -1,9 +1,13 @@
 import type { AdminUser } from "../../lib/admin";
 import UserBadges from "./UserBadges";
 
-type Props = { users: AdminUser[] | null; onChoose: (id: number) => void };
+type Props = {
+  users: AdminUser[] | null;
+  focusId: number | null;
+  onChoose: (id: number) => void;
+};
 
-export default function UserList({ users, onChoose }: Props) {
+export default function UserList({ users, focusId, onChoose }: Props) {
   if (!users) return <p className="account-note">Loading users…</p>;
   if (!users.length) return <p className="account-note">No users match.</p>;
   return (
@@ -13,6 +17,7 @@ export default function UserList({ users, onChoose }: Props) {
           <button
             type="button"
             className="admin-pick"
+            autoFocus={user.id === focusId}
             onClick={() => onChoose(user.id)}
           >
             <strong>{user.username}</strong>

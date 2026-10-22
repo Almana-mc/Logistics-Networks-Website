@@ -1,45 +1,46 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import AccountPanel from "../../components/AccountPanel";
-import Field from "../../components/Field";
-import FormSubmit from "../../components/FormSubmit";
-import { useSubmit } from "../../lib/account";
-import { searchUsers, type AdminUser } from "../../lib/admin";
+import type { AdminUser } from "../../lib/admin";
+import { useNotice } from "../../lib/useNotice";
+import { useUserList } from "../../lib/useUserList";
 import type { Reauth } from "../../lib/useReauth";
 import UserDetail from "./UserDetail";
-import UserList from "./UserList";
+import UserSearch from "./UserSearch";
 
 export default function UsersPanel({ guard }: { guard: Reauth["guard"] }) {
-  const [query, setQuery] = useState("");
-  const [users, setUsers] = useState<AdminUser[] | null>(null);
+  const list = useUserList();
   const [chosen, setChosen] = useState<number | null>(null);
-  const form = useSubmit(() => searchUsers(query).then(setUsers));
-  useEffect(() => {
-    searchUsers("").then(setUsers, () => setUsers([]));
-  }, []);
+  const [focusId, setFocusId] = useState<number | null>(null);
+  const notice = useNotice();
+  const choose = (id: number) => {
+    setChosen(id);
+    setFocusId(id);
+    notice.clear();
+  };
   const back = () => {
     setChosen(null);
-    searchUsers(query).then(setUsers);
+    list.load(list.query);
+  };
+  const deleted = (user: AdminUser) => {
+    setChosen(null);
+    list.remove(user.id);
+    notice.show(`Deleted ${user.username}.`);
   };
   return (
     <AccountPanel title="Users">
       {chosen === null ? (
-        <>
-          <form className="account-form" role="search" onSubmit={form.onSubmit}>
-            <Field
-              id="admin-user-query"
-              label="Username or email"
-              type="search"
-              required={false}
-              value={query}
-              onValue={setQuery}
-            />
-            <FormSubmit label="Search" form={form} kind="secondary" />
-          </form>
-          <UserList users={users} onChoose={setChosen} />
-        </>
+        <UserSearch {...{ list, focusId }} onChoose={choose} />
       ) : (
-        <UserDetail id={chosen} guard={guard} onBack={back} />
+        <UserDetail
+          id={chosen}
+          guard={guard}
+          onBack={back}
+          onDeleted={deleted}
+        />
       )}
+      <p ref={notice.ref} className="account-note" role="status" tabIndex={-1}>
+        {notice.text}
+      </p>
     </AccountPanel>
   );
 }

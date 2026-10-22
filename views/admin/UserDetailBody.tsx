@@ -9,19 +9,18 @@ import UserEditForm from "./UserEditForm";
 type Props = {
   user: UserDetails;
   guard: Reauth["guard"];
-  onBack: () => void;
+  onDeleted: (user: AdminUser) => void;
   onUser: (user: UserDetails) => void;
 };
 
 export default function UserDetailBody(props: Props) {
-  const { user, guard, onBack, onUser } = props;
+  const { user, guard, onDeleted, onUser } = props;
   const changed = (next: AdminUser) => onUser({ ...user, ...next });
   return (
     <>
-      <h3>
-        {user.username} <UserBadges user={user} />
-      </h3>
-      <p>
+      <h3>{user.username}</h3>
+      <UserBadges user={user} />
+      <p className="admin-email">
         {user.email} · joined {formatDate(user.createdAt)}
       </p>
       <UserEditForm user={user} guard={guard} onSaved={changed} />
@@ -29,7 +28,7 @@ export default function UserDetailBody(props: Props) {
         user={user}
         guard={guard}
         onChanged={changed}
-        onDeleted={onBack}
+        onDeleted={() => onDeleted(user)}
       />
       <h4>Networks</h4>
       <AdminNetworkList
