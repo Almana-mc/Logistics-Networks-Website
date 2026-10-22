@@ -70,6 +70,7 @@
 .workspace-layout {
   display: flex;
   flex-wrap: wrap;
+  container-type: inline-size;
 }
 .graph-region {
   position: relative;

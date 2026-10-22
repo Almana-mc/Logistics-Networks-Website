@@ -9,6 +9,13 @@
   border-top: 1px solid var(--line);
   border-left: 1px solid var(--line);
 }
+/* panel scrolls, graph fixed */
+@container (width >= 51.25rem) {
+  .node-detail {
+    contain: size;
+    overflow-y: auto;
+  }
+}
 .node-picker label,
 .detail-label {
   margin: 0;
